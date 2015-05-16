@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ds.photosight.ui.widget.HackyDrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- The main content view -->
+    <ds.photosight.ui.widget.GalleryViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <!--drawer-->
+    <FrameLayout
+        android:background="@color/drawer_background"
+        android:layout_width="@dimen/drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:animateLayoutChanges="true"
+       >
+            <!--android:layerType="software"-->
+        <ListView
+            android:id="@+id/drawer_list"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:choiceMode="singleChoice"
+            android:divider="@color/dark_divider"
+            android:dividerHeight="1dp"
+            android:listSelector="@android:color/transparent"
+
+            tools:listitem="@layout/row_comment"/>
+        <ProgressBar
+            android:id="@+id/drawer_progress"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"/>
+            <!--android:layout_marginTop="48dp"-->
+
+    </FrameLayout>
+
+
+
+</ds.photosight.ui.widget.HackyDrawerLayout>
+

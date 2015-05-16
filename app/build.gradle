@@ -1,0 +1,31 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "ds.photosight"
+        minSdkVersion 15
+        targetSdkVersion 22
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles 'proguard.cfg'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:22.+'
+    compile 'org.jsoup:jsoup:1.8.2'
+    compile 'com.github.castorflex.smoothprogressbar:library-circular:+'
+    compile 'com.astuetz:pagerslidingtabstrip:+'
+    compile 'com.googlecode.android-query:android-query:0.25.9'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.github.chrisbanes.photoview:library:+'
+
+    compile files('libs/flurryagent.jar')
+}

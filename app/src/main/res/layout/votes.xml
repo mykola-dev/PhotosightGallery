@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ds.photosight.ui.widget.VotesWidget
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#2888"
+    android:paddingRight="10dp"
+    android:paddingBottom="30dp"
+    android:paddingTop="40dp"
+    android:animateLayoutChanges="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layoutAnimation="@anim/cascade"
+            android:id="@+id/labelsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/aot_labels"
+                android:text="@string/artistic"/>
+
+            <TextView
+                style="@style/aot_labels"
+                android:text="@string/original"
+                />
+
+            <TextView
+                style="@style/aot_labels"
+                android:text="@string/technic"
+                />
+
+            <TextView
+                style="@style/aot_labels"
+                android:text="@string/likes"
+                />
+
+            <TextView
+                style="@style/aot_labels"
+                android:text="@string/dislikes"
+                />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            >
+
+            <View
+                android:id="@+id/redBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/red"
+                >
+            </View>
+
+            <View
+                android:id="@+id/greenBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/blue"
+                >
+            </View>
+
+            <!-- <TextView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:shadowRadius="1"
+                 android:shadowColor="#000"
+                 android:shadowDx="0"
+                 android:shadowDy="0"
+                 android:textColor="@android:color/white"
+                 android:layout_gravity="center"
+                 android:textSize="12sp"
+                 android:text="95%"/>-->
+
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/aRate"
+                style="@style/aot_values"
+                android:text="0"/>
+
+            <TextView
+                android:id="@+id/oRate"
+                style="@style/aot_values"
+                android:text="0"
+                />
+
+            <TextView
+                android:id="@+id/tRate"
+                style="@style/aot_values"
+                android:text="0"
+                />
+
+            <TextView
+                android:id="@+id/lRate"
+                style="@style/aot_values"
+                android:text="0"
+                />
+
+            <TextView
+                android:id="@+id/dRate"
+                style="@style/aot_values"
+                android:text="0"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/avardsContainer"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+    </LinearLayout>
+
+</ds.photosight.ui.widget.VotesWidget>

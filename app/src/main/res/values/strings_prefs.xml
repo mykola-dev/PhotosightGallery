@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<integer-array name="thumb_size_values">
+		<item>@string/thumb_size_1</item>
+		<item>@string/thumb_size_2</item>
+		<item>@string/thumb_size_3</item>
+	</integer-array>
+	<string-array name="thumb_size">
+		<item>Small</item>
+		<item>Normal</item>
+		<item>Large</item>
+	</string-array>
+
+	<string name="main_settings">Main Settings</string>
+	<string name="parental_control">Parental Control</string>
+	<string name="nu_photos_disabled">Nu photos disabled</string>
+	<string name="nu_photos_enabled">Nu photos enabled</string>
+	<string name="cache_folder">Cache Folder</string>
+	<string name="where_to_cache_photos">Where to cache photos</string>
+	<string name="save_folder">Save Folder</string>
+	<string name="manually_saved_photos_placed_here">Manually saved photos placed here</string>
+	<string name="clear_cache">Clear Cache</string>
+	<string name="clear_cache_on_exit">Autoclear Cache</string>
+	<string name="clear_cache_on_exit_sub">Clear cache on exit</string>
+	<string name="appearance">Appearance</string>
+	<string name="thumb_size">Thumb Size</string>
+	<string name="other">Other</string>
+	<string name="get_ad_free_version">Get Ad-Free version</string>
+	<string name="share_link_to_this_app_with_friends">Share this app with friends</string>
+	<string name="about_">About…</string>
+	<string name="enable_if_you_have_problems_with_image_downloading">Enable if you have problems with image downloading</string>
+	<string name="image_rescaling">Image rescaling</string>
+
+</resources>
