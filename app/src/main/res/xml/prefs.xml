@@ -48,11 +48,11 @@
 
 	<PreferenceCategory android:title="@string/appearance">
 		<ListPreference
-			android:entryValues="@array/thumb_size_values"
-			android:title="@string/thumb_size"
+			android:entryValues="@array/thumb_size"
+			android:title="@string/thumb_columns"
 			android:entries="@array/thumb_size"
-			android:key="thumbSize"
-			android:defaultValue="@string/thumb_size_2" />
+			android:key="thumbColumns"
+			android:defaultValue="2" />
 		<CheckBoxPreference
 			android:summaryOff="@string/enable_if_you_have_problems_with_image_downloading"
 			android:summaryOn="@string/enable_if_you_have_problems_with_image_downloading"

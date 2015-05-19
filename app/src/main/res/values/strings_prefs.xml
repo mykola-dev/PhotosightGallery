@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<integer-array name="thumb_size_values">
-		<item>@string/thumb_size_1</item>
-		<item>@string/thumb_size_2</item>
-		<item>@string/thumb_size_3</item>
-	</integer-array>
 	<string-array name="thumb_size">
-		<item>Small</item>
-		<item>Normal</item>
-		<item>Large</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+		<item>4</item>
+		<item>5</item>
 	</string-array>
 
 	<string name="main_settings">Main Settings</string>

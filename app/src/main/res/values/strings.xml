@@ -184,6 +184,7 @@ All Photosight trademarks displayed on this application are property of Photosig
     <string name="processing">Processing…</string>
     <string name="histogram">Histogram</string>
 	<string name="low_resolution">Low Image Resolution</string>
+	<string name="thumb_columns">Thumbs Columns</string>
 
 
 </resources>

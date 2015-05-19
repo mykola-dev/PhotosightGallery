@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string-array name="thumb_size_values">
-		<item>@string/thumb_size_1</item>
-		<item>@string/thumb_size_2</item>
-		<item>@string/thumb_size_3</item>
-	</string-array>
-	<string-array name="thumb_size">
-		<item>Мини</item>
-		<item>Нормально</item>
-		<item>Макро</item>
-	</string-array>
-
 	<string name="main_settings">Основные</string>
 	<string name="parental_control">Цензура</string>
 	<string name="nu_photos_disabled">Голые телеса не доступны</string>
