@@ -50,6 +50,9 @@
 	<string name="changelog">"
 Change Log:
 
+v0.8.1
+- Fixed landscape orientation bug
+
 v0.8
 - Bugfixes
 - Increased photos quality

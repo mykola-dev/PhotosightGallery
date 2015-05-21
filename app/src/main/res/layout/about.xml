@@ -45,7 +45,6 @@
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="5dp"
             android:layout_weight="1">
 
             <LinearLayout
@@ -53,6 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:padding="5dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -63,7 +63,7 @@
                     android:background="@null"
                     android:padding="2dp"
                     android:textColorLink="@color/dark_gray"
-                    android:textColor="#000"
+                    android:textColor="@color/black_text"
                     android:textSize="14sp"/>
 
                 <TextView

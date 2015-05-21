@@ -118,8 +118,7 @@ public class App : Application(), Constants {
             }
 
 
-            val dialog = Dialog(ctx, android.R.style.Theme_Dialog)
-
+            val dialog = Dialog(ctx, R.style.Theme_AppCompat_Dialog)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.about)
             val b = dialog.findViewById(R.id.aboutOK) as Button

@@ -17,7 +17,6 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import android.widget.ImageView.ScaleType
 import com.androidquery.AQuery
-import com.androidquery.AbstractAQuery
 import com.androidquery.util.AQUtility
 import de.greenrobot.event.EventBus
 import ds.photosight.App
@@ -31,10 +30,11 @@ import ds.photosight.model.ViewerData
 import ds.photosight.model.ViewerData.OnLoadListener
 import ds.photosight.utils.L
 import java.util.ArrayList
+import kotlin.properties.Delegates
 
 public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListener {
     private val app: App? = null
-    private var grid: GridView? = null
+    private var grid: GridView by Delegates.notNull()
     private var progress: View? = null
     private var currPage = 0
     private var currPhoto = 0
@@ -158,16 +158,21 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
     private fun initViews(v: View, forceUpdate: Boolean) {
         setTitle()
         grid = v.findViewById(id.viewerGrid) as GridView
-        val gridWidth = grid!!.getWidth()
-        val numOfColumns = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constants.PREFS_KEY_COLUMNS, "2"))!!
-        mColumnWidth = gridWidth / numOfColumns
-        grid!!.setColumnWidth(mColumnWidth)
-        grid!!.setNumColumns(numOfColumns)
+        grid.setSelector(R.drawable.list_item_background)
+        grid.setDrawSelectorOnTop(true)
+        val gridWidth = grid.getWidth()
+        L.v("grid width=$gridWidth")
+        if (gridWidth!=0) {
+            val numOfColumns = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constants.PREFS_KEY_COLUMNS, "2"))!!
+            mColumnWidth = gridWidth / numOfColumns
+            grid.setColumnWidth(mColumnWidth)
+            grid.setNumColumns(numOfColumns)
+        }
 
-        if (grid!!.getAdapter() != null && !forceUpdate) {
+        if (grid.getAdapter() != null && !forceUpdate) {
             L.w("grid.getAdapter() != null && !forceUpdate")
             if (currPhoto != 0) {
-                grid!!.setSelection(currPhoto)
+                grid.setSelection(currPhoto)
                 //currPhoto = 0;
             }
             return
@@ -182,7 +187,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
         }
 
         progress!!.setVisibility(View.VISIBLE)
-        grid!!.setVisibility(View.GONE)
+        grid.setVisibility(View.GONE)
         val tab = getRoot().currentTab
         viewerData = ViewerData(tab, getRoot().getListSelection(tab), currPage)
         viewerData!!.setOnLoadListener(object : OnLoadListener {
@@ -245,15 +250,15 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
                 Toast.makeText(getActivity(), R.string.connection_error, 0).show()
             return
         }
-        grid!!.setVisibility(View.VISIBLE)
+        grid.setVisibility(View.VISIBLE)
         val adapter = GridAdapter(getActivity(), result, mColumnWidth)
-        grid!!.setAdapter(adapter)
+        grid.setAdapter(adapter)
         if (currPhoto != 0) {
             L.v("selecting grid cell")
-            grid!!.setSelection(currPhoto)
+            grid.setSelection(currPhoto)
             currPhoto = 0
         }
-        grid!!.setOnItemClickListener(object : AdapterView.OnItemClickListener {
+        grid.setOnItemClickListener(object : AdapterView.OnItemClickListener {
 
             override fun onItemClick(arg0: AdapterView<*>, arg1: View, pos: Int, arg3: Long) {
                 val i = Intent(getActivity(), javaClass<GalleryActivity>())
@@ -301,7 +306,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
 
 
     private fun showInfo(pos: Int) {
-        val a = grid!!.getAdapter() as GridAdapter
+        val a = grid.getAdapter() as GridAdapter
         val newFragment = InfoDialog(a.data?.get(pos))
         newFragment.show(getFragmentManager().beginTransaction(), "dialog")
     }
@@ -310,7 +315,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
     private fun showInBrowser(pos: Int) {
         val i: Intent// = new Intent();
         i = Intent(Intent.ACTION_VIEW)
-        val a = grid!!.getAdapter() as GridAdapter
+        val a = grid.getAdapter() as GridAdapter
         if (pos != -1) {
             Log.d("#", "pos=" + pos)
             i.setData(Uri.parse(a.data?.get(pos)?.get(Constants.DATA_URL_PAGE)))
@@ -414,7 +419,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
 
         init {
             //if (data == null)
-             //   return
+            //   return
             this.numOfItems = data!!.size()
             imageLayout = FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             val d = cellSize / 5

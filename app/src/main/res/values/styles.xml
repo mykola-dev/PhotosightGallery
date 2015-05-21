@@ -11,14 +11,14 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/tabs</item>
         <item name="colorPrimary">@color/tabs</item>
-        <item name="colorAccent">@color/primary_text</item>
+        <item name="colorAccent">@color/background_selected</item>
 
     </style>
 
     <style name="Theme.MySherlockBlack" parent="Theme.AppCompat">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBarOverlay">true</item>
-        <item name="colorAccent">@color/primary_text</item>
+        <item name="colorAccent">@color/background_selected</item>
 
     </style>
 
@@ -74,7 +74,7 @@
         <item name="pstsUnderlineColor">@color/primary_text</item>
         <item name="pstsUnderlineHeight">1dp</item>
         <item name="android:textColor">@color/primary_text</item>
-        <!--<item name="pstsTabBackground">@color/tabs</item>-->
+        <item name="pstsTabBackground">@drawable/list_item_background</item>
         <item name="android:background">@color/tabs</item>
     </style>
 

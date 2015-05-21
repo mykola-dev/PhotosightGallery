@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/main_background"
+    android:background="@color/list_background"
     android:orientation="horizontal"
     >
 
@@ -35,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="7"
-        android:background="@color/selector_solid"
+        android:background="@color/grid_background"
         android:orientation="vertical"
         >
 

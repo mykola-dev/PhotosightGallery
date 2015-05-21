@@ -86,11 +86,13 @@ public class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChan
         }
 
 
-        // Check if app version is different
-        showAbout()
 
     }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super<AppCompatActivity>.onPostCreate(savedInstanceState)
+        showAboutIfNeed()
+    }
 
     public fun getViewerFragment(): ViewerFragment? {
         val f = getSupportFragmentManager().findFragmentByTag(javaClass<ViewerFragment>().getName()) as ViewerFragment?
@@ -186,7 +188,7 @@ public class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChan
     }
 
 
-    private fun showAbout() {
+    private fun showAboutIfNeed() {
         val ver: String
         try {
             val manager = getPackageManager().getPackageInfo(getPackageName(), 0)
@@ -200,12 +202,6 @@ public class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChan
             App.showAbout(this)
         }
 
-    }
-
-
-    private fun addBanner() {
-        /*ad = (AdView) findViewById(R.id.admob);
-		AdManager.initAdmobMediationBanner(ad);*/
     }
 
 

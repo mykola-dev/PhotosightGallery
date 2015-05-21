@@ -42,6 +42,7 @@ public abstract class ListFragmentAbstract : ListFragment(), Constants {
         getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
         getListView().setSelection(mPositionChecked)
         getListView().setItemChecked(mPositionChecked, true)
+        getListView().setSelector(android.R.color.transparent)
     }
 
 

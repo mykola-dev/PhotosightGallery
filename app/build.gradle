@@ -5,21 +5,51 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
+    signingConfigs {
+        release {
+            def propsFile = rootProject.file('app/keystore.properties')
+            def props = new Properties()
+            props.load(new FileInputStream(propsFile))
+            storeFile = file('../../' + props.storeFile)
+            keyAlias props.keyAlias
+            keyPassword props.keyPassword
+            storePassword props.storePassword
+        }
+    }
+
     defaultConfig {
         applicationId "ds.photosight"
         minSdkVersion 15
         targetSdkVersion 22
+        versionCode 22
+        versionName '0.8.1'
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles 'proguard.cfg'
+            signingConfig signingConfigs.release
         }
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File("d:/dev/photosight",
+                    "photosight${defaultConfig.versionName}-${variant.buildType.name}.apk")
+        }
+    }
+
+
 }
 
 dependencies {
@@ -30,7 +60,6 @@ dependencies {
     compile 'com.googlecode.android-query:android-query:0.25.9'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.github.chrisbanes.photoview:library:+'
-
     compile files('libs/flurryagent.jar')
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
