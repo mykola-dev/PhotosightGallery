@@ -61,12 +61,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/other">
-		<!--<Preference
-			android:title="@string/get_ad_free_version"
-			android:key="donate" />-->
-		<Preference
-			android:title="@string/share_link_to_this_app_with_friends"
-			android:key="shareApp" />
+
 		<Preference
 			android:title="@string/about_"
 			android:key="about" />

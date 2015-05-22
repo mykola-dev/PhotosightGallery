@@ -1,6 +1,5 @@
 package ds.photosight.ui
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.NameNotFoundException
@@ -16,12 +15,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.androidquery.util.AQUtility
 import com.astuetz.PagerSlidingTabStrip
 import com.flurry.android.FlurryAgent
-import ds.photosight.App
-import ds.photosight.Constants
-import ds.photosight.R
-import ds.photosight.getApp
+import ds.photosight.*
 import ds.photosight.utils.L
 import ds.photosight.utils.Utils
 import kotlin.properties.Delegates
@@ -86,13 +83,9 @@ public class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChan
         }
 
 
-
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super<AppCompatActivity>.onPostCreate(savedInstanceState)
         showAboutIfNeed()
     }
+
 
     public fun getViewerFragment(): ViewerFragment? {
         val f = getSupportFragmentManager().findFragmentByTag(javaClass<ViewerFragment>().getName()) as ViewerFragment?
@@ -189,6 +182,7 @@ public class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChan
 
 
     private fun showAboutIfNeed() {
+
         val ver: String
         try {
             val manager = getPackageManager().getPackageInfo(getPackageName(), 0)
@@ -199,7 +193,10 @@ public class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChan
 
         if (!App._prefs.getString("version", "0").equals(ver)) {
             App._prefs.edit().putString("version", ver).commit()
-            App.showAbout(this)
+            AQUtility.postDelayed({
+                showAbout()
+            }, 1000)
+
         }
 
     }
@@ -261,7 +258,7 @@ public class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChan
                 i.setData(Uri.parse(Constants.URL_MAIN))
                 startActivity(i)
             }
-            R.id.im_about -> App.showAbout(this)
+            R.id.im_about -> showAbout()
         }
         return super<AppCompatActivity>.onOptionsItemSelected(item)
     }

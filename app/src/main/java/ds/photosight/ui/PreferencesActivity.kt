@@ -16,8 +16,8 @@ import android.widget.Toast
 import ds.photosight.App
 import ds.photosight.Constants
 import ds.photosight.R
+import ds.photosight.showAbout
 import ds.photosight.utils.L
-import ds.photosight.utils.ShareProgress
 import ds.photosight.utils.Utils
 import kotlin.properties.Delegates
 
@@ -52,8 +52,8 @@ public class PreferencesActivity : PreferenceActivity(), Constants, SharedPrefer
 
     override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen?, preference: Preference): Boolean {
         when (preference.getKey()) {
-            "about" -> App.showAbout(this)
-            Constants.PREFS_KEY_SHAREAPP -> shareApp()
+            //Constants.PREFS_KEY_SHAREAPP -> shareApp()
+            Constants.PREFS_KEY_ABOUT -> showAbout()
             Constants.PREFS_KEY_DONATE -> donate()
             Constants.PREFS_KEY_CLEAR_CACHE -> showClearCacheDialog()
             Constants.PREFS_KEY_LOW_RES -> App.isLowRes = prefs.getBoolean(Constants.PREFS_KEY_LOW_RES, false)
@@ -72,14 +72,6 @@ public class PreferencesActivity : PreferenceActivity(), Constants, SharedPrefer
         showDialog(1)
     }
 
-
-    private fun shareApp() {
-        val share = Intent(Intent.ACTION_SEND)
-        share.setType("text/plain")
-        share.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_app_subj))
-        share.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text) + " " + Constants.MARKETS_URL[Constants.CURRENT_MARKET])
-        ShareProgress(this).execute(share)
-    }
 
 
     override fun onCreateDialog(id: Int): Dialog {

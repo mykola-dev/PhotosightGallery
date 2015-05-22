@@ -162,11 +162,11 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
         grid.setDrawSelectorOnTop(true)
         val gridWidth = grid.getWidth()
         L.v("grid width=$gridWidth")
-        if (gridWidth!=0) {
-            val numOfColumns = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constants.PREFS_KEY_COLUMNS, "2"))!!
+        val numOfColumns = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constants.PREFS_KEY_COLUMNS, "2"))!!
+        grid.setNumColumns(numOfColumns)
+        if (gridWidth != 0) {
             mColumnWidth = gridWidth / numOfColumns
             grid.setColumnWidth(mColumnWidth)
-            grid.setNumColumns(numOfColumns)
         }
 
         if (grid.getAdapter() != null && !forceUpdate) {

@@ -21,13 +21,13 @@ android {
         applicationId "ds.photosight"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 22
-        versionName '0.8.1'
+        versionCode 24
+        versionName '0.8.3'
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles 'proguard.cfg'
             signingConfig signingConfigs.release
         }

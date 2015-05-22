@@ -3,6 +3,7 @@ package ds.photosight
 public trait Constants {
     companion object {
 
+
         public val FLURRY: String = "YTU1ZAFD3EP1W4M9CQZ2"
 
 
@@ -40,26 +41,26 @@ public trait Constants {
 
         public val PATH_SAVED_DEFAULT: String = "Photosight"
 
-        public val PREFS_KEY_SAVE_PATH: String = "savePath"
-        public val PREFS_KEY_CACHE_PATH: String = "cachePath"
-        public val PREFS_KEY_PARENTAL: String = "censored"
-        public val PREFS_KEY_CLEAR_CACHE: String = "clearCache"
-        public val PREFS_KEY_AUTO_CLEAR_CACHE: String = "autoClearCache"
-        public val PREFS_KEY_USE_INTERNAL_CACHE_DIR: String = "internalCache"
-        public val PREFS_KEY_COLUMNS: String = "thumbColumns"
-        public val PREFS_KEY_SHAREAPP: String = "shareApp"
-        public val PREFS_KEY_DONATE: String = "donate"
-        public val PREFS_KEY_LOW_RES: String = "lowres"
+        val PREFS_KEY_SAVE_PATH = "savePath"
+        val PREFS_KEY_CACHE_PATH = "cachePath"
+        val PREFS_KEY_PARENTAL = "censored"
+        val PREFS_KEY_CLEAR_CACHE = "clearCache"
+        val PREFS_KEY_AUTO_CLEAR_CACHE = "autoClearCache"
+        val PREFS_KEY_USE_INTERNAL_CACHE_DIR = "internalCache"
+        val PREFS_KEY_COLUMNS = "thumbColumns"
+        val PREFS_KEY_SHAREAPP = "shareApp"
+        val PREFS_KEY_DONATE = "donate"
+        val PREFS_KEY_LOW_RES = "lowres"
+        val PREFS_KEY_ABOUT = "about"
 
 
-        public val DATA_URL_LARGE: Int = 0
-        public val DATA_URL_SMALL: Int = 1
-        public val DATA_AUTHOR: Int = 2
-        public val DATA_IMG_NAME: Int = 3
-        public val DATA_URL_PAGE: Int = 4
-        public val DATA_AWARD: Int = 5
-        public val DATA_DATE: Int = 6
-
+        val DATA_URL_LARGE = 0
+        val DATA_URL_SMALL: Int = 1
+        val DATA_AUTHOR: Int = 2
+        val DATA_IMG_NAME: Int = 3
+        val DATA_URL_PAGE: Int = 4
+        val DATA_AWARD: Int = 5
+        val DATA_DATE: Int = 6
 
 
         //static final String SAMSUNG_APPS_URI = "samsungapps://ProductDetail/ds.photosight";

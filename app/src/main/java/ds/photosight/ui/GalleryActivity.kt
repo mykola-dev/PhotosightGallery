@@ -42,7 +42,6 @@ import ds.photosight.model.ViewerData.OnLoadListener
 import ds.photosight.ui.widget.GalleryViewPager
 import ds.photosight.ui.widget.VotesWidget
 import ds.photosight.utils.L
-import ds.photosight.utils.ShareProgress
 import ds.photosight.utils.Utils
 import uk.co.senab.photoview.PhotoView
 import uk.co.senab.photoview.PhotoViewAttacher
@@ -102,10 +101,10 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
             currPhoto = state.getInt("item")
             currTab = state.getInt("tab")
             currCategory = state.getInt("category")
-            val comments:List<Comment> = state.getSerializable("comments") as ArrayList<Comment>
-            val rates:List<Int> = state.getSerializable("rates") as ArrayList<Int>
-            val awards:List<String> = state.getSerializable("awards") as ArrayList<String>
-            if (comments != null) {
+            val comments: List<Comment>? = state.getSerializable("comments") as ArrayList<Comment>?
+            val rates: List<Int>? = state.getSerializable("rates") as ArrayList<Int>?
+            val awards: List<String>? = state.getSerializable("awards") as ArrayList<String>?
+            if (comments != null && awards != null && rates != null) {
                 mComments.put(getCurrentItem().get(Constants.DATA_URL_PAGE) as String, comments)
                 mAwards.put(getCurrentItem().get(Constants.DATA_URL_PAGE) as String, awards)
                 mRates.put(getCurrentItem().get(Constants.DATA_URL_PAGE) as String, rates)
@@ -358,7 +357,7 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
         share.setType("text/plain")
         share.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subj))
         share.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + " " + getCurrentItem().get(Constants.DATA_URL_PAGE))
-        ShareProgress(this).execute(share)
+        startActivity(Intent.createChooser(share, getString(R.string.share_link)))
 
     }
 
@@ -371,7 +370,7 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
         share.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subj))
         share.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text))
         share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
-        ShareProgress(this).execute(share)
+        startActivity(Intent.createChooser(share, getString(R.string.share_img)))
 
     }
 
@@ -473,7 +472,7 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
         if (title != null)
             aq.id(R.id.text1).text(title)
         //aq.id(R.id.text2).text(String.format("[%s:%s] %s", currPage + 1, currPhoto + 1, getCurrentItem().get(Constants.DATA_IMG_NAME)))
-        aq.id(R.id.text2).text("[${currPage+1}:${currPhoto+1}] ${getCurrentItem().get(Constants.DATA_IMG_NAME)}")
+        aq.id(R.id.text2).text("[${currPage + 1}:${currPhoto + 1}] ${getCurrentItem().get(Constants.DATA_IMG_NAME)}")
 
     }
 

@@ -102,42 +102,13 @@ public class App : Application(), Constants {
         return getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE
     }
 
+
     companion object {
         public val _prefs: SharedPreferences by Delegates.lazy { PreferenceManager.getDefaultSharedPreferences(App._instance) }
         public var isLowRes: Boolean = false
         var _instance: App? = null
 
 
-        platformStatic public fun showAbout(ctx: Context) {
-            val ver: String
-            try {
-                val manager = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0)
-                ver = manager.versionName
-            } catch (e1: NameNotFoundException) {
-                ver = "100500"
-            }
-
-
-            val dialog = Dialog(ctx, R.style.Theme_AppCompat_Dialog)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.about)
-            val b = dialog.findViewById(R.id.aboutOK) as Button
-            val text = dialog.findViewById(R.id.aboutText) as TextView
-            val verText = dialog.findViewById(R.id.versionText) as TextView
-
-            val s = ctx.getResources().getString(R.string.abouttext, ctx.getResources().getString(R.string.changelog),
-                    if (Constants.PRO_VERSION) Constants.MARKETS_URL_PRO[Constants.CURRENT_MARKET] else Constants.MARKETS_URL[Constants.CURRENT_MARKET])
-            text.setText(s)
-            verText.setText(ver)
-            b.setOnClickListener(object : View.OnClickListener {
-
-                override fun onClick(v: View) {
-                    dialog.cancel()
-                }
-            })
-            dialog.getWindow().setWindowAnimations(android.R.style.Animation_Translucent)
-            dialog.show()
-        }
 
         platformStatic fun getInstance():App? = _instance
         platformStatic fun getPrefs():SharedPreferences? = _prefs
@@ -147,4 +118,4 @@ public class App : Application(), Constants {
 
 }
 
-public fun Context.getApp(): App = this.getApplicationContext() as App
+

@@ -50,6 +50,9 @@
 	<string name="changelog">"
 Change Log:
 
+v0.8.3
+- Bugfixes
+
 v0.8.1
 - Fixed landscape orientation bug
 
