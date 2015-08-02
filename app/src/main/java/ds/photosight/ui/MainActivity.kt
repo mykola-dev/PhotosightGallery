@@ -313,7 +313,7 @@ public class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChan
         private val ctx: Context
 
 
-        {
+        init {
             ctx = a
         }
 

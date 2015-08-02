@@ -37,8 +37,8 @@ import ds.photosight.R
 import ds.photosight.event.PhotoInfo
 import ds.photosight.model.AdvancedInfoParser
 import ds.photosight.model.Comment
-import ds.photosight.model.ViewerData
-import ds.photosight.model.ViewerData.OnLoadListener
+import ds.photosight.model.DataLoader
+import ds.photosight.model.DataLoader.OnLoadListener
 import ds.photosight.ui.widget.GalleryViewPager
 import ds.photosight.ui.widget.VotesWidget
 import ds.photosight.utils.L
@@ -199,7 +199,7 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
             return
         }
 
-        L.v("loading url: " + url)
+        L.v("loading page: " + url)
         AdvancedInfoParser().parseAsync(url as String, object : AdvancedInfoParser.Callback {
 
             override fun onDone(comments: List<out Comment>, rates: List<out Int>, awards: List<out String>) {
@@ -395,9 +395,9 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
         currPage += direction
 
         if (!dataSet.containsKey(currPage)) {
-            val viewerData: ViewerData
-            viewerData = ViewerData(currTab, currCategory, currPage)
-            viewerData.setOnLoadListener(object : OnLoadListener {
+            val loader: DataLoader
+            loader = DataLoader(currTab, currCategory, currPage)
+            loader.setOnLoadListener(object : OnLoadListener {
 
                 override fun onLoad(result: ArrayList<Map<Int, String>>, page: Int) {
                     data = result
@@ -592,7 +592,7 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
         }
 
 
-        {
+        init {
             aq = AQuery(ctx)
             offset = numOfItems - data.size() - 1
             mImageWidth = if (App.getPrefs()!!.getBoolean("rescale", false)) Constants.RESCALE_WIDTH else 0
@@ -723,7 +723,7 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
         var user: Bitmap
 
 
-        {
+        init {
             aq = AQuery(context)
             user = BitmapFactory.decodeResource(context.getResources(), R.drawable.anonymous)
         }

@@ -41,8 +41,8 @@ public class AdvancedInfoParser {
     }
 
 
-    throws(javaClass<IOException>())
     public fun parse(url: String) {
+        L.v("url=$url")
         mComments.clear()
         rates.clear()
         avards.clear()

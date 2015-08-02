@@ -26,7 +26,7 @@ public class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(c
     private var mRedBar: View? = null
 
 
-    {
+    init{
         aq = AQuery(this)
 
     }

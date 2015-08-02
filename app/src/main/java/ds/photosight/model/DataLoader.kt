@@ -14,7 +14,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-public class ViewerData(private val tab: Int, private val item: Int, private val page: Int) : Constants {
+public class DataLoader(private val tab: Int, private val item: Int, private val page: Int) : Constants {
     //private int sort;
     private var mDoc: Document? = null
     private var mLargeImage: String? = null
@@ -25,7 +25,7 @@ public class ViewerData(private val tab: Int, private val item: Int, private val
     var maxSize = 60
 
 
-    {
+    init {
         isCensored = App.getPrefs()!!.getBoolean("parental", false)
         //this.sort = sort;
         date = Calendar.getInstance()
@@ -80,6 +80,7 @@ public class ViewerData(private val tab: Int, private val item: Int, private val
         val date: String
         val author: String
         val award: String
+        val photoId: String
 
         // Document doc = Jsoup.parse(html);
         var root: Element? = null
@@ -107,13 +108,15 @@ public class ViewerData(private val tab: Int, private val item: Int, private val
         L.v("photolist size=" + photolist.size())
         val replacement = if (App.isLowRes) "_large." else "_xlarge."
         for (photo in photolist) {
+            photoId=photo.attr("data-photoid")
             map = HashMap<Int, String>()
-            val a_hrefs = photo.select("a[href]") // это все ссылочные теги в фотке
+            val a_hrefs = photo.select("a[href]")
             if (a_hrefs.size() == 0)
                 continue
 
-            icon = a_hrefs.get(0).child(0).attr("src") // ссылка на тхумб картинку
-            link = a_hrefs.get(0).attr("href") // ссылка на страницу с фото
+            icon = a_hrefs.get(0).child(0).attr("src") // thumb url
+            //link = a_hrefs.get(0).attr("href")
+            link = "/photos/$photoId"
             name = a_hrefs.get(0).child(0).attr("alt") // имя фотки
             date = "Not supported yet"// photo.select("span.dateRaw").text(); //дата
 
@@ -124,11 +127,7 @@ public class ViewerData(private val tab: Int, private val item: Int, private val
 			 * else award = "";
 			 */
 
-            e = photo.getElementsByTag("thumbautor")
-            if (!e.isEmpty()) {
-                author = e.get(0).child(0).child(0).text()
-            } else
-                author = ""
+           author=photo.select("a[href^=\"/users\"]").text()
 
             // if nude
             if (icon.contains("/skin/")) {
@@ -138,6 +137,7 @@ public class ViewerData(private val tab: Int, private val item: Int, private val
 
                 mLargeImage = icon.replace("_icon.", replacement).replace("pv_", "").replace("prv-", "img-").replace("_thumb.", replacement)
             }
+            L.d("id " + photoId)
             L.d("links " + a_hrefs.size())
             L.d("link " + link)
             L.d("icon " + icon)

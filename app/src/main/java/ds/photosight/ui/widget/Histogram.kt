@@ -18,7 +18,7 @@ public class Histogram(context: Context, attrs: AttributeSet) : View(context, at
     private var alpha = 0
 
 
-    {
+    init {
 
         paint = Paint(Paint.ANTI_ALIAS_FLAG)
         paint.setColor(Color.GRAY)

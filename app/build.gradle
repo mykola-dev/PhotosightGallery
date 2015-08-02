@@ -21,8 +21,8 @@ android {
         applicationId "ds.photosight"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 24
-        versionName '0.8.3'
+        versionCode 25
+        versionName '0.9'
     }
 
     buildTypes {
@@ -65,7 +65,7 @@ dependencies {
 }
 
 buildscript {
-    ext.kotlin_version = '0.11.91.4'
+    ext.kotlin_version = '0.12+'
     repositories {
         mavenCentral()
     }

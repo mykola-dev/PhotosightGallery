@@ -26,8 +26,8 @@ import ds.photosight.R.anim
 import ds.photosight.R.array
 import ds.photosight.R.id
 import ds.photosight.event.PhotoInfo
-import ds.photosight.model.ViewerData
-import ds.photosight.model.ViewerData.OnLoadListener
+import ds.photosight.model.DataLoader
+import ds.photosight.model.DataLoader.OnLoadListener
 import ds.photosight.utils.L
 import java.util.ArrayList
 import kotlin.properties.Delegates
@@ -38,7 +38,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
     private var progress: View? = null
     private var currPage = 0
     private var currPhoto = 0
-    private var viewerData: ViewerData? = null
+    private var viewerData: DataLoader? = null
     private var pageAdapter: ViewerPagerAdapter? = null
     private var viewPager: ViewPager? = null
     private var mColumnWidth: Int = 0
@@ -189,7 +189,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
         progress!!.setVisibility(View.VISIBLE)
         grid.setVisibility(View.GONE)
         val tab = getRoot().currentTab
-        viewerData = ViewerData(tab, getRoot().getListSelection(tab), currPage)
+        viewerData = DataLoader(tab, getRoot().getListSelection(tab), currPage)
         viewerData!!.setOnLoadListener(object : OnLoadListener {
 
             override fun onLoad(result: ArrayList<Map<Int, String>>, page: Int) {
@@ -480,7 +480,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
             var progress: ProgressBar
 
 
-            {
+            init {
 
                 img = ImageView(ctx)
                 img.setScaleType(ScaleType.CENTER_CROP)

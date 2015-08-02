@@ -65,13 +65,15 @@ public trait Constants {
 
         //static final String SAMSUNG_APPS_URI = "samsungapps://ProductDetail/ds.photosight";
         public val MARKET_OTHER: Int = 0
-        public val MARKET_GOOGLE: Int = 1
-        public val MARKET_SAMSUNG: Int = 2
-        public val MARKET_AMAZON: Int = 3
-        public val MARKET_YANDEX: Int = 4
-        public val MARKET_NAMES: Array<String> = array("other", "google", "samsung", "amazon", "yandex")
-        public val MARKETS_URL_PRO: Array<String> = array("market.android.com/details?id=ds.photosight", "null", "null", "null", "null")
-        public val MARKETS_URL: Array<String> = array("https://play.google.com/store/apps/details?id=ds.photosight", "https://play.google.com/store/apps/details?id=ds.photosight", "null", "http://www.amazon.com/gp/mas/dl/android?p=ds.photosight&showAll=1", "https://play.google.com/store/apps/details?id=ds.photosight")
+        public val MARKET_AMAZON: Int = 1
+        public val MARKET_NAMES: Array<String> = array("other", "amazon")
+        public val MARKETS_URL_PRO: Array<String> = array(
+                "null",
+                "null")
+        public val MARKETS_URL: Array<String> = array(
+                "null",
+                "http://www.amazon.com/gp/mas/dl/android?p=ds.photosight&showAll=1"
+        )
 
         public val PRO_VERSION: Boolean = false
         public val CURRENT_MARKET: Int = MARKET_AMAZON
