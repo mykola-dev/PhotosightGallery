@@ -30,8 +30,8 @@ public class Utils {
             } finally {
                 if (i != null && o != null) {
                     try {
-                        o!!.close()
-                        i!!.close()
+                        o.close()
+                        i.close()
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }

@@ -66,9 +66,6 @@ public abstract class ListFragmentAbstract : ListFragment(), Constants {
 
 
     override fun onSaveInstanceState(b: Bundle?) {
-        /*b.putInt("item", mPositionShown);
-		if (!App.getInstance().isPortrait())
-			b.putBoolean("fromLandscape", true);*/
         super<ListFragment>.onSaveInstanceState(b)
     }
 

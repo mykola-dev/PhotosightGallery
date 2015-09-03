@@ -104,7 +104,7 @@ public class DataLoader(private val tab: Int, private val item: Int, private val
             return null
         }
 
-        photolist = root!!.children()
+        photolist = root.children()
         L.v("photolist size=" + photolist.size())
         val replacement = if (App.isLowRes) "_large." else "_xlarge."
         for (photo in photolist) {
@@ -209,7 +209,7 @@ public class DataLoader(private val tab: Int, private val item: Int, private val
     }
 
 
-    public trait OnLoadListener {
+    public interface OnLoadListener {
 
         public fun onLoad(result: ArrayList<Map<Int, String>>, page: Int)
 
@@ -222,7 +222,7 @@ public class DataLoader(private val tab: Int, private val item: Int, private val
 
     companion object {
 
-        private val MAX_SIZES = intArray(30, 80, 270, 140, 140, 140, 80, 50)
+        private val MAX_SIZES = intArrayOf(30, 80, 270, 140, 140, 140, 80, 50)
     }
 
 }

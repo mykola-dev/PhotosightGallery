@@ -451,12 +451,12 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
 
             if (view == null) {
                 view = FrameLayout(ctx)
-                view?.setLayoutParams(AbsListView.LayoutParams(cellSize, cellSize))
+                view.setLayoutParams(AbsListView.LayoutParams(cellSize, cellSize))
 
                 h = ViewHolder(view)
-                view?.setTag(h)
+                view.setTag(h)
             } else {
-                h = view?.getTag() as ViewHolder
+                h = view.getTag() as ViewHolder
                 h.img.setImageBitmap(null)
             }
 
@@ -470,7 +470,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
             }
 
             //imageLoader.DisplayImage(data.get(position), h.img, h.progress, false);
-            return view!!
+            return view
         }
 
 

@@ -1,6 +1,6 @@
 package ds.photosight
 
-public trait Constants {
+public interface  Constants {
     companion object {
 
 
@@ -11,15 +11,12 @@ public trait Constants {
         public val TAB_TOPS: Int = 1
         public val TAB_AUTHORS: Int = 2
 
-        public val LOGIN: String = "photosight-gallery"
-        public val PASSWORD: String = "androiduser"
-
         public val RESCALE_WIDTH: Int = 800
         public val LIST_CLICKED: String = "list_clicked"
 
-        public val CATEGORIES_ID: IntArray = intArray(82, 7, 12, 8, 5, 13, 15, 27, 65, 3, 19, 91, 92, 17, 11, 18, 80, 70, 14, 78, 4, 16, 36, 2, 6, 9, 10, 64, 87)
+        public val CATEGORIES_ID: IntArray = intArrayOf(82, 7, 12, 8, 5, 13, 15, 27, 65, 3, 19, 91, 92, 17, 11, 18, 80, 70, 14, 78, 4, 16, 36, 2, 6, 9, 10, 64, 87)
         // public static final String[] TOPS = {};
-        public val TOPS_IDS: IntArray = intArray()
+        public val TOPS_IDS: IntArray = intArrayOf()
         public val URL_CATEGORY: String = "http://www.photosight.ru/photos/category/%d/?pager=%d"    //count page
         public val URL_MAIN: String = "http://www.photosight.ru"
         public val ITEM_TOP_DAY: Int = 0
@@ -30,7 +27,7 @@ public trait Constants {
         public val ITEM_TOP_TECH: Int = 5
         public val ITEM_TOP_FAVORITES: Int = 6
         public val ITEM_TOP_OUTRUN: Int = 7
-        public val URL_TOPS: Array<String> = array("http://www.photosight.ru/outrun/date/%d/%d/%d", //dateRaw page
+        public val URL_TOPS: Array<String> = arrayOf("http://www.photosight.ru/outrun/date/%d/%d/%d", //dateRaw page
                 "http://www.photosight.ru/top/50/", //1 page
                 "http://www.photosight.ru/top/200", //1 page
                 "http://www.photosight.ru/top/art", //1 page
@@ -66,12 +63,10 @@ public trait Constants {
         //static final String SAMSUNG_APPS_URI = "samsungapps://ProductDetail/ds.photosight";
         public val MARKET_OTHER: Int = 0
         public val MARKET_AMAZON: Int = 1
-        public val MARKET_NAMES: Array<String> = array("other", "amazon")
-        public val MARKETS_URL_PRO: Array<String> = array(
-                "null",
+        public val MARKET_NAMES: Array<String> = arrayOf("other", "amazon")
+        public val MARKETS_URL_PRO: Array<String> = arrayOf("null",
                 "null")
-        public val MARKETS_URL: Array<String> = array(
-                "null",
+        public val MARKETS_URL: Array<String> = arrayOf("null",
                 "http://www.amazon.com/gp/mas/dl/android?p=ds.photosight&showAll=1"
         )
 

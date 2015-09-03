@@ -669,15 +669,12 @@ public class GalleryActivity : AppCompatActivity(), Constants, OnPageChangeListe
 
 
         private fun loadImage(url: String, cb: BitmapAjaxCallback) {
-            //aq.progress(R.id.gallery_progress).image(url, true, true, mImageWidth, 0, thumb, fade);
-
             aq.progress(R.id.gallery_progress).image(url, true, true, mImageWidth, 0, cb)
         }
 
+        override fun setPrimaryItem(container: ViewGroup, position: Int, obj: Any) {
 
-        override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
-
-            mCurrentView = `object` as View
+            mCurrentView = obj as View
 
         }
 

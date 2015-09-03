@@ -114,7 +114,7 @@ public class AdvancedInfoParser {
     }
 
 
-    public trait Callback {
+    public interface Callback {
 
         public fun onDone(comments: List<Comment>, rates: List<Int>, avards: List<String>)
     }

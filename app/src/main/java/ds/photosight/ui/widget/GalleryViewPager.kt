@@ -25,7 +25,7 @@ public class GalleryViewPager(context: Context, attrs: AttributeSet? = null) : V
     }
 
 
-    public trait ClickListener {
+    public interface ClickListener {
         public fun onClick()
     }
 
