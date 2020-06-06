@@ -13,35 +13,29 @@ import kotlin.properties.Delegates
 public class AdvancedInfoParser {
 
 
-    private val mComments: MutableList<Comment> by Delegates.lazy { ArrayList<Comment>() }
-    private val rates: MutableList<Int>  by Delegates.lazy { ArrayList<Int>() }
-    private val avards: MutableList<String>  by Delegates.lazy { ArrayList<String>() }
+    private val mComments: MutableList<Comment> by lazy { ArrayList<Comment>() }
+    private val rates: MutableList<Int>  by lazy { ArrayList<Int>() }
+    private val avards: MutableList<String>  by lazy { ArrayList<String>() }
 
     private val ORIG_DATE_FORMAT = "dd MMMM yyyy, kk:mm:ss"
     private val DEST_DATE_FORMAT = "kk:mm dd.MM.yy"
-    private val VOTE_CLASSES = array(".item.item-x", ".item.item-o", ".item.item-t", ".item.item-up", ".item.item-down")
+    private val VOTE_CLASSES = arrayOf(".item.item-x", ".item.item-o", ".item.item-t", ".item.item-up", ".item.item-down")
 
 
-    public fun parseAsync(url: String, c: Callback) {
+    fun parseAsync(url: String, c: Callback) {
         val h = Handler()
-        Thread(object : Runnable {
-            override fun run() {
-                    try {
-                        parse(url)
-                        h.post(object : Runnable {
-                            override fun run() {
-                                c.onDone(mComments, rates, avards)
-                            }
-                        })
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
+        Thread(Runnable {
+            try {
+                parse(url)
+                h.post { c.onDone(mComments, rates, avards) }
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }).start()
     }
 
 
-    public fun parse(url: String) {
+    private fun parse(url: String) {
         L.v("url=$url")
         mComments.clear()
         rates.clear()
@@ -56,14 +50,14 @@ public class AdvancedInfoParser {
         for (cls in VOTE_CLASSES) {
             rates.add(Integer.valueOf(photoInfo.select(cls).select(".count").text()))
         }
-        L.v("rates fetched %s", rates.size())
+        L.v("rates fetched %s", rates.size)
 
         // avard
         val tops = doc.select(".medels.glued")
         for (e in tops) {
             avards.add(e.attr("src"))
         }
-        L.v("awards fetched %s", avards.size())
+        L.v("awards fetched %s", avards.size)
 
         // comments
         val comments = doc.select("div.comments div.comment-content")
@@ -89,7 +83,7 @@ public class AdvancedInfoParser {
                 mComments.add(comment)
             }
         }
-        L.v("comments fetched %s", mComments.size())
+        L.v("comments fetched %s", mComments.size)
 
         // log
         for (c in mComments) {
@@ -114,9 +108,8 @@ public class AdvancedInfoParser {
     }
 
 
-    public interface Callback {
-
-        public fun onDone(comments: List<Comment>, rates: List<Int>, avards: List<String>)
+    interface Callback {
+        fun onDone(comments: List<Comment>, rates: List<Int>, avards: List<String>)
     }
 
 }

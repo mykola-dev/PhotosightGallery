@@ -21,13 +21,12 @@ import ds.photosight.utils.L
 import ds.photosight.utils.Utils
 import kotlin.properties.Delegates
 
-public class PreferencesActivity : PreferenceActivity(), Constants, SharedPreferences.OnSharedPreferenceChangeListener {
+class PreferencesActivity : PreferenceActivity(), Constants, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    val prefs: SharedPreferences by Delegates.lazy { PreferenceManager.getDefaultSharedPreferences(this) }
-
+    private val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<PreferenceActivity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.prefs)
         prefs.registerOnSharedPreferenceChangeListener(this)
 
@@ -36,22 +35,21 @@ public class PreferencesActivity : PreferenceActivity(), Constants, SharedPrefer
 
     override fun onDestroy() {
         prefs.unregisterOnSharedPreferenceChangeListener(this)
-        super<PreferenceActivity>.onDestroy()
+        super.onDestroy()
     }
 
 
     override fun onSharedPreferenceChanged(p: SharedPreferences, key: String) {
         if (key == Constants.PREFS_KEY_CACHE_PATH || key == (Constants.PREFS_KEY_USE_INTERNAL_CACHE_DIR)) {
             L.v("cache setting changed")
-            App.getInstance()!!.setCacheDir()
+            App.getInstance().setCacheDir()
         }
-
 
     }
 
 
     override fun onPreferenceTreeClick(preferenceScreen: PreferenceScreen?, preference: Preference): Boolean {
-        when (preference.getKey()) {
+        when (preference.key) {
             //Constants.PREFS_KEY_SHAREAPP -> shareApp()
             Constants.PREFS_KEY_ABOUT -> showAbout()
             Constants.PREFS_KEY_DONATE -> donate()
@@ -59,12 +57,12 @@ public class PreferencesActivity : PreferenceActivity(), Constants, SharedPrefer
             Constants.PREFS_KEY_LOW_RES -> App.isLowRes = prefs.getBoolean(Constants.PREFS_KEY_LOW_RES, false)
         }
 
-        return super<PreferenceActivity>.onPreferenceTreeClick(preferenceScreen, preference)
+        return super.onPreferenceTreeClick(preferenceScreen, preference)
     }
 
 
     private fun donate() {
-        Toast.makeText(this, getString(R.string.coming_soon), 0).show()
+        Toast.makeText(this, getString(R.string.coming_soon), Toast.LENGTH_SHORT).show()
     }
 
 
@@ -84,7 +82,7 @@ public class PreferencesActivity : PreferenceActivity(), Constants, SharedPrefer
                 d.setPositiveButton(android.R.string.yes, object : OnClickListener {
 
                     override fun onClick(dialog: DialogInterface, which: Int) {
-                        Utils.clearCaches(getApplicationContext())
+                        Utils.clearCaches(applicationContext)
 
                     }
                 })

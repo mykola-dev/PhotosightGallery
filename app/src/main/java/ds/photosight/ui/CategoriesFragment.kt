@@ -4,15 +4,12 @@ import ds.photosight.Constants
 import ds.photosight.R
 
 
-public class CategoriesFragment : ListFragmentAbstract(), Constants {
+class CategoriesFragment : ListFragmentAbstract(), Constants {
 
-    override fun initList(): ListFragmentAbstract.ListAdapter? =
-        ListFragmentAbstract.ListAdapter(getActivity(), R.layout.simple_list_item_activated_1, getResources().getStringArray(R.array.categories_array))
+    override fun initList(): ListAdapter? =
+            ListAdapter(activity!!, R.layout.simple_list_item_activated_1, resources.getStringArray(R.array.categories_array))
 
 
-
-    override fun getListType(): Int {
-        return Constants.TAB_CATEGORIES
-    }
+    override val listType: Int get() = Constants.TAB_CATEGORIES
 
 }

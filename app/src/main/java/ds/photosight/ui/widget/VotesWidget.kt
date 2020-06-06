@@ -1,13 +1,13 @@
 package ds.photosight.ui.widget
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.AsyncTask
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Interpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -15,48 +15,42 @@ import com.androidquery.AQuery
 import ds.photosight.R
 import ds.photosight.utils.Utils
 
-SuppressWarnings("ALL")
-public class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
     private var mRates: List<Int>? = null
     private var mAvards: List<String>? = null
-    private val aq: AQuery
+    private val aq: AQuery = AQuery(this)
     private val mRateViews = arrayOfNulls<TextView>(5)
     private var mGreenBar: View? = null
     private var mRedBar: View? = null
 
 
-    init{
-        aq = AQuery(this)
-
-    }
-
-
-    public fun setRates(rates: List<Int>) {
+    fun setRates(rates: List<Int>) {
         mRates = rates
     }
 
 
-    public fun setAvards(avards: List<String>) {
+    fun setAvards(avards: List<String>) {
         mAvards = avards
     }
 
 
-    public fun runAnimations() {
+    @SuppressLint("StaticFieldLeak")
+    fun runAnimations() {
 
-        awardIconSize = getAwardIconSize(mAvards!!.size())
-        mRateViews[0] = aq.id(R.id.aRate).getTextView()
-        mRateViews[1] = aq.id(R.id.oRate).getTextView()
-        mRateViews[2] = aq.id(R.id.tRate).getTextView()
-        mRateViews[3] = aq.id(R.id.lRate).getTextView()
-        mRateViews[4] = aq.id(R.id.dRate).getTextView()
+        awardIconSize = getAwardIconSize(mAvards!!.size)
+        mRateViews[0] = aq.id(R.id.aRate).textView
+        mRateViews[1] = aq.id(R.id.oRate).textView
+        mRateViews[2] = aq.id(R.id.tRate).textView
+        mRateViews[3] = aq.id(R.id.lRate).textView
+        mRateViews[4] = aq.id(R.id.dRate).textView
         for (t in mRateViews) {
-            t?.setText("")
+            t?.text = ""
         }
 
-        mGreenBar = aq.id(R.id.greenBar).getView()
-        mRedBar = aq.id(R.id.redBar).getView()
-        (aq.id(R.id.labelsContainer).getView() as ViewGroup).startLayoutAnimation()
+        mGreenBar = aq.id(R.id.greenBar).view
+        mRedBar = aq.id(R.id.redBar).view
+        (aq.id(R.id.labelsContainer).view as ViewGroup).startLayoutAnimation()
         removeAvards()
 
         object : AsyncTask<List<Int>, Int, Boolean>() {
@@ -64,9 +58,9 @@ public class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(c
             override fun doInBackground(params: Array<List<Int>>): Boolean? {
                 val interpolator = AccelerateDecelerateInterpolator()
                 val values = params[0]
-                val rating = 1 / (values.get(3) + values.get(4)).toFloat() * values.get(3).toFloat()
+                val rating = 1 / (values[3] + values[4]).toFloat() * values[3].toFloat()
 
-                val results = arrayOfNulls<Int>(values.size() + 1)
+                val results = arrayOfNulls<Int>(values.size + 1)
                 val start = System.currentTimeMillis()
                 var escape = false
                 while (!escape) {
@@ -82,17 +76,17 @@ public class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(c
                         escape = true
 
                     for (i in values.indices) {
-                        results[i] = (values.get(i).toFloat() * interpolator.getInterpolation(f)).toInt()
+                        results[i] = (values[i].toFloat() * interpolator.getInterpolation(f)).toInt()
                     }
 
                     //L.v("publish progress");
-                    results[results.size() - 1] = (rating * interpolator.getInterpolation(f) * 1000).toInt()
+                    results[results.size - 1] = (rating * interpolator.getInterpolation(f) * 1000).toInt()
                     publishProgress(*results)
 
                 }
 
                 for (i in values.indices) {
-                    results[i] = (values.get(i))
+                    results[i] = (values[i])
                 }
                 publishProgress(*results)
 
@@ -101,14 +95,12 @@ public class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(c
 
 
             override fun onProgressUpdate(values: Array<Int>?) {
-                for (i in 0..values!!.size() - 1 - 1) {
-                    mRateViews[i]?.setText(values[i].toString())
+                for (i in 0 until values!!.size - 1) {
+                    mRateViews[i]?.text = values[i].toString()
                 }
 
-                val height = values[values.size() - 1] * mRedBar!!.getHeight() / 1000
-                //L.v("h=" + height);
-                mGreenBar!!.getLayoutParams().height = height
-                //mGreenBar.setMinimumHeight();
+                val height = values[values.size - 1] * mRedBar!!.height / 1000
+                mGreenBar!!.layoutParams.height = height
             }
 
 
@@ -120,38 +112,29 @@ public class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(c
     }
 
 
-    private fun getAwardIconSize(size: Int): Int {
-        if (size > 7)
-            return Utils.dp(16)
-        else if (size > 4)
-            return Utils.dp(24)
-        else
-            return Utils.dp(32)
+    private fun getAwardIconSize(size: Int): Int = when {
+        size > 7 -> Utils.dp(16)
+        size > 4 -> Utils.dp(24)
+        else -> Utils.dp(32)
     }
 
 
     private fun removeAvards() {
-        (aq.id(R.id.avardsContainer).getView() as ViewGroup).removeAllViews()
+        (aq.id(R.id.avardsContainer).view as ViewGroup).removeAllViews()
     }
 
 
     private fun addAvards() {
-        val vg = aq.id(R.id.avardsContainer).getView() as ViewGroup
+        val vg = aq.id(R.id.avardsContainer).view as ViewGroup
 
-        val lp = LinearLayout.LayoutParams(awardIconSize, awardIconSize)
+        val lp = LayoutParams(awardIconSize, awardIconSize)
 
         for (a in mAvards!!) {
-            val img = ImageView(getContext())
+            val img = ImageView(context)
             vg.addView(img)
-            img.setLayoutParams(lp)
+            img.layoutParams = lp
 
-            val url = a
-            img.post(object : Runnable {
-                override fun run() {
-                    aq.id(img).image(url, true, true, 0, 0, null, R.anim.award_anim)
-
-                }
-            })
+            img.post { aq.id(img).image(a, true, true, 0, 0, null, R.anim.award_anim) }
         }
     }
 

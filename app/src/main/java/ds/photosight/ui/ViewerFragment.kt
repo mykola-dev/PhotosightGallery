@@ -5,9 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.Fragment
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
@@ -16,6 +13,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
 import android.widget.ImageView.ScaleType
+import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.androidquery.AQuery
 import com.androidquery.util.AQUtility
 import de.greenrobot.event.EventBus
@@ -24,7 +24,6 @@ import ds.photosight.Constants
 import ds.photosight.R
 import ds.photosight.R.anim
 import ds.photosight.R.array
-import ds.photosight.R.id
 import ds.photosight.event.PhotoInfo
 import ds.photosight.model.DataLoader
 import ds.photosight.model.DataLoader.OnLoadListener
@@ -32,7 +31,7 @@ import ds.photosight.utils.L
 import java.util.ArrayList
 import kotlin.properties.Delegates
 
-public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListener {
+class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListener {
     private val app: App? = null
     private var grid: GridView by Delegates.notNull()
     private var progress: View? = null
@@ -46,73 +45,52 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
     private var tempdata: List<Map<Int, String>>? = null
 
 
-    override fun onCreate(b: Bundle?) {
-
-        super<Fragment>.onCreate(b)
-
-    }
-
-
     private fun getRoot(): MainActivity {
-        return getActivity() as MainActivity
+        return activity as MainActivity
     }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super<Fragment>.onActivityCreated(savedInstanceState)
+        super.onActivityCreated(savedInstanceState)
         L.v("viewer onActivity created")
     }
 
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super<Fragment>.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         L.v("Viewer view created!")
 
-        aq = AQuery(getActivity())
+        aq = AQuery(activity)
         currPage = getRoot().currPage
 
-        /*if (App.getInstance().isPortrait())
-			getRoot().toggleTabs(false);*/
-
-        // setup title
-        setTitle()
+        setupTitle()
 
         setHasOptionsMenu(true)
 
-        pageAdapter = ViewerPagerAdapter(getActivity(), getNumOfPages())
-        viewPager!!.setAdapter(pageAdapter)
+        pageAdapter = ViewerPagerAdapter(activity!!, getNumOfPages())
+        viewPager!!.adapter = pageAdapter
         viewPager!!.setOnPageChangeListener(this)
         viewPager!!.setCurrentItem(currPage, false)
-        //if (currPage == 0) {
-        AQUtility.postDelayed(object : Runnable {
-            override fun run() {
-                initViews(getCurrentPage(), false)
-            }
-        }, 200)
-        //}
+        AQUtility.postDelayed({ initViews(getCurrentPage(), false) }, 200)
 
     }
 
 
     override fun onResume() {
-        super<Fragment>.onResume()
+        super.onResume()
         L.v("viewer onresume")
-        val info = EventBus.getDefault().getStickyEvent<PhotoInfo>(javaClass<PhotoInfo>()) as PhotoInfo?
+        val info = EventBus.getDefault().getStickyEvent(PhotoInfo::class.java)
         if (info != null) {
             //T.show(getActivity(), "got some event!");
             getRoot().currentTab = info.tab
             getRoot().currPage = info.page
             currPage = info.page
             currPhoto = info.item
-            L.v("curr photo: " + currPhoto)
+            L.v("curr photo: $currPhoto")
             tempdata = info.data
             if (tempdata != null) {
                 viewPager!!.setCurrentItem(currPage, false)
-                AQUtility.postDelayed(object : Runnable {
-                    override fun run() {
-                        initViews(getCurrentPage(), false)
-                    }
-                }, 200)
+                AQUtility.postDelayed({ initViews(getCurrentPage(), false) }, 200)
             }
 
             EventBus.getDefault().removeStickyEvent(info)
@@ -120,33 +98,31 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
     }
 
 
-    private fun getNumOfPages(): Int {
-        if (getRoot().currentTab == Constants.TAB_TOPS && getRoot().getListSelection(Constants.TAB_TOPS) != Constants.ITEM_TOP_DAY)
-            return 1
-        else
-            return 100500
-    }
+    private fun getNumOfPages(): Int = if (
+            getRoot().currentTab == Constants.TAB_TOPS &&
+            getRoot().getListSelection(Constants.TAB_TOPS) != Constants.ITEM_TOP_DAY
+    ) 1
+    else 100500
 
 
-    private fun setTitle() {
-        val ab = getRoot().getSupportActionBar()
+    private fun setupTitle() {
+        val ab = getRoot().supportActionBar!!
         L.v("setting 2 line title")
         ab.setDisplayShowCustomEnabled(false)
-        ab.setSubtitle(getResources().getString(R.string.page_) + (currPage + 1))
-        val t: String?
-        when (getRoot().currentTab) {
-            Constants.TAB_CATEGORIES -> t = getResources().getStringArray(array.categories_array)[getRoot().getCurrentListSelection()]
-            Constants.TAB_TOPS -> t = getString(R.string.top_in) + getResources().getStringArray(array.tops_array)[getRoot().getCurrentListSelection()]
-            else -> t = null
+        ab.setSubtitle(resources.getString(R.string.page_) + (currPage + 1))
+        val t: String? = when (getRoot().currentTab) {
+            Constants.TAB_CATEGORIES -> resources.getStringArray(array.categories_array)[getRoot().getCurrentListSelection()]
+            Constants.TAB_TOPS -> getString(R.string.top_in) + resources.getStringArray(array.tops_array)[getRoot().getCurrentListSelection()]
+            else -> null
         }
         ab.setTitle(t!!.toUpperCase())
     }
 
 
-    public fun reload() {
+    fun reload() {
         tempdata = null
-        pageAdapter = ViewerPagerAdapter(getActivity(), getNumOfPages())
-        viewPager!!.setAdapter(pageAdapter)
+        pageAdapter = ViewerPagerAdapter(activity!!, getNumOfPages())
+        viewPager!!.adapter = pageAdapter
         viewPager!!.setOnPageChangeListener(this)
         currPage = getRoot().currPage
         viewPager!!.setCurrentItem(currPage, false)
@@ -156,20 +132,20 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
 
 
     private fun initViews(v: View, forceUpdate: Boolean) {
-        setTitle()
-        grid = v.findViewById(id.viewerGrid) as GridView
+        setupTitle()
+        grid = v.findViewById(R.id.viewerGrid) as GridView
         grid.setSelector(R.drawable.list_item_background)
         grid.setDrawSelectorOnTop(true)
-        val gridWidth = grid.getWidth()
+        val gridWidth = grid.width
         L.v("grid width=$gridWidth")
-        val numOfColumns = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(Constants.PREFS_KEY_COLUMNS, "2"))!!
-        grid.setNumColumns(numOfColumns)
+        val numOfColumns = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(activity).getString(Constants.PREFS_KEY_COLUMNS, "2"))!!
+        grid.numColumns = numOfColumns
         if (gridWidth != 0) {
             mColumnWidth = gridWidth / numOfColumns
-            grid.setColumnWidth(mColumnWidth)
+            grid.columnWidth = mColumnWidth
         }
 
-        if (grid.getAdapter() != null && !forceUpdate) {
+        if (grid.adapter != null && !forceUpdate) {
             L.w("grid.getAdapter() != null && !forceUpdate")
             if (currPhoto != 0) {
                 grid.setSelection(currPhoto)
@@ -177,30 +153,30 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
             }
             return
         }
-        progress = v.findViewById(id.viewerLoader)
+        progress = v.findViewById(R.id.viewerLoader)
 
         if (tempdata != null) {
-            progress!!.setVisibility(View.GONE)
+            progress!!.visibility = View.GONE
             loadThumbs(tempdata)
             tempdata = null
             return
         }
 
-        progress!!.setVisibility(View.VISIBLE)
-        grid.setVisibility(View.GONE)
+        progress!!.visibility = View.VISIBLE
+        grid.visibility = View.GONE
         val tab = getRoot().currentTab
         viewerData = DataLoader(tab, getRoot().getListSelection(tab), currPage)
         viewerData!!.setOnLoadListener(object : OnLoadListener {
 
             override fun onLoad(result: ArrayList<Map<Int, String>>, page: Int) {
-                if (getActivity() == null)
+                if (activity == null)
                     return
 
                 if (page != currPage)
                     return
 
-                if (progress != null && getActivity() != null) {
-                    val a = AnimationUtils.loadAnimation(getActivity(), anim.fade_out)
+                if (progress != null && activity != null) {
+                    val a = AnimationUtils.loadAnimation(activity, anim.fade_out)
                     a.setAnimationListener(object : Animation.AnimationListener {
                         override fun onAnimationStart(animation: Animation) {
                         }
@@ -245,97 +221,88 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
         //progress.setVisibility(View.GONE);
         if (data == null) {
             if (getRoot().currentTab == Constants.TAB_TOPS && getRoot().getListSelection(Constants.TAB_TOPS) == Constants.ITEM_TOP_DAY)
-                Toast.makeText(getActivity(), R.string.no_photos_try_next_page_, 1).show()
+                Toast.makeText(activity, R.string.no_photos_try_next_page_, Toast.LENGTH_LONG).show()
             else
-                Toast.makeText(getActivity(), R.string.connection_error, 0).show()
+                Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_SHORT).show()
             return
         }
-        grid.setVisibility(View.VISIBLE)
-        val adapter = GridAdapter(getActivity(), result, mColumnWidth)
-        grid.setAdapter(adapter)
+        grid.visibility = View.VISIBLE
+        val adapter = GridAdapter(activity!!, result, mColumnWidth)
+        grid.adapter = adapter
         if (currPhoto != 0) {
             L.v("selecting grid cell")
             grid.setSelection(currPhoto)
             currPhoto = 0
         }
-        grid.setOnItemClickListener(object : AdapterView.OnItemClickListener {
-
-            override fun onItemClick(arg0: AdapterView<*>, arg1: View, pos: Int, arg3: Long) {
-                val i = Intent(getActivity(), javaClass<GalleryActivity>())
-                // Bundle e;
-                i.putExtra("data", data as ArrayList<Any>)
-                i.putExtra("item", pos)
-                i.putExtra("page", currPage)
-                i.putExtra("tab", getRoot().currentTab)
-                i.putExtra("category", getRoot().getCurrentListSelection())
-                Log.d("startGallery", "item" + pos + " page" + currPage)
-                startActivity(i)
-                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            }
-        })
+        grid.onItemClickListener = AdapterView.OnItemClickListener { _, _, pos, _ ->
+            val i = Intent(activity, GalleryActivity::class.java)
+            // Bundle e;
+            i.putExtra("data", data as ArrayList<Any>)
+            i.putExtra("item", pos)
+            i.putExtra("page", currPage)
+            i.putExtra("tab", getRoot().currentTab)
+            i.putExtra("category", getRoot().getCurrentListSelection())
+            Log.d("startGallery", "item$pos page$currPage")
+            startActivity(i)
+            activity!!.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
 
         registerForContextMenu(grid)
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        viewPager = ViewPager(getActivity())
-        viewPager!!.setId(VIEWPAGER_ID)
+        viewPager = ViewPager(activity!!)
+        viewPager!!.id = VIEWPAGER_ID
         return viewPager
     }
 
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo) {
-        // if (menu == null)
-        getActivity().getMenuInflater().inflate(R.menu.context_menu, menu)
-
-        super<Fragment>.onCreateContextMenu(menu, v, menuInfo)
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        activity!!.menuInflater.inflate(R.menu.context_menu, menu)
     }
 
-
-    override fun onContextItemSelected(item: android.view.MenuItem?): Boolean {
-        val pos = (item!!.getMenuInfo() as AdapterView.AdapterContextMenuInfo).position
-        when (item.getItemId()) {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val pos = (item.menuInfo as AdapterView.AdapterContextMenuInfo).position
+        when (item.itemId) {
             R.id.imc_open_in_browser -> showInBrowser(pos)
             R.id.imc_show_detailed_info -> showInfo(pos)
-        }// Toast.makeText(getActivity(), String.valueOf(Runtime.getRuntime().maxMemory()/1024/1024),1).show();
-        //
-        return super<Fragment>.onContextItemSelected(item)
+        }
+        return super.onContextItemSelected(item)
     }
 
 
     private fun showInfo(pos: Int) {
-        val a = grid.getAdapter() as GridAdapter
+        val a = grid.adapter as GridAdapter
         val newFragment = InfoDialog(a.data?.get(pos))
-        newFragment.show(getFragmentManager().beginTransaction(), "dialog")
+        newFragment.show(fragmentManager!!.beginTransaction(), "dialog")
     }
 
 
     private fun showInBrowser(pos: Int) {
-        val i: Intent// = new Intent();
-        i = Intent(Intent.ACTION_VIEW)
-        val a = grid.getAdapter() as GridAdapter
+        val i = Intent(Intent.ACTION_VIEW)// = new Intent();
+        val a = grid.adapter as GridAdapter
         if (pos != -1) {
-            Log.d("#", "pos=" + pos)
-            i.setData(Uri.parse(a.data?.get(pos)?.get(Constants.DATA_URL_PAGE)))
+            Log.d("#", "pos=$pos")
+            i.data = Uri.parse(a.data?.get(pos)?.get(Constants.DATA_URL_PAGE))
             startActivity(i)
         }
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.getItemId()) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.im_refresh -> initViews(getCurrentPage(), true)
         }
-        return super<Fragment>.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item)
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        // if (menu.findItem(R.id.im_refresh) == null)
-        inflater!!.inflate(R.menu.viewer_menu, menu)
-        super<Fragment>.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.viewer_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
 
@@ -374,7 +341,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
     // ViewerPagerAdapter
     // **********************************************************************************************************************************************
     //
-    public class ViewerPagerAdapter(private val ctx: Context, val numOfPages: Int) : PagerAdapter() {
+    class ViewerPagerAdapter(private val ctx: Context, val numOfPages: Int) : PagerAdapter() {
 
         override fun getCount(): Int {
             return numOfPages
@@ -389,7 +356,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             L.v("item created " + position)
             val v = LayoutInflater.from(ctx).inflate(R.layout.viewer, null)
-            v.setTag(position)
+            v.tag = position
             container.addView(v)
             return v
         }
@@ -410,6 +377,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
     //
     private class GridAdapter(private val ctx: Context, public val data: List<Map<Int, String>>?, private val cellSize: Int) : BaseAdapter() {
         var numOfItems: Int = 0
+
         // private ArrayList<Map<Integer, String>> urlList = new ArrayList<Map<Integer, String>>();
         private val aq: AQuery
         private val imageLayout: FrameLayout.LayoutParams
@@ -420,7 +388,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
         init {
             //if (data == null)
             //   return
-            this.numOfItems = data!!.size()
+            this.numOfItems = data!!.size
             imageLayout = FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             val d = cellSize / 5
             progressLayout = FrameLayout.LayoutParams(d, d)
@@ -451,12 +419,12 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
 
             if (view == null) {
                 view = FrameLayout(ctx)
-                view.setLayoutParams(AbsListView.LayoutParams(cellSize, cellSize))
+                view.layoutParams = AbsListView.LayoutParams(cellSize, cellSize)
 
                 h = ViewHolder(view)
-                view.setTag(h)
+                view.tag = h
             } else {
-                h = view.getTag() as ViewHolder
+                h = view.tag as ViewHolder
                 h.img.setImageBitmap(null)
             }
 
@@ -465,30 +433,28 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
                 aq.id(h.img).progress(h.progress).image(data?.get(position)?.get(Constants.DATA_URL_SMALL), true, true, 0, 0, null,
                         com.androidquery.util.Constants.FADE_IN)
             else {
-                h.img.setVisibility(View.GONE)
-                h.progress.setVisibility(View.VISIBLE)
+                h.img.visibility = View.GONE
+                h.progress.visibility = View.VISIBLE
             }
 
-            //imageLoader.DisplayImage(data.get(position), h.img, h.progress, false);
             return view
         }
 
 
         private inner class ViewHolder(view: ViewGroup?) {
 
-            var img: ImageView
+            var img: ImageView = ImageView(ctx)
             var progress: ProgressBar
 
 
             init {
 
-                img = ImageView(ctx)
-                img.setScaleType(ScaleType.CENTER_CROP)
-                img.setLayoutParams(imageLayout)
+                img.scaleType = ScaleType.CENTER_CROP
+                img.layoutParams = imageLayout
                 //img.setAdjustViewBounds(true);
 
                 progress = ProgressBar(ctx)
-                progress.setLayoutParams(progressLayout)
+                progress.layoutParams = progressLayout
 
                 view?.addView(img)
                 view?.addView(progress)
@@ -499,7 +465,7 @@ public class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListe
 
     companion object {
 
-        private val VIEWPAGER_ID = 123456789
+        private const val VIEWPAGER_ID = 123456789
     }
 
 }

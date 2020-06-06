@@ -13,8 +13,9 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
+import java.lang.String.format
 
-public class DataLoader(private val tab: Int, private val item: Int, private val page: Int) : Constants {
+class DataLoader(private val tab: Int, private val item: Int, private val page: Int) : Constants {
     //private int sort;
     private var mDoc: Document? = null
     private var mLargeImage: String? = null
@@ -26,7 +27,7 @@ public class DataLoader(private val tab: Int, private val item: Int, private val
 
 
     init {
-        isCensored = App.getPrefs()!!.getBoolean("parental", false)
+        isCensored = App.prefs.getBoolean("parental", false)
         //this.sort = sort;
         date = Calendar.getInstance()
         date.add(Calendar.DAY_OF_YEAR, -page)
@@ -43,19 +44,19 @@ public class DataLoader(private val tab: Int, private val item: Int, private val
 
         when (tab) {
             Constants.TAB_CATEGORIES -> {
-                request = java.lang.String.format(Constants.URL_CATEGORY, Constants.CATEGORIES_ID[item], page + 1)
+                request = format(Constants.URL_CATEGORY, Constants.CATEGORIES_ID[item], page + 1)
                 // parseParam1 = 1;
                 maxSize = 57
             }
             Constants.TAB_TOPS -> {
                 // parseParam1 = 0;
                 maxSize = MAX_SIZES[item]
-                if (item == Constants.ITEM_TOP_DAY) {
+                request = if (item == Constants.ITEM_TOP_DAY) {
                     // parseParam2 = 0;
-                    request = java.lang.String.format(Constants.URL_TOPS[item], date.get(Calendar.YEAR), date.get(Calendar.MONTH) + 1, date.get(Calendar.DAY_OF_MONTH))
+                    format(Constants.URL_TOPS[item], date.get(Calendar.YEAR), date.get(Calendar.MONTH) + 1, date.get(Calendar.DAY_OF_MONTH))
                     // Log.d("#", request);
                 } else {
-                    request = Constants.URL_TOPS[item]
+                    Constants.URL_TOPS[item]
 
                 }
             }
@@ -73,14 +74,14 @@ public class DataLoader(private val tab: Int, private val item: Int, private val
     private fun parseHtml(html: String): ArrayList<Map<Int, String>>? {
 
         val list = ArrayList<Map<Int, String>>()
-        val map: MutableMap<Int, String>
-        val link: String
+        var map: MutableMap<Int, String>
+        var link: String
         var icon: String
-        val name: String
-        val date: String
-        val author: String
-        val award: String
-        val photoId: String
+        var name: String
+        var date: String
+        var author: String
+        var award: String
+        var photoId: String
 
         // Document doc = Jsoup.parse(html);
         var root: Element? = null
@@ -105,13 +106,13 @@ public class DataLoader(private val tab: Int, private val item: Int, private val
         }
 
         photolist = root.children()
-        L.v("photolist size=" + photolist.size())
+        L.v("photolist size=" + photolist.size)
         val replacement = if (App.isLowRes) "_large." else "_xlarge."
         for (photo in photolist) {
             photoId=photo.attr("data-photoid")
             map = HashMap<Int, String>()
             val a_hrefs = photo.select("a[href]")
-            if (a_hrefs.size() == 0)
+            if (a_hrefs.size == 0)
                 continue
 
             icon = a_hrefs.get(0).child(0).attr("src") // thumb url
@@ -138,7 +139,7 @@ public class DataLoader(private val tab: Int, private val item: Int, private val
                 mLargeImage = icon.replace("_icon.", replacement).replace("pv_", "").replace("prv-", "img-").replace("_thumb.", replacement)
             }
             L.d("id " + photoId)
-            L.d("links " + a_hrefs.size())
+            L.d("links " + a_hrefs.size)
             L.d("link " + link)
             L.d("icon " + icon)
             L.d("name " + name)

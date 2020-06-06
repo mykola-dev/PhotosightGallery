@@ -9,13 +9,12 @@ import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 
-public fun Activity.showAbout() {
-    val ver: String
-    try {
-        val manager = getPackageManager().getPackageInfo(getPackageName(), 0)
-        ver = manager.versionName
+fun Activity.showAbout() {
+    val ver: String = try {
+        val manager = packageManager.getPackageInfo(packageName, 0)
+        manager.versionName
     } catch (e1: PackageManager.NameNotFoundException) {
-        ver = "100500"
+        "100500"
     }
 
 
@@ -28,16 +27,11 @@ public fun Activity.showAbout() {
 
     val s = getResources().getString(R.string.abouttext, getResources().getString(R.string.changelog),
             if (Constants.PRO_VERSION) Constants.MARKETS_URL_PRO[Constants.CURRENT_MARKET] else Constants.MARKETS_URL[Constants.CURRENT_MARKET])
-    text.setText(s)
-    verText.setText(ver)
-    b.setOnClickListener(object : View.OnClickListener {
-
-        override fun onClick(v: View) {
-            dialog.cancel()
-        }
-    })
-    dialog.getWindow().setWindowAnimations(android.R.style.Animation_Translucent)
+    text.text = s
+    verText.text = ver
+    b.setOnClickListener { dialog.cancel() }
+    dialog.window.setWindowAnimations(android.R.style.Animation_Translucent)
     dialog.show()
 }
 
-public fun Context.getApp(): App = this.getApplicationContext() as App
+fun Context.getApp(): App = this.applicationContext as App

@@ -66,7 +66,7 @@
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
-    <style name="TabStrip">
+<!--    <style name="TabStrip">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
         <item name="pstsIndicatorColor">@color/primary_text</item>
@@ -76,7 +76,7 @@
         <item name="android:textColor">@color/primary_text</item>
         <item name="pstsTabBackground">@drawable/list_item_background</item>
         <item name="android:background">@color/tabs</item>
-    </style>
+    </style>-->
 
     <style name="big_progress">
         <item name="android:layout_width">48dp</item>
