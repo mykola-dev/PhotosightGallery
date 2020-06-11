@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ds.photosight.ui.widget.VotesWidget
+<ds.photosight_legacy.ui.widget.VotesWidget
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="#2888"
     android:paddingRight="10dp"
@@ -136,4 +136,4 @@
 
     </LinearLayout>
 
-</ds.photosight.ui.widget.VotesWidget>
+</ds.photosight_legacy.ui.widget.VotesWidget>

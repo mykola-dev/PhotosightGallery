@@ -24,7 +24,7 @@
             android:disableDependentsState="true"
              />
 
-        <ds.photosight.ui.widget.SummaryEditTextPreference
+        <ds.photosight_legacy.ui.widget.SummaryEditTextPreference
             android:title="@string/cache_folder"
             android:summary="@string/where_to_cache_photos"
             android:key="cachePath"
@@ -32,7 +32,7 @@
             android:defaultValue="@string/default_cache_dir"
              />
 
-        <ds.photosight.ui.widget.SummaryEditTextPreference
+        <ds.photosight_legacy.ui.widget.SummaryEditTextPreference
             android:key="savePath"
             android:title="@string/save_folder"
             android:defaultValue="Photosight/saved"

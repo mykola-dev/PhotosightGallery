@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="red">#ffdd3e35</color>
+    <color name="primary">#1b1b1b</color>
+    <color name="accent">#db5e4b</color>
+    <color name="background">#666</color>
+
+    <color name="red">#ffdd3e35</color>
     <color name="green">#ff3cb840</color>
     <color name="blue">#ff15a9dc</color>
-	<color name="gray">#ccc</color>
-	<color name="dark_gray">#555</color>
-	<color name="selector_solid">#bbb</color>
-	<color name="list_background">#aaa</color>
+    <!--legacy-->
+    <color name="gray">#ccc</color>
+    <color name="dark_gray">#555</color>
+    <color name="selector_solid">#bbb</color>
+    <color name="list_background">#aaa</color>
     <color name="list_text">#333</color>
     <color name="list_divider">#bbb</color>
-	<color name="grid_background">#666</color>
-	<color name="main_background">#888</color>
+    <color name="grid_background">#666</color>
+    <color name="main_background">#888</color>
     <color name="drawer_background">#a000</color>
     <color name="text_secondary">#888</color>
     <color name="primary_text">#ddd</color>

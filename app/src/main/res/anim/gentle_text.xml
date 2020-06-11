@@ -6,7 +6,6 @@
         android:duration="1500"/>
 
     <translate
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:interpolator="@android:anim/decelerate_interpolator"
         android:fromXDelta="-20%"
         android:toXDelta="0"

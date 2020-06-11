@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ds.photosight.ui.widget.HackyDrawerLayout
+<ds.photosight_legacy.ui.widget.HackyDrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <!-- The main content view -->
-    <ds.photosight.ui.widget.GalleryViewPager
+    <ds.photosight_legacy.ui.widget.GalleryViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
@@ -44,5 +44,5 @@
 
 
 
-</ds.photosight.ui.widget.HackyDrawerLayout>
+</ds.photosight_legacy.ui.widget.HackyDrawerLayout>
 

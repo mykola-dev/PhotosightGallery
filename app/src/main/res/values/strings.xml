@@ -44,11 +44,13 @@
 		<item>Favorites</item>
 	</string-array>
 
-    <string name="thin_font">sans-serif-light</string>
-    <string name="light_font">sans-serif</string>
+    <string name="thin_font" translatable="false">sans-serif-light</string>
+    <string name="light_font" translatable="false">sans-serif</string>
 
-	<string name="changelog">"
+	<string name="changelog" translatable="false">"
 Change Log:
+v 1.0
+- first release
 
 v0.9
 - Comments fix
