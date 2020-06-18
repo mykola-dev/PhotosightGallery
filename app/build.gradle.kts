@@ -8,6 +8,8 @@ plugins {
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
+    id("androidx.navigation.safeargs.kotlin")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -15,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "ds.photosight"
-        minSdkVersion(16)
+        minSdkVersion(21)
         targetSdkVersion(28)
         versionCode = 26
         versionName = "1.0"
@@ -72,11 +74,22 @@ android {
 
 }
 
+// for hilt
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     val androidX = "1.3.0"
     val lifecycleVersion = "2.2.0"
     val koinVersion = "2.1.6"
+    val archVersion = "2.1.0"
+    val composeVersion = "0.1.0-dev13"
+    val hiltJetpackVersion = "1.0.0-alpha01"
+    val pagingVersion = "3.0.0-alpha01"
+    val hiltVersion: String by rootProject.extra
     val coroutinesVersion: String by rootProject.extra
+    val navVersion: String by rootProject.extra
 
     implementation("androidx.multidex:multidex:2.0.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.5")
@@ -86,7 +99,11 @@ dependencies {
     implementation("androidx.core:core-ktx:$androidX")
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation("androidx.fragment:fragment-ktx:1.2.4")
+    implementation("androidx.fragment:fragment-ktx:1.2.5")
+    implementation("androidx.paging:paging-runtime:$pagingVersion")
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")              // https://developer.android.com/jetpack/androidx
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion")
@@ -96,36 +113,25 @@ dependencies {
     implementation("androidx.preference:preference:1.1.1")
 
     // ui
-    implementation("com.google.android.material:material:1.1.0")
+    implementation("com.google.android.material:material:1.3.0-alpha01")
     implementation("com.github.chrisbanes.photoview:library:+")
+    implementation("androidx.slidingpanelayout:slidingpanelayout:1.0.0")
+    implementation("androidx.ui:ui-tooling:$composeVersion")
+    implementation("androidx.ui:ui-layout:$composeVersion")
+    implementation("androidx.ui:ui-material:$composeVersion")
 
     // kotlin
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")          // https://kotlinlang.org/docs/reference/coroutines/basics.html
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation(kotlin("reflect"))
 
     // di
-    implementation("org.koin:koin-core:$koinVersion")                                           // https://github.com/InsertKoinIO/koin/
-    // Koin Extended & experimental features
-    implementation("org.koin:koin-core-ext:$koinVersion")
-    // Koin for Android
-    implementation("org.koin:koin-android:$koinVersion")
-    // Koin Android Scope features
-    implementation("org.koin:koin-android-scope:$koinVersion")
-    // Koin Android ViewModel features
-    implementation("org.koin:koin-android-viewmodel:$koinVersion")
-    // Koin Android Experimental features
-    implementation("org.koin:koin-android-ext:$koinVersion")
-    // Koin AndroidX Scope features
-    implementation("org.koin:koin-androidx-scope:$koinVersion")
-    // Koin AndroidX ViewModel features
-    implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
-    // Koin AndroidX Fragment features
-    implementation("org.koin:koin-androidx-fragment:$koinVersion")
-    // Koin AndroidX Experimental features
-    implementation("org.koin:koin-androidx-ext:$koinVersion")
-    // Koin for Unit tests
-    testImplementation("org.koin:koin-test:$koinVersion")
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion")
+    kapt("androidx.hilt:hilt-compiler:$hiltJetpackVersion")
+
 
     // prefs
     implementation("com.chibatching.kotpref:kotpref:2.11.0")                                    // https://github.com/chibatching/Kotpref
@@ -142,5 +148,18 @@ dependencies {
     implementation("de.greenrobot:eventbus:2.4.0")
     implementation("org.jsoup:jsoup:1.13.1")
 
+    // tests
+    testImplementation("junit:junit:4.13")
+    testImplementation("io.mockk:mockk:1.10.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutinesVersion")
+    testImplementation("androidx.arch.core:core-testing:$archVersion")
+    testImplementation(kotlin("test-junit"))
+    androidTestImplementation("androidx.test.ext:junit:1.1.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    testImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
+    kaptTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
 }
 

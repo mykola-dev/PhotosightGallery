@@ -1,4 +1,4 @@
-package ds.photosight_legacy.parser
+package ds.photosight.parser
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -58,7 +58,7 @@ class CategoriesRequest : JsoupRequest<List<PhotoCategory>>() {
     override val url: String = baseUrl
 }
 
-class PhotoDetailsRequest(override val url: String) : JsoupRequest<PhotoDetails>() {
+class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
     private val originalDateFormat = "dd MMMM yyyy, kk:mm:ss"
     private val dateFormat = SimpleDateFormat(originalDateFormat, Locale("ru"))
 
@@ -104,6 +104,8 @@ class PhotoDetailsRequest(override val url: String) : JsoupRequest<PhotoDetails>
     private fun Document.commentsSection() = parse("div.comments div.comment-content")
     private fun Document.avardsSection() = parse("div.medals > div.medal")
     private fun Document.infoSection() = parse("div.photo-info")
+
+    override val url: String = "$baseUrl/photos/$photoId"
 
 }
 
@@ -223,4 +225,12 @@ class TopApplicantsPhotosRequest : PhotosRequest() {
 
 class OutrunPhotosRequest : PhotosRequest() {
     override val url: String = "$baseUrl/outrun"
+}
+
+class NewPhotosRequest(page: Int = 1) : PhotosRequest(), Multipage {
+    override val url: String = "$baseUrl/new_on_site/photos/?pager=$page"
+}
+
+class PretenderPhotosRequest(page: Int = 1) : PhotosRequest(), Multipage {
+    override val url: String = "$baseUrl/pretender/photos/?pager=$page"
 }

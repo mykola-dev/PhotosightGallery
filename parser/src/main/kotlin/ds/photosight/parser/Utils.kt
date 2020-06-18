@@ -1,4 +1,4 @@
-package ds.photosight_legacy.parser
+package ds.photosight.parser
 
 fun String.thumbToLarge(): String = this
     .replace("prv-", "img-")

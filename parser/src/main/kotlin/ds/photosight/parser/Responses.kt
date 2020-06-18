@@ -1,4 +1,4 @@
-package ds.photosight_legacy.parser
+package ds.photosight.parser
 
 
 data class PhotoCategory(

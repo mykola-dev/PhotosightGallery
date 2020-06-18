@@ -1,18 +1,22 @@
 package ds.photosight.di
 
-import ds.photosight.core.Prefs
-import ds.photosight.viewmodel.MainViewModel
-import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import timber.log.Timber
+import javax.inject.Singleton
 
-val appModule = module {
-    single<Timber.Tree> { Timber.DebugTree() }
-    single { Prefs(androidContext()) }
-    //single { ScenariosAccessibilityService.Companion::scriptRunner.liveData }
-}
 
-val viewModelsModule = module {
-    viewModel { MainViewModel() }
+@Module
+@InstallIn(ApplicationComponent::class)
+class MainModule {
+
+    @Provides
+    @Singleton
+    fun timber(): Timber.Tree {
+        println("timber init")
+        return Timber.DebugTree()
+    }
 }

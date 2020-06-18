@@ -1,6 +1,8 @@
 buildscript {
     val kotlinVersion by extra("1.3.72")
     val coroutinesVersion by extra("1.3.6")
+    val navVersion by extra("2.3.0-rc01")
+    val hiltVersion by extra ("2.28-alpha")
 
     repositories {
         google()
@@ -9,6 +11,8 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:4.0.0")
         classpath(kotlin("gradle-plugin", version = kotlinVersion))
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
     }
 }
 

@@ -1,13 +1,16 @@
 package ds.photosight.view
 
 import android.os.Bundle
+import androidx.activity.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.viewmodel.MainViewModel
 import ds.photosight.R
-import org.koin.android.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
-    override val vm: MainViewModel by viewModel()
+    override val vm: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -16,7 +19,7 @@ class MainActivity : BaseActivity() {
 
         //toolbar.title = getString(R.string.app_name)
 
-        log.v("hello koin")
+        log.v("hello hilt!")
     }
 
 }

@@ -50,7 +50,7 @@
 	<string name="changelog" translatable="false">"
 Change Log:
 v 1.0
-- first release
+- the app has been rewritten from scratch
 
 v0.9
 - Comments fix
@@ -141,7 +141,7 @@ All Photosight trademarks displayed on this application are property of Photosig
     <string name="thumb_size_2">210</string>
     <string name="thumb_size_3">400</string>
 	<string name="app_name">Photosight Gallery</string>
-	<string name="categories">CATEGORIES</string>
+	<string name="categories">Categories</string>
 	<string name="top">" TOP "</string>
 	<string name="authors">AUTHORS</string>
 	<string name="share_subj">Check this out!</string>
@@ -196,6 +196,9 @@ All Photosight trademarks displayed on this application are property of Photosig
     <string name="histogram">Histogram</string>
 	<string name="low_resolution">Low Image Resolution</string>
 	<string name="thumb_columns">Thumbs Columns</string>
+	<string name="copyright" translatable="false">© 1997-2020 Deviant Studio</string>
+	<string name="about_title_" translatable="false">PHOTOSIGHT GALLERY </string>
+	<string name="ratings">Ratings</string>
 
 
 </resources>

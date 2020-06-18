@@ -4,14 +4,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.utils.snack
 import ds.photosight.viewmodel.BaseViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
-import org.koin.android.ext.android.inject
 import timber.log.Timber
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
-
 
 abstract class BaseActivity : AppCompatActivity(), CoroutineScope {
 
@@ -19,11 +20,12 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext = lifecycleScope.coroutineContext
 
-    protected val log: Timber.Tree by inject()
+    @Inject
+    protected lateinit var log: Timber.Tree
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        L.v("${this::class.simpleName} onCreate")
+        log.v("${this::class.simpleName} onCreate")
 
         vm.showSnackbarCommand.observe(this) {
             root.snack(it)

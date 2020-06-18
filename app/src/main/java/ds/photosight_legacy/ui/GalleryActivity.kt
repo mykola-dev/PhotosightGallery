@@ -671,7 +671,7 @@ public class GalleryActivity : AppCompatActivity(), Constants, ViewPager.OnPageC
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private inner class CommentsAdapter(context: Context, objects: List<Comment>) : ArrayAdapter<Comment>(context, R.layout.row_comment, R.id.content, objects) {
+    private inner class CommentsAdapter(context: Context, objects: List<Comment>) : ArrayAdapter<Comment>(context, R.layout.item_comment, R.id.content, objects) {
 
         var aq: AQuery
         var user: Bitmap

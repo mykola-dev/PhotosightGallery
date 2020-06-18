@@ -20,7 +20,7 @@ fun Activity.showAbout() {
 
     val dialog = Dialog(this, R.style.Theme_AppCompat_Dialog)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-    dialog.setContentView(R.layout.about)
+    dialog.setContentView(R.layout.dialog_about)
     val b = dialog.findViewById(R.id.aboutOK) as Button
     val text = dialog.findViewById(R.id.aboutText) as TextView
     val verText = dialog.findViewById(R.id.versionText) as TextView

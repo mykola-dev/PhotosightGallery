@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:maxWidth="360dp"
+    android:layout_gravity="center_horizontal"
+    android:backgroundTint="@color/grey_light"
+    android:elevation="20dp"
+    android:orientation="vertical"
+    app:behavior_peekHeight="46dp"
+    app:layout_behavior=".view.widget.HideableBottomSheet"
+    app:shapeAppearance="@style/BottomTabsShapeAppearance"
+    tools:showIn="@layout/fragment_gallery"
+    >
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        style="@style/Widget.MaterialComponents.TabLayout.PrimarySurface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabGravity="center"
+        >
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/categories"
+            />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ratings"
+            />
+    </com.google.android.material.tabs.TabLayout>
+    <!--</com.google.android.material.card.MaterialCardView>-->
+    <!--</FrameLayout>-->
+
+    <!--         <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:text="asd"
+                     />-->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/menuViewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/grey_light"
+        android:elevation="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

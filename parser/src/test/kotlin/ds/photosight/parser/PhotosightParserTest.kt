@@ -1,6 +1,5 @@
-package ds.photosight_legacy
+package ds.photosight.parser
 
-import ds.photosight_legacy.parser.*
 import org.junit.Before
 import org.junit.Test
 
@@ -55,7 +54,7 @@ class PhotosightParserTest {
 
     @Test
     fun `comments showcase`() {
-        PhotoDetailsRequest("https://photosight.ru/photos/5358008/")()
+        PhotoDetailsRequest(5358008)()
             .also { println(it) }
     }
 
