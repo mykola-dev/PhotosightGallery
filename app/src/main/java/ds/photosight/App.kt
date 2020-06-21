@@ -3,6 +3,7 @@ package ds.photosight
 import android.content.res.Configuration
 import androidx.multidex.MultiDexApplication
 import dagger.hilt.android.HiltAndroidApp
+import ds.photosight.parser.debugEnabled
 import timber.log.Timber
 
 @HiltAndroidApp
@@ -13,6 +14,7 @@ class App : MultiDexApplication() {
         // legacy
         Timber.plant(Timber.DebugTree())
 
+        //debugEnabled = true
     }
 
     fun isPortrait(): Boolean {

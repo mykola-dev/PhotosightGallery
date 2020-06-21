@@ -1,4 +1,4 @@
-package com.sevensevenlabs.multidelivery.util
+package ds.photosight.utils
 
 import android.os.Looper
 import androidx.lifecycle.LifecycleOwner

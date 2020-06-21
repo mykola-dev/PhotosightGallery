@@ -114,7 +114,7 @@ public class GalleryActivity : AppCompatActivity(), Constants, ViewPager.OnPageC
         var t = ""
         when (currTab) {
             Constants.TAB_CATEGORIES -> t = getResources().getStringArray(R.array.categories_array)[currCategory]
-            Constants.TAB_TOPS -> t = getString(R.string.top_in) + getResources().getStringArray(R.array.tops_array)[currCategory]
+            Constants.TAB_TOPS -> t = getString(R.string.top_in) + getResources().getStringArray(R.array.ratings_array)[currCategory]
         }
 
 

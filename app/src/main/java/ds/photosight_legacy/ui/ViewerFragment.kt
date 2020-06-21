@@ -110,7 +110,7 @@ class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListener {
         ab.setSubtitle(resources.getString(R.string.page_) + (currPage + 1))
         val t: String? = when (getRoot().currentTab) {
             Constants.TAB_CATEGORIES -> resources.getStringArray(R.array.categories_array)[getRoot().getCurrentListSelection()]
-            Constants.TAB_TOPS -> getString(R.string.top_in) + resources.getStringArray(R.array.tops_array)[getRoot().getCurrentListSelection()]
+            Constants.TAB_TOPS -> getString(R.string.top_in) + resources.getStringArray(R.array.ratings_array)[getRoot().getCurrentListSelection()]
             else -> null
         }
         ab.setTitle(t!!.toUpperCase())

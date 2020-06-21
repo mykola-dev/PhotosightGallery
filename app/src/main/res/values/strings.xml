@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
+	<!--deprecated-->
 	<string-array name="categories_array">
 		<item>Architecture and Interiors</item>
 		<item>City</item>
@@ -34,7 +35,9 @@
 
 	</string-array>
 
-	<string-array name="tops_array">
+	<string name="category_15">Nu</string>
+
+	<string-array name="ratings_array">
 		<item>Day</item>
 		<item>Week</item>
 		<item>Month</item>

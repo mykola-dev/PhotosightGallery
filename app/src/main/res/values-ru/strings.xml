@@ -33,7 +33,7 @@
 		<item>Фотомодели</item>
 
 	</string-array>
-	<string-array name="tops_array">
+	<string-array name="ratings_array">
 		<item>Фото Дня</item>
 		<item>Фото Недели</item>
 		<item>Фото Месяца</item>

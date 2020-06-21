@@ -79,6 +79,10 @@ kapt {
     correctErrorTypes = true
 }
 
+androidExtensions {
+    isExperimental = true
+}
+
 dependencies {
     val androidX = "1.3.0"
     val lifecycleVersion = "2.2.0"
@@ -87,8 +91,8 @@ dependencies {
     val composeVersion = "0.1.0-dev13"
     val hiltJetpackVersion = "1.0.0-alpha01"
     val pagingVersion = "3.0.0-alpha01"
+    val coroutinesVersion = "1.3.6"
     val hiltVersion: String by rootProject.extra
-    val coroutinesVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra
 
     implementation("androidx.multidex:multidex:2.0.1")
