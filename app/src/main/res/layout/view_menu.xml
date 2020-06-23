@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottomSheet"
+    android:id="@+id/bottomSheetLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:maxWidth="360dp"
@@ -15,18 +15,20 @@
     app:layout_behavior=".view.widget.HideableBottomSheet"
     app:shapeAppearance="@style/BottomTabsShapeAppearance"
     tools:showIn="@layout/fragment_gallery"
+    android:theme="@style/AppTheme.Light"
+
     >
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        style="@style/Widget.MaterialComponents.TabLayout.Colored"
+        style="@style/Widget.MaterialComponents.TabLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         app:tabGravity="center"
         >
 
-        <!--<com.google.android.material.tabs.TabItem
+       <!-- <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/categories"
@@ -43,8 +45,8 @@
         android:id="@+id/menuViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_light"
         android:elevation="1dp"
+
         />
 
 </LinearLayout>

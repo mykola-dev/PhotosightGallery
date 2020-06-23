@@ -13,6 +13,13 @@
         <!--<item name="progressIndicatorStyle">@style/ProgressIndicatorStyle</item>-->
     </style>
 
+    <style name="AppTheme.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSurface">@color/grey_light</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="android:windowBackground">@color/grey_light</item>
+    </style>
+
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:windowTranslucentStatus">true</item>

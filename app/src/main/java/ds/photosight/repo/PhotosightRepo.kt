@@ -6,8 +6,8 @@ import ds.photosight.R
 import ds.photosight.parser.CategoriesRequest
 import ds.photosight.parser.PhotoCategory
 import ds.photosight.parser.Request
-import ds.photosight.view.MenuItemState
-import ds.photosight.view.MenuState
+import ds.photosight.model.MenuItemState
+import ds.photosight.model.MenuState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

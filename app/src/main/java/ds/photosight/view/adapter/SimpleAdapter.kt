@@ -16,6 +16,15 @@ abstract class SimpleAdapter<D : Any>(
 
     protected lateinit var context: Context
 
+    init {
+        setHasStableIds(true)
+    }
+
+    fun updateData(new: List<D>) {
+        data = new
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int = data.size
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
