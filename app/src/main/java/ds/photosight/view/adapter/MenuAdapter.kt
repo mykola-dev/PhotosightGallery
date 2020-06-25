@@ -1,7 +1,7 @@
 package ds.photosight.view.adapter
 
 import ds.photosight.R
-import ds.photosight.model.MenuItemState
+import ds.photosight.viewmodel.MenuItemState
 import kotlinx.android.synthetic.main.item_menu.*
 
 class MenuAdapter(private val onSelected: (MenuItemState) -> Unit) : SimpleAdapter<MenuItemState>(R.layout.item_menu, emptyList()) {

@@ -13,12 +13,15 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
-import ds.photosight.model.MenuItemState
-import ds.photosight.model.MenuState.Companion.MENU_CATEGORIES
-import ds.photosight.model.MenuState.Companion.MENU_RATINGS
+import ds.photosight.utils.toggle
 import ds.photosight.view.adapter.MenuAdapter
 import ds.photosight.view.adapter.MenuPagerAdapter
-import ds.photosight.viewmodel.MenuViewModel
+import ds.photosight.view.adapter.PhotosAdapter
+import ds.photosight.viewmodel.GalleryViewModel
+import ds.photosight.viewmodel.MenuItemState
+import ds.photosight.viewmodel.MenuState.Companion.MENU_CATEGORIES
+import ds.photosight.viewmodel.MenuState.Companion.MENU_RATINGS
+import kotlinx.android.synthetic.main.fragment_gallery.*
 import kotlinx.android.synthetic.main.view_menu.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -45,7 +48,7 @@ class GalleryFragment : Fragment() {
 
     }
 
-    private val menuViewModel: MenuViewModel by viewModels()
+    private val galleryViewModel: GalleryViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_gallery, container, false)
@@ -56,7 +59,7 @@ class GalleryFragment : Fragment() {
 
         val onMenuSelected = { item: MenuItemState ->
             bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
-            menuViewModel.onSelected(item)
+            galleryViewModel.onMenuSelected(item)
         }
         val categoriesAdapter = MenuAdapter(onMenuSelected)
         val ratingsAdapter = MenuAdapter(onMenuSelected)
@@ -67,9 +70,10 @@ class GalleryFragment : Fragment() {
         bottomSheet.isHideable = true
         bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
 
+        val photosAdapter = PhotosAdapter()
+        photosRecyclerView.adapter = photosAdapter
 
-        menuViewModel.menuStateLiveData.observe(viewLifecycleOwner) {
-            log.v("menu state observed")
+        galleryViewModel.menuStateLiveData.observe(viewLifecycleOwner) {
 
             categoriesAdapter.updateData(it.categories)
             ratingsAdapter.updateData(it.ratings)
@@ -82,7 +86,15 @@ class GalleryFragment : Fragment() {
             }
 
         }
+
+        galleryViewModel.photosStateLiveData.observe(viewLifecycleOwner) { state ->
+            log.v("photos list loaded: $state")
+
+            progress.toggle(state.isLoading)
+            photosAdapter.update(state.photoPages.flatMap { it.values })
+        }
     }
+
 
     private fun setupTabs() {
         TabLayoutMediator(tabLayout, menuViewPager) { tab, position ->
@@ -105,3 +117,5 @@ class GalleryFragment : Fragment() {
         }
     }
 }
+
+

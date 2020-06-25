@@ -40,9 +40,13 @@
         >
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/photosRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="1000dp"
+            tools:listitem="@layout/item_photo"
+            tools:itemCount="100"
+            app:spanCount="2"
+            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             />
 
     </androidx.core.widget.NestedScrollView>

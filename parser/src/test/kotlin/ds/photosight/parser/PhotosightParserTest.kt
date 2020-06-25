@@ -48,7 +48,7 @@ class PhotosightParserTest {
 
     @Test
     fun `daily outrun photos`() {
-        DailyPhotosRequest(2013, 12, 31, 15)()
+        DailyPhotosRequest(DailyPhotosRequest.DatePage(2013, 12, 31), 15)()
             .forEach { println(it) }
     }
 

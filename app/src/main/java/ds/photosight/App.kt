@@ -3,6 +3,7 @@ package ds.photosight
 import android.content.res.Configuration
 import androidx.multidex.MultiDexApplication
 import dagger.hilt.android.HiltAndroidApp
+import ds.photosight.parser.DailyPhotosRequest
 import ds.photosight.parser.debugEnabled
 import timber.log.Timber
 
@@ -13,6 +14,8 @@ class App : MultiDexApplication() {
         super.onCreate()
         // legacy
         Timber.plant(Timber.DebugTree())
+
+        //DailyPhotosRequest(DailyPhotosRequest.DatePage(1,1,1))
 
         //debugEnabled = true
     }

@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import com.google.android.material.progressindicator.ProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -39,4 +40,9 @@ fun Snackbar.action(@StringRes actionRes: Int, color: Int? = null, listener: (Vi
 fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit) {
     setAction(action, listener)
     color?.let { setActionTextColor(ContextCompat.getColor(context, color)) }
+}
+
+fun ProgressIndicator.toggle(show: Boolean) {
+    if (show) show()
+    else hide()
 }

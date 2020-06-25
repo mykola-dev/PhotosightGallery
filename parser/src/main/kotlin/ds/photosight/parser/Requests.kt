@@ -5,6 +5,8 @@ import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 interface Request<T> {
     operator fun invoke(): T
@@ -12,7 +14,9 @@ interface Request<T> {
     val cookies: Map<String, String>
 }
 
-interface Multipage
+interface Multipage {
+    val page: Int
+}
 
 abstract class JsoupRequest<T> : Request<T> {
     private val nudeModeCookie: Pair<String, String> = "show_nude" to "1"
@@ -153,18 +157,31 @@ class BestPhotosRequest(sort: Sort = Sort.BEST, time: Time = Time.DAY) : PhotosR
     override val url: String = "$baseUrl/best/?sort=$sort&time=$time"
 }
 
-class DailyPhotosRequest(year: Int, month: Int, day: Int, category: Int? = null) : PhotosRequest(), Multipage {
-    override val url: String = "$baseUrl/outrun/date/$year/$month/$day/${category?.let { "?category=$it" } ?: ""}"
+class DailyPhotosRequest(datePage: DatePage, category: Int? = null) : PhotosRequest(), Multipage {
+    override val page: Int = datePage.calculatePage()
+    override val url: String = "$baseUrl/outrun/date/${datePage.year}/${datePage.month}/${datePage.day}/${category?.let { "?category=$it" } ?: ""}"
+
+    class DatePage(val year: Int, val month: Int, val day: Int) {
+        fun calculatePage(): Int {
+            val date = Calendar.getInstance()
+            date.set(year, month, day)
+            val start: Long = date.timeInMillis
+            val end: Long = now.timeInMillis
+            return TimeUnit.MILLISECONDS.toDays(abs(end - start)).toInt()
+        }
+
+        private val now: Calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"))
+    }
 }
 
 class CategoriesPhotosRequest(
     category: Int,
-    currentPage: Int = 1,
+    override val page: Int = 1,
     sortDumpCategory: SortDumpCategory = SortDumpCategory.ALL,
     sortTypeCategory: SortTypeCategory = SortTypeCategory.DEFAULT
 ) : PhotosRequest(), Multipage {
     init {
-        if (currentPage < 1) error("currentPage must be > 0")
+        if (page < 1) error("currentPage must be > 0")
     }
 
     enum class SortDumpCategory(private val value: String) {
@@ -186,7 +203,7 @@ class CategoriesPhotosRequest(
     }
 
 
-    override val url: String = "https://photosight.ru/photos/category/$category?pager=$currentPage"
+    override val url: String = "https://photosight.ru/photos/category/$category?pager=$page"
 
     override val cookies: Map<String, String> = mapOf(
         "sort_dump_category" to sortDumpCategory.toString(),
@@ -227,10 +244,10 @@ class OutrunPhotosRequest : PhotosRequest() {
     override val url: String = "$baseUrl/outrun"
 }
 
-class NewPhotosRequest(page: Int = 1) : PhotosRequest(), Multipage {
+class NewPhotosRequest(override val page: Int = 1) : PhotosRequest(), Multipage {
     override val url: String = "$baseUrl/new_on_site/photos/?pager=$page"
 }
 
-class PretenderPhotosRequest(page: Int = 1) : PhotosRequest(), Multipage {
+class PretenderPhotosRequest(override val page: Int = 1) : PhotosRequest(), Multipage {
     override val url: String = "$baseUrl/pretender/photos/?pager=$page"
 }

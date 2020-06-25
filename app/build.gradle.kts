@@ -56,7 +56,7 @@ android {
     }
 
     compileOptions {
-        coreLibraryDesugaringEnabled = true
+        //coreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -96,7 +96,7 @@ dependencies {
     val navVersion: String by rootProject.extra
 
     implementation("androidx.multidex:multidex:2.0.1")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.5")
+    //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.6")
     implementation(project(":parser"))
 
     // androidx
