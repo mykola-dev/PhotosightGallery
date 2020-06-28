@@ -1,5 +1,6 @@
 package ds.photosight.viewmodel
 
+import androidx.paging.PagingData
 import ds.photosight.parser.BestPhotosRequest
 import ds.photosight.parser.CategoriesPhotosRequest
 import ds.photosight.parser.PhotoInfo
@@ -14,7 +15,8 @@ data class MenuItemState(
 
 data class MenuState(
     val categories: List<MenuItemState>,
-    val ratings: List<MenuItemState>
+    val ratings: List<MenuItemState>,
+    val categoriesFilter: CategoriesFilter = CategoriesFilter(true)
 ) {
     companion object {
         const val MENU_CATEGORIES = 0
@@ -27,14 +29,14 @@ data class MenuState(
     )
 }
 
-data class PhotosState(
-    val photoPages: List<PhotoMap> = emptyList(),
-    val currentPage: Int = 1,
-    val isLoading: Boolean = true,
-    val categoriesFilter: CategoriesFilter = CategoriesFilter(true)
-)
+/*data class PhotosState(
+    val photos:  = PagingData.empty()
+    //val currentPage: Int = 1,
+    //val isLoading: Boolean = true,
 
-typealias PhotoMap = Map<Int, PhotoInfo>
+)*/
+
+//typealias PhotoMap = Map<Int, PhotoInfo>
 
 interface PhotosFilter {
     val enabled: Boolean

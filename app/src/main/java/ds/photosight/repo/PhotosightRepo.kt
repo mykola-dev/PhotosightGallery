@@ -1,11 +1,14 @@
 package ds.photosight.repo
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ds.photosight.R
-import ds.photosight.parser.CategoriesRequest
-import ds.photosight.parser.PhotoCategory
-import ds.photosight.parser.Request
+import ds.photosight.parser.*
 import ds.photosight.viewmodel.MenuItemState
 import ds.photosight.viewmodel.MenuState
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +34,7 @@ class PhotosightRepo @Inject constructor(@ApplicationContext private val context
         .resources
         .getStringArray(R.array.ratings_array)
         .mapIndexed { idx, title -> MenuItemState(MenuState.MENU_RATINGS, idx, title, false) }
+
 
 }
 

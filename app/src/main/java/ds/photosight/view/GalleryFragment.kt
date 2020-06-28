@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
+import androidx.paging.LoadState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -71,6 +72,9 @@ class GalleryFragment : Fragment() {
         bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
 
         val photosAdapter = PhotosAdapter()
+        photosAdapter.addLoadStateListener { state ->
+            galleryViewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
+        }
         photosRecyclerView.adapter = photosAdapter
 
         galleryViewModel.menuStateLiveData.observe(viewLifecycleOwner) {
@@ -87,11 +91,12 @@ class GalleryFragment : Fragment() {
 
         }
 
-        galleryViewModel.photosStateLiveData.observe(viewLifecycleOwner) { state ->
-            log.v("photos list loaded: $state")
-
-            progress.toggle(state.isLoading)
-            photosAdapter.update(state.photoPages.flatMap { it.values })
+        galleryViewModel.photosStateLiveData.observe(viewLifecycleOwner) { photos ->
+            log.v("photos list loaded: $photos")
+            photosAdapter.submitData(lifecycle, photos)
+        }
+        galleryViewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
+            progress.toggle(isLoading)
         }
     }
 

@@ -27,7 +27,7 @@ class HideableBottomSheet<V : View>(context: Context, attrs: AttributeSet) : Bot
         type: Int,
         consumed: IntArray
     ) {
-        Timber.v("onNestedScroll target=${target.javaClass.simpleName} dxConsumed=$dxConsumed dyConsumend=$dyConsumed dxUnconsumed=$dxUnconsumed dyUnconsumed=$dyUnconsumed type=$type consumed=${consumed.map { it }}")
+        //Timber.v("onNestedScroll target=${target.javaClass.simpleName} dxConsumed=$dxConsumed dyConsumend=$dyConsumed dxUnconsumed=$dxUnconsumed dyUnconsumed=$dyUnconsumed type=$type consumed=${consumed.map { it }}")
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
         // block when scrolling bottomsheet content
         if (target is RecyclerView && target.id == R.id.menuList) return

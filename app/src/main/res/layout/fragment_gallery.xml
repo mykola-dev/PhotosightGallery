@@ -31,14 +31,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/photosRecyclerView"
             android:layout_width="match_parent"
@@ -46,10 +38,20 @@
             tools:listitem="@layout/item_photo"
             tools:itemCount="100"
             app:spanCount="2"
+            android:verticalScrollbarPosition="right"
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
 
-    </androidx.core.widget.NestedScrollView>
+<!--    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+
+    </androidx.core.widget.NestedScrollView>-->
 
 
     <include layout="@layout/view_menu" />

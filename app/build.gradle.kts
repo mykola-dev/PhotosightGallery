@@ -90,7 +90,7 @@ dependencies {
     val archVersion = "2.1.0"
     val composeVersion = "0.1.0-dev13"
     val hiltJetpackVersion = "1.0.0-alpha01"
-    val pagingVersion = "3.0.0-alpha01"
+    val pagingVersion = "3.0.0-alpha02"
     val coroutinesVersion = "1.3.6"
     val hiltVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra
