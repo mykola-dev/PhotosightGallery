@@ -13,8 +13,6 @@ import ds.photosight.model.toMenuItemState
 import ds.photosight.repo.ResourcesRepo
 import ds.photosight.parser.*
 import ds.photosight.repo.PhotosPagingSource
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class GalleryViewModel @ViewModelInject constructor(
@@ -37,38 +35,28 @@ class GalleryViewModel @ViewModelInject constructor(
             )
         }
 
-
-    private val _photosStateLiveData = MediatorLiveData<PagingData<PhotoInfo>>().apply { value = PagingData.empty() }
-    val photosStateLiveData: LiveData<PagingData<PhotoInfo>> = _photosStateLiveData
-
-    private val photosPagedLiveData: LiveData<PagingData<PhotoInfo>> = menuStateLiveData.switchMap {
-        Pager(
-            config = PagingConfig(pageSize = 24, prefetchDistance = 12),
-            pagingSourceFactory = {
-                Timber.d("instantiating photos paging source")
-                PhotosPagingSource(menuStateLiveData.value!!)
+    val photosPagedLiveData: LiveData<PagingData<PhotoInfo>> = menuStateLiveData
+        .switchMap {
+            liveData {
+                emit(PagingData.empty())
+                emitSource(
+                    Pager(
+                        config = PagingConfig(pageSize = 24, prefetchDistance = 12, enablePlaceholders = false),
+                        pagingSourceFactory = {
+                            Timber.d("instantiating photos paging source")
+                            PhotosPagingSource(menuStateLiveData.value!!)
+                        }
+                    ).liveData
+                )
             }
-        ).liveData
-    }
 
-    val loadingState = MutableLiveData<Boolean>()
+        }
 
-    init {
-        _photosStateLiveData.addSource(menuStateLiveData) {
-            _photosStateLiveData.value = PagingData.empty()
-            loadingState.value = true
-        }
-        _photosStateLiveData.addSource(photosPagedLiveData) { pagingData ->
-            _photosStateLiveData.value = pagingData
-            loadingState.value = false
-        }
-    }
+    val loadingState = MutableLiveData<Boolean>(true)
 
 
     fun onMenuSelected(item: MenuItemState) {
-        log.v("on selected: $item")
-        (menuStateLiveData as MutableLiveData<MenuState>).value = menuStateLiveData.value!!.edit(item)
-
+        (menuStateLiveData as MutableLiveData<MenuState>).reduce(item)
     }
 
     fun onFilterChanged(filter: PhotosFilter) {
@@ -78,3 +66,9 @@ class GalleryViewModel @ViewModelInject constructor(
 
 }
 
+fun MutableLiveData<MenuState>.reduce(item: MenuItemState) = with(value!!) {
+    value = copy(
+        categories = categories.onEach { it.isSelected = item.menu == MenuState.MENU_CATEGORIES && item.id == it.id },
+        ratings = ratings.onEach { it.isSelected = item.menu == MenuState.MENU_RATINGS && item.id == it.id }
+    )
+}

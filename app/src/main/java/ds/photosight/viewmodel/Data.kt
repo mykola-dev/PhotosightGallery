@@ -23,10 +23,6 @@ data class MenuState(
         const val MENU_RATINGS = 1
     }
 
-    fun edit(item: MenuItemState): MenuState = copy(
-        categories = categories.onEach { it.isSelected = item.menu == MENU_CATEGORIES && item.id == it.id },
-        ratings = ratings.onEach { it.isSelected = item.menu == MENU_RATINGS && item.id == it.id }
-    )
 }
 
 /*data class PhotosState(

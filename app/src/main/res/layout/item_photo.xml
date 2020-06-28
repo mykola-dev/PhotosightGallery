@@ -6,7 +6,10 @@
     android:id="@+id/photoImage"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:src="@mipmap/ic_launcher"
     android:adjustViewBounds="true"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    tools:src="@mipmap/ic_launcher"
     />
 

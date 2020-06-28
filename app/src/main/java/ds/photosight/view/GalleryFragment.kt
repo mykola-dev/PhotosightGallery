@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
@@ -71,10 +72,12 @@ class GalleryFragment : Fragment() {
         bottomSheet.isHideable = true
         bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
 
-        val photosAdapter = PhotosAdapter()
-        photosAdapter.addLoadStateListener { state ->
-            galleryViewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
+        val photosAdapter = PhotosAdapter { photoInfo ->
+            log.v("clicked on ${photoInfo.id}")
+            //findNavController().navigate()
         }
+
+
         photosRecyclerView.adapter = photosAdapter
 
         galleryViewModel.menuStateLiveData.observe(viewLifecycleOwner) {
@@ -87,11 +90,14 @@ class GalleryFragment : Fragment() {
                     bottomSheet.isHideable = false
                     bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
+                photosAdapter.addLoadStateListener { state ->
+                    galleryViewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
+                }
             }
 
         }
 
-        galleryViewModel.photosStateLiveData.observe(viewLifecycleOwner) { photos ->
+        galleryViewModel.photosPagedLiveData.observe(viewLifecycleOwner) { photos ->
             log.v("photos list loaded: $photos")
             photosAdapter.submitData(lifecycle, photos)
         }
