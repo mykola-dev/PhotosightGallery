@@ -2,9 +2,14 @@ package ds.photosight.utils
 
 import android.content.Context
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.progressindicator.ProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -46,3 +51,10 @@ fun ProgressIndicator.toggle(show: Boolean) {
     if (show) show()
     else hide()
 }
+
+fun ProgressBar.toggle(show: Boolean) {
+    isVisible = show
+}
+
+val ViewPager2.recyclerView: RecyclerView
+    get() = this[0] as RecyclerView

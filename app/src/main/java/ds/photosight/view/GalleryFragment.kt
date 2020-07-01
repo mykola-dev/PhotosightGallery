@@ -54,10 +54,9 @@ class GalleryFragment : Fragment() {
             .currentBackStackEntry
             ?.savedStateHandle
             ?.get<Int>("position")
-            ?.let{ position ->
+            ?.let { position ->
                 log.v("observed new position: $position")
                 transitionHelper.postpone(position)
-                //transitionHelper.setupExitCallback(photosRecyclerView)
             }
 
         bottomSheet = BottomSheetBehavior.from(bottomSheetLayout)
@@ -76,6 +75,7 @@ class GalleryFragment : Fragment() {
         bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
 
         val photosAdapter = GalleryAdapter(transitionHelper) { clickedItem ->
+            log.v("clicked on ${clickedItem.view.transitionName} pos=${clickedItem.position}")
             if (clickedItem.isLoading) {
                 galleryViewModel.loadingState.value = true
             } else {
@@ -107,10 +107,10 @@ class GalleryFragment : Fragment() {
 
         }
 
-
         mainViewModel.photosPagedLiveData.observe(viewLifecycleOwner) { photos ->
             log.v("photos list observed")
             photosAdapter.submitData(lifecycle, photos)
+            transitionHelper.moveToCurrentItem(photosRecyclerView)
         }
         galleryViewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
             log.v("isloading observed")

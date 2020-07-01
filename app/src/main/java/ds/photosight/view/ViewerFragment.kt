@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
+import ds.photosight.utils.recyclerView
 import ds.photosight.view.adapter.ViewerAdapter
 import ds.photosight.viewmodel.MainViewModel
 import ds.photosight.viewmodel.ViewerViewModel
@@ -42,11 +43,12 @@ class ViewerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        transitionHelper.postpone(args.position)
         log.v("viewer created")
+        transitionHelper.postpone(args.position)
 
         val adapter = ViewerAdapter(transitionHelper) {
             log.v("on clicked")
+            findNavController().navigateUp()
         }
         viewPager.adapter = adapter
         var shouldSettle = true
@@ -60,7 +62,10 @@ class ViewerFragment : Fragment() {
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                log.v("on page selected: $position")
                 findNavController().previousBackStackEntry?.savedStateHandle?.set("position", position)
+                val photoView = viewPager.recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.findViewById<View>(R.id.photoImage) ?: return
+                transitionHelper.setupEnterCallback(photoView)
             }
         })
 

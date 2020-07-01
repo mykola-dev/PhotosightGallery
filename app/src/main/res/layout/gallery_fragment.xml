@@ -3,7 +3,7 @@
 	android:id="@+id/gallery_frame"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android" android:background="#000">
-	<uk.co.senab.photoview.PhotoView
+	<com.github.chrisbanes.photoview.PhotoView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:id="@+id/gallery_image"

@@ -66,25 +66,25 @@ class GalleryAdapter(
 
 
     override fun onBindViewHolder(holder: SimpleViewHolder, position: Int) {
-        Timber.d("onBindViewHolder $position width=${holder.photoImage.width} height=${holder.photoImage.height}")
         val item = getItem(position)!!
-        transitionHelper.bindView(holder.photoImage, item.id.toString())
+        val photoView = holder.photoImage
+        transitionHelper.bindView(photoView, item.id.toString())
 
-        val enterAnimation = clickedItem == position
-        val exitAnimation = transitionHelper.isAnimating(position)
+        val afterClick = clickedItem == position
+        val settlingBack = transitionHelper.isAnimating(position)
 
-        val url = if (enterAnimation || exitAnimation) {
+        val url = if (afterClick || settlingBack) {
             item.large
         } else {
             item.thumb
         }
-        Glide.with(holder.itemView)
+        Glide.with(photoView)
             .load(url)
             .run {
-                if (!enterAnimation) {
+                if (!afterClick) {
                     placeholder(placeholder).transition(properTransition)
                 } else {
-                    placeholder(holder.photoImage.drawable)
+                    placeholder(photoView.drawable)
                 }
             }
             .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -94,22 +94,20 @@ class GalleryAdapter(
                 }
 
                 override fun onResourceReady(resource: Drawable, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    val type = if (enterAnimation) "large"
-                    else "thumb"
-                    Timber.v("$position: loaded $type")
-
-                    if (enterAnimation) {
+                    if (afterClick) {
                         clickedItem = null
-                        onClick(ClickedItem(holder.photoImage, position, false))
+                        onClick(ClickedItem(photoView, position, false))
                     }
-                    if (exitAnimation) {
+                    if (settlingBack) {
+                        transitionHelper.setupExitCallback(photoView)
                         transitionHelper.animate(position)
+
                     }
 
                     return false
                 }
             })
-            .into(holder.photoImage)
+            .into(photoView)
 
     }
 
