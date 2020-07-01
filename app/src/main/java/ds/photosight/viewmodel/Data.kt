@@ -25,15 +25,6 @@ data class MenuState(
 
 }
 
-/*data class PhotosState(
-    val photos:  = PagingData.empty()
-    //val currentPage: Int = 1,
-    //val isLoading: Boolean = true,
-
-)*/
-
-//typealias PhotoMap = Map<Int, PhotoInfo>
-
 interface PhotosFilter {
     val enabled: Boolean
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--todo constraint layout-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -61,11 +62,11 @@
         android:layout_below="@+id/status"
         android:layout_alignParentRight="true"/>
 
+    <!--todo remove-->
     <ImageView
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:id="@+id/status"
-        android:src="@drawable/lover"
         android:alpha=".5"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"/>

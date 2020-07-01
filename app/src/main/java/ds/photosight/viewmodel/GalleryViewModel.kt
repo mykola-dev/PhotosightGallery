@@ -3,10 +3,7 @@ package ds.photosight.viewmodel
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.lifecycle.liveData
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.liveData
+import androidx.paging.*
 import ds.photosight.core.Prefs
 import ds.photosight.repo.PhotosightRepo
 import ds.photosight.model.toMenuItemState
@@ -35,22 +32,7 @@ class GalleryViewModel @ViewModelInject constructor(
             )
         }
 
-    val photosPagedLiveData: LiveData<PagingData<PhotoInfo>> = menuStateLiveData
-        .switchMap {
-            liveData {
-                emit(PagingData.empty())
-                emitSource(
-                    Pager(
-                        config = PagingConfig(pageSize = 24, prefetchDistance = 12, enablePlaceholders = false),
-                        pagingSourceFactory = {
-                            Timber.d("instantiating photos paging source")
-                            PhotosPagingSource(menuStateLiveData.value!!)
-                        }
-                    ).liveData
-                )
-            }
 
-        }
 
     val loadingState = MutableLiveData<Boolean>(true)
 

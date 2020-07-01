@@ -86,7 +86,7 @@ androidExtensions {
 dependencies {
     val androidX = "1.3.0"
     val lifecycleVersion = "2.2.0"
-    val koinVersion = "2.1.6"
+    //val koinVersion = "2.1.6"
     val archVersion = "2.1.0"
     val composeVersion = "0.1.0-dev13"
     val hiltJetpackVersion = "1.0.0-alpha01"
@@ -118,8 +118,8 @@ dependencies {
 
     // ui
     implementation("com.google.android.material:material:1.3.0-alpha01")
-    implementation("com.github.chrisbanes.photoview:library:+")
-    implementation("androidx.slidingpanelayout:slidingpanelayout:1.0.0")
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    //implementation("androidx.slidingpanelayout:slidingpanelayout:1.0.0")
     implementation("androidx.ui:ui-tooling:$composeVersion")
     implementation("androidx.ui:ui-layout:$composeVersion")
     implementation("androidx.ui:ui-material:$composeVersion")

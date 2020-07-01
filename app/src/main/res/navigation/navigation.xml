@@ -13,14 +13,25 @@
         tools:layout="@layout/fragment_gallery"
         >
         <action
-            android:id="@+id/action_galleryFragment_to_viewerFragment"
+            android:id="@+id/open_viewer"
             app:destination="@id/viewerFragment"
-            />
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"
+            >
+
+        </action>
     </fragment>
     <fragment
         android:id="@+id/viewerFragment"
-        android:name="ds.photosight_legacy.ui.ViewerFragment"
+        android:name="ds.photosight.view.ViewerFragment"
         android:label="Viewer"
         tools:layout="@layout/fragment_viewer"
-        />
+        >
+        <argument
+            android:name="position"
+            app:argType="integer"
+            />
+    </fragment>
 </navigation>

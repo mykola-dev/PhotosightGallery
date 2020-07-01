@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:theme="@style/AppTheme.Black"
+    >
 
     <!-- The main content view -->
     <androidx.viewpager2.widget.ViewPager2
@@ -15,28 +18,30 @@
 
     <!--drawer-->
     <FrameLayout
-        android:background="@color/drawer_background"
         android:layout_width="@dimen/drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:animateLayoutChanges="true"
+        android:background="@color/drawer_background"
         >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/drawerList"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            tools:listitem="@layout/item_comment"/>
-            <!--android:divider="@color/dark_divider"-->
-        <ProgressBar
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_comment"
+            />
+        <!--android:divider="@color/dark_divider"-->
+        <com.google.android.material.progressindicator.ProgressIndicator
             android:id="@+id/drawer_progress"
-            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.ProgressIndicator.Circular.Indeterminate"
             android:layout_width="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
         <!--android:layout_marginTop="48dp"-->
 
     </FrameLayout>
-
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

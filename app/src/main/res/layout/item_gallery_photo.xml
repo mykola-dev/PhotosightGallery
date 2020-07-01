@@ -11,5 +11,6 @@
     android:focusable="true"
     android:foreground="?selectableItemBackground"
     tools:src="@mipmap/ic_launcher"
+    tools:ignore="ContentDescription"
     />
 

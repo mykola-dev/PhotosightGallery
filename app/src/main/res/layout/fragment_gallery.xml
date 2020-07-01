@@ -35,7 +35,7 @@
             android:id="@+id/photosRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_photo"
+            tools:listitem="@layout/item_gallery_photo"
             tools:itemCount="100"
             app:spanCount="2"
             android:verticalScrollbarPosition="right"

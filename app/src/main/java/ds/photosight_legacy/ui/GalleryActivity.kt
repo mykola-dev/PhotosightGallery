@@ -26,6 +26,8 @@ import androidx.viewpager.widget.ViewPager
 import com.androidquery.AQuery
 import com.androidquery.callback.AjaxStatus
 import com.androidquery.callback.BitmapAjaxCallback
+import com.github.chrisbanes.photoview.PhotoView
+import com.github.chrisbanes.photoview.PhotoViewAttacher
 import de.greenrobot.event.EventBus
 import ds.photosight.R
 import ds.photosight_legacy.App
@@ -39,8 +41,6 @@ import ds.photosight_legacy.ui.widget.GalleryViewPager
 import ds.photosight_legacy.ui.widget.VotesWidget
 import ds.photosight.utils.L
 import ds.photosight_legacy.utils.Utils
-import uk.co.senab.photoview.PhotoView
-import uk.co.senab.photoview.PhotoViewAttacher
 import java.io.File
 import java.util.ArrayList
 import java.util.HashMap
