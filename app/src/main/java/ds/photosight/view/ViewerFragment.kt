@@ -61,6 +61,11 @@ class ViewerFragment : Fragment() {
         setupDrawer()
         toggleActionBar(false)
 
+        setupViewPager()
+
+    }
+
+    private fun setupViewPager() {
         val adapter = ViewerAdapter(transitionHelper) {
             log.v("on clicked")
             toggleActionBar(!isActionBarVisible())
@@ -75,6 +80,8 @@ class ViewerFragment : Fragment() {
             }
         }
 
+        viewPager.offscreenPageLimit = 1
+
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 log.v("on page selected: $position")
@@ -83,7 +90,6 @@ class ViewerFragment : Fragment() {
                 transitionHelper.setupEnterCallback(photoView)
             }
         })
-
     }
 
     private fun isActionBarVisible(): Boolean = (activity as AppCompatActivity).supportActionBar?.isShowing ?: false
@@ -116,10 +122,10 @@ class ViewerFragment : Fragment() {
             //requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         } else {
             ab?.hide()
-           /* requireActivity().window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                )*/
+            /* requireActivity().window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                 )*/
             requireActivity().window.navigationBarColor = Color.TRANSPARENT
             requireActivity().window.statusBarColor = Color.TRANSPARENT
         }

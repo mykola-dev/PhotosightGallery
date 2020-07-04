@@ -9,9 +9,9 @@
     >
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         >
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -22,14 +22,6 @@
             app:title="Photosight Gallery"
             />
 
-        <com.google.android.material.progressindicator.ProgressIndicator
-            android:id="@+id/progress"
-            style="@style/IndeterminateLinearProgressIndicatorStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminateDuration="0"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -47,9 +39,17 @@
         />
 
 
-    <include
-        layout="@layout/view_menu"
-        />
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 
+    <include layout="@layout/view_menu" />
+
+    <com.google.android.material.progressindicator.ProgressIndicator
+        android:id="@+id/progress"
+        style="@style/IndeterminateLinearProgressIndicatorStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:fitsSystemWindows="true"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

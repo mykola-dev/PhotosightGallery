@@ -7,8 +7,10 @@ import androidx.paging.PagingDataAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.DrawableCrossFadeTransition
 import com.github.chrisbanes.photoview.PhotoViewAttacher
 import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
@@ -41,7 +43,7 @@ class ViewerAdapter(
         Glide.with(photoView)
             .load(url)
             .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-            .transition(properTransition)
+            .transition(withCrossFade())
             .listener(object : RequestListener<Drawable> {
                 private fun onCompleted(): Boolean {
                     Timber.v("item $position loaded id=${photoView.transitionName}")

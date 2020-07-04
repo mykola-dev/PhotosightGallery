@@ -1,13 +1,17 @@
 package ds.photosight.view
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -38,7 +42,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
 
-    private lateinit var bottomSheet: BottomSheetBehavior<*>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     @Inject
     lateinit var log: Timber.Tree
@@ -53,11 +57,11 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
-        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
-
+        requireActivity().window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
 
         setupMenu()
+        setupAppBar()
 
         findNavController()
             .currentBackStackEntry
@@ -68,11 +72,11 @@ class GalleryFragment : Fragment() {
                 transitionHelper.postpone(position)
             }
 
-        bottomSheet = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         fixInsets()
 
         val onMenuSelected = { item: MenuItemState ->
-            bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             galleryViewModel.onMenuSelected(item)
         }
         val categoriesAdapter = MenuAdapter(onMenuSelected)
@@ -81,8 +85,8 @@ class GalleryFragment : Fragment() {
         setupTabs()
 
         // hide bottom sheet until categories loaded
-        bottomSheet.isHideable = true
-        bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehavior.isHideable = true
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         val photosAdapter = GalleryAdapter(transitionHelper) { clickedItem ->
             log.v("clicked on ${clickedItem.view.transitionName} pos=${clickedItem.position}")
@@ -105,10 +109,10 @@ class GalleryFragment : Fragment() {
             categoriesAdapter.updateData(it.categories)
             ratingsAdapter.updateData(it.ratings)
 
-            if (bottomSheet.isHideable) {
+            if (bottomSheetBehavior.isHideable) {
                 Handler().post {
-                    bottomSheet.isHideable = false
-                    bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+                    bottomSheetBehavior.isHideable = false
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 photosAdapter.addLoadStateListener { state ->
                     galleryViewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
@@ -128,18 +132,39 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    private fun fixInsets() {
-        //bottomSheet.setb
-        ViewCompat.setOnApplyWindowInsetsListener(bottomSheetLayout) { view, insets ->
-            val initialPeekHeight = resources.getDimension(R.dimen.peek_height).toInt()
-            log.e("bottom inset=${insets.systemWindowInsetBottom} top=${insets.systemWindowInsetTop}")
-            val lp = bottomSheetLayout.layoutParams as CoordinatorLayout.LayoutParams
-            lp.topMargin = insets.systemWindowInsetTop
-            bottomSheetLayout.layoutParams = lp
-            val bottomInset = insets.systemWindowInsetBottom + insets.systemWindowInsetTop
-            bottomSheet.setPeekHeight(initialPeekHeight + bottomInset, true)
+    private fun setupAppBar() {
+        val top = toolbar.paddingTop
+        ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, insets ->
+            val sbInset = insets.systemWindowInsetTop
+            view.updatePadding(top = top + sbInset)
             insets
         }
+    }
+
+    private fun fixInsets() {
+        val initialPeekHeight = resources.getDimension(R.dimen.peek_height).toInt()
+        var sbInset = 0
+        var nbInset = 0
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomSheetLayout) { view, insets ->
+            sbInset = insets.systemWindowInsetTop
+            nbInset = insets.systemWindowInsetBottom
+            bottomSheetBehavior.setPeekHeight(initialPeekHeight + nbInset, true)
+            insets
+        }
+        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                //log.v("on slide")
+                tabLayout.updatePadding(
+                    top = (sbInset * slideOffset).toInt(),
+                    bottom = (nbInset * (1 - slideOffset)).toInt()
+                )
+                //bottomSheet.requestLayout()
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+            }
+        })
     }
 
     private fun setupMenu() {
@@ -178,8 +203,8 @@ class GalleryFragment : Fragment() {
     }
 
     private fun openMenu() {
-        if (bottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
-            bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 

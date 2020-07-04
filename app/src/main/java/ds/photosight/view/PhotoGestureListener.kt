@@ -2,21 +2,21 @@ package ds.photosight.view
 
 import android.view.GestureDetector
 import android.view.MotionEvent
-import androidx.core.view.postDelayed
 import com.github.chrisbanes.photoview.PhotoView
 import timber.log.Timber
+import kotlin.math.min
 
 class PhotoGestureListener(private var photo: PhotoView, val onClick: () -> Unit) : GestureDetector.OnDoubleTapListener {
 
     override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-        L.v("onSingleTapConfirmed")
+        println("onSingleTapConfirmed")
         onClick()
 
         return true
     }
 
     override fun onDoubleTap(e: MotionEvent): Boolean {
-        L.v("onDoubleTap")
+        println("onDoubleTap")
 
         try {
             val scale: Float
@@ -34,7 +34,7 @@ class PhotoGestureListener(private var photo: PhotoView, val onClick: () -> Unit
                 else -> photo.minimumScale
             }
 
-            photo.setScale(scale, x, y, true)
+            photo.setScale(min(scale, photo.maximumScale), x, y, true)
 
         } catch (ex: ArrayIndexOutOfBoundsException) {
             // Can sometimes happen when getX() and getY() is called
@@ -46,7 +46,7 @@ class PhotoGestureListener(private var photo: PhotoView, val onClick: () -> Unit
 
 
     override fun onDoubleTapEvent(e: MotionEvent): Boolean {
-        L.v("onDoubleTapEvent")
+        println("onDoubleTapEvent")
         return true
     }
 }

@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:windowBackground"
-    tools:background="@color/green"
     android:theme="@style/AppTheme.Black"
     >
 
@@ -31,7 +30,6 @@
             android:fitsSystemWindows="true"
             app:elevation="0dp"
             >
-            <!--android:background="@android:color/transparent"-->
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -39,7 +37,6 @@
                 android:layout_height="wrap_content"
                 app:title="Photosight Gallery"
                 />
-                <!--android:background="@color/drawer_background"-->
 
         </com.google.android.material.appbar.AppBarLayout>
 
