@@ -15,13 +15,7 @@ class App : MultiDexApplication() {
         // legacy
         Timber.plant(Timber.DebugTree())
 
-        //DailyPhotosRequest(DailyPhotosRequest.DatePage(1,1,1))
-
         //debugEnabled = true
-    }
-
-    fun isPortrait(): Boolean {
-        return resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
     }
 
 

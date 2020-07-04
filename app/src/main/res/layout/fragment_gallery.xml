@@ -11,6 +11,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         >
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -24,39 +25,31 @@
         <com.google.android.material.progressindicator.ProgressIndicator
             android:id="@+id/progress"
             style="@style/IndeterminateLinearProgressIndicatorStyle"
-            android:indeterminateDuration="0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:indeterminateDuration="0"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/photosRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_gallery_photo"
-            tools:itemCount="100"
-            app:spanCount="2"
-            android:scrollbarStyle="outsideOverlay"
-            android:scrollbars="vertical"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            />
-
-<!--    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScroll"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/photosRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+        app:spanCount="2"
+        tools:itemCount="100"
+        tools:listitem="@layout/item_gallery_photo"
+        />
 
 
-    </androidx.core.widget.NestedScrollView>-->
-
-
-    <include layout="@layout/view_menu" />
+    <include
+        layout="@layout/view_menu"
+        />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

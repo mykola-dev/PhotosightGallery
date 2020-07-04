@@ -9,8 +9,10 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.github.chrisbanes.photoview.PhotoViewAttacher
 import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
+import ds.photosight.view.PhotoGestureListener
 import ds.photosight.view.SharedElementsHelper
 import kotlinx.android.synthetic.main.item_viewer_photo.*
 import timber.log.Timber
@@ -22,9 +24,10 @@ class ViewerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleViewHolder {
         val holder = SimpleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_viewer_photo, parent, false))
-        holder.itemView.setOnClickListener {
-            onClick(getItem(holder.bindingAdapterPosition)!!)
-        }
+        val photo = holder.photoImage
+        photo.setOnDoubleTapListener(
+            PhotoGestureListener(photo) { onClick(getItem(holder.bindingAdapterPosition)!!) }
+        )
         return holder
     }
 

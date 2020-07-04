@@ -1,10 +1,13 @@
 package ds.photosight.view
 
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,6 +16,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,6 +53,11 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
+        requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.primary)
+
+
+        setupMenu()
 
         findNavController()
             .currentBackStackEntry
@@ -60,6 +69,7 @@ class GalleryFragment : Fragment() {
             }
 
         bottomSheet = BottomSheetBehavior.from(bottomSheetLayout)
+        fixInsets()
 
         val onMenuSelected = { item: MenuItemState ->
             bottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -118,6 +128,30 @@ class GalleryFragment : Fragment() {
         }
     }
 
+    private fun fixInsets() {
+        //bottomSheet.setb
+        ViewCompat.setOnApplyWindowInsetsListener(bottomSheetLayout) { view, insets ->
+            val initialPeekHeight = resources.getDimension(R.dimen.peek_height).toInt()
+            log.e("bottom inset=${insets.systemWindowInsetBottom} top=${insets.systemWindowInsetTop}")
+            val lp = bottomSheetLayout.layoutParams as CoordinatorLayout.LayoutParams
+            lp.topMargin = insets.systemWindowInsetTop
+            bottomSheetLayout.layoutParams = lp
+            val bottomInset = insets.systemWindowInsetBottom + insets.systemWindowInsetTop
+            bottomSheet.setPeekHeight(initialPeekHeight + bottomInset, true)
+            insets
+        }
+    }
+
+    private fun setupMenu() {
+        toolbar.inflateMenu(R.menu.main_menu)
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.im_about -> requireActivity().showAbout()
+                else -> error("not implemented")
+            }
+            true
+        }
+    }
 
     private fun setupTabs() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -147,6 +181,28 @@ class GalleryFragment : Fragment() {
         if (bottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
             bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+    private fun Activity.showAbout() {
+        val version: String = try {
+            val manager = packageManager.getPackageInfo(packageName, 0)
+            manager.versionName
+        } catch (e1: PackageManager.NameNotFoundException) {
+            "100500"
+        }
+
+        val message = getString(R.string.abouttext, getString(R.string.changelog))
+
+        val d = MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.about_title_) + version)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok) { dialog, _ ->
+                dialog.cancel()
+            }
+            .create()
+        d.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        d.show()
+
     }
 }
 

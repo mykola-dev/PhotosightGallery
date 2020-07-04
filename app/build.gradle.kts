@@ -107,6 +107,9 @@ dependencies {
     implementation("androidx.paging:paging-runtime:$pagingVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
+    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha04")
+
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")              // https://developer.android.com/jetpack/androidx
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")

@@ -11,4 +11,8 @@ class ViewerViewModel @ViewModelInject constructor(
     private val photosightRepo: PhotosightRepo
 ) : BaseViewModel() {
 
+    fun loadComments() {
+        // todo
+    }
+
 }

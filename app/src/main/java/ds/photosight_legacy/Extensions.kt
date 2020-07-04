@@ -10,7 +10,7 @@ import android.widget.TextView
 import ds.photosight.R
 
 fun Activity.showAbout() {
-    val ver: String = try {
+   /* val ver: String = try {
         val manager = packageManager.getPackageInfo(packageName, 0)
         manager.versionName
     } catch (e1: PackageManager.NameNotFoundException) {
@@ -31,7 +31,7 @@ fun Activity.showAbout() {
     verText.text = ver
     b.setOnClickListener { dialog.cancel() }
     dialog.window.setWindowAnimations(android.R.style.Animation_Translucent)
-    dialog.show()
+    dialog.show()*/
 }
 
 fun Context.getApp(): App = this.applicationContext as App

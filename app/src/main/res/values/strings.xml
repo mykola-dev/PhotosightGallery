@@ -126,19 +126,13 @@ v0.1
 "
 	</string>
 	<string name="abouttext">"Photosight.ru is a photographic community of talented photographers mostly from Europe. You can find there daily updated archive of creative artistic photos or share your own.
-Photosight Gallery is an easy way to browse photos from www.photosight.ru on your Android device.
+Photosight Gallery is an easy way to browse photos from photosight.ru on your Android device.
 
 Please e-mail bugreports:
 deviantstudio.software@gmail.com
 
-If you like this app, please rate:
-%2$s
-
-and feel free to comment:
-http://deviantstudio-software.blogspot.com
 %1$s
 
-All Photosight trademarks displayed on this application are property of Photosight.ru. All photographs hosted on photosight.ru are property of their owners.
 "</string>
 	<string name="thumb_size_1">140</string>
     <string name="thumb_size_2">210</string>
@@ -200,7 +194,7 @@ All Photosight trademarks displayed on this application are property of Photosig
 	<string name="low_resolution">Low Image Resolution</string>
 	<string name="thumb_columns">Thumbs Columns</string>
 	<string name="copyright" translatable="false">© 1997-2020 Deviant Studio</string>
-	<string name="about_title_" translatable="false">PHOTOSIGHT GALLERY </string>
+	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
 	<string name="ratings">Ratings</string>
 
 

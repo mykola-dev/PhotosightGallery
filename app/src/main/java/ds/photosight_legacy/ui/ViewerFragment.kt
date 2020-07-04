@@ -132,7 +132,6 @@ class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListener {
     private fun initViews(v: View, forceUpdate: Boolean) {
         setupTitle()
         grid = v.findViewById(R.id.viewerGrid) as GridView
-        grid.setSelector(R.drawable.list_item_background)
         grid.setDrawSelectorOnTop(true)
         val gridWidth = grid.width
         L.v("grid width=$gridWidth")

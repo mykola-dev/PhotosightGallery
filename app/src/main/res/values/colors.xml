@@ -3,6 +3,7 @@
     <color name="primary">#1b1b1b</color>
     <color name="accent">#db5e4b</color>
     <color name="background">@color/grey_dark</color>
+    <color name="drawer_background">#a000</color>
 
     <color name="black">#000</color>
     <color name="grey_dark">#333</color>
@@ -21,7 +22,6 @@
     <color name="list_divider">#bbb</color>
     <color name="grid_background">#666</color>
     <color name="main_background">#888</color>
-    <color name="drawer_background">#a000</color>
     <color name="text_secondary">#888</color>
     <color name="primary_text">#ddd</color>
     <color name="ab_text">#ccc</color>
@@ -30,5 +30,4 @@
     <color name="black_text">#111</color>
     <color name="white">#fff</color>
     <color name="dark_divider">#2fff</color>
-    <color name="background_selected">#6fff</color>
 </resources>

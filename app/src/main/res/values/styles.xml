@@ -5,12 +5,20 @@
         <item name="colorPrimary">@color/grey_light</item>
         <item name="colorSurface">@color/primary</item>
         <item name="colorSecondary">@color/accent</item>
+        <!--<item name="colorPrimaryDark">@android:color/transparent</item>-->
         <!--<item name="colorOnPrimary">?colorOnBackground</item>-->
         <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="elevationOverlayEnabled">false</item>
+        <item name="materialAlertDialogTheme">@style/DialogTheme</item>
         <!--    <item name="toolbarStyle">@style/ToolBarStyle</item>-->
         <!--<item name="progressIndicatorStyle">@style/ProgressIndicatorStyle</item>-->
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--<item name="android:fitsSystemWindows">true</item>-->
+        <!--        <item name="android:windowTranslucentStatus">true</item>
+                <item name="android:windowTranslucentNavigation">true</item>-->
     </style>
 
     <style name="AppTheme.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -22,6 +30,8 @@
 
     <style name="AppTheme.Black" parent="AppTheme">
         <item name="android:windowBackground">@color/black</item>
+        <item name="colorSurface">@color/drawer_background</item>
+
     </style>
 
 
@@ -29,6 +39,11 @@
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:background">@color/grey_light</item>
     </style>
     <!--
         <style name="ToolBarStyle" parent="Widget.AppCompat.Toolbar">
