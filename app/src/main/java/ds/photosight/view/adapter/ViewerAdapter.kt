@@ -43,7 +43,7 @@ class ViewerAdapter(
         Glide.with(photoView)
             .load(url)
             .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-            .transition(withCrossFade())
+            .transition(properTransition)
             .listener(object : RequestListener<Drawable> {
                 private fun onCompleted(): Boolean {
                     Timber.v("item $position loaded id=${photoView.transitionName}")

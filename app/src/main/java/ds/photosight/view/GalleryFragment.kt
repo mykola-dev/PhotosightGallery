@@ -1,16 +1,15 @@
 package ds.photosight.view
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,6 +18,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
@@ -26,9 +26,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
 import ds.photosight.utils.toggle
+import ds.photosight.view.adapter.GalleryAdapter
 import ds.photosight.view.adapter.MenuAdapter
 import ds.photosight.view.adapter.MenuPagerAdapter
-import ds.photosight.view.adapter.GalleryAdapter
 import ds.photosight.viewmodel.GalleryViewModel
 import ds.photosight.viewmodel.MainViewModel
 import ds.photosight.viewmodel.MenuItemState
@@ -38,6 +38,7 @@ import kotlinx.android.synthetic.main.fragment_gallery.*
 import kotlinx.android.synthetic.main.view_menu.*
 import timber.log.Timber
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
@@ -59,9 +60,7 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
         requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
-
-        setupMenu()
-        setupAppBar()
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
 
         findNavController()
             .currentBackStackEntry
@@ -72,9 +71,14 @@ class GalleryFragment : Fragment() {
                 transitionHelper.postpone(position)
             }
 
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        setupMenu()
+        setupAppBar()
         fixInsets()
+        observeData()
 
+    }
+
+    private fun observeData() {
         val onMenuSelected = { item: MenuItemState ->
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             galleryViewModel.onMenuSelected(item)
@@ -96,7 +100,14 @@ class GalleryFragment : Fragment() {
                 val extras = FragmentNavigatorExtras(
                     clickedItem.view to clickedItem.view.transitionName
                 )
-                findNavController().navigate(GalleryFragmentDirections.openViewer(clickedItem.position), extras)
+                with(findNavController()) {
+                    log.v("current destination: ${currentDestination?.id}")
+                    if (R.id.galleryFragment == currentDestination?.id) {
+                        navigate(GalleryFragmentDirections.openViewer(clickedItem.position), extras)
+                    } else {
+                        log.w("wrong destination")
+                    }
+                }
             }
         }
 
@@ -133,10 +144,13 @@ class GalleryFragment : Fragment() {
     }
 
     private fun setupAppBar() {
-        val top = toolbar.paddingTop
+        // fixes returning image transition glitch
+        appBar.setExpanded(true, false)
+
+        val topPadding = toolbar.paddingTop
         ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, insets ->
             val sbInset = insets.systemWindowInsetTop
-            view.updatePadding(top = top + sbInset)
+            view.updatePadding(top = topPadding + sbInset)
             insets
         }
     }
@@ -150,6 +164,10 @@ class GalleryFragment : Fragment() {
             sbInset = insets.systemWindowInsetTop
             nbInset = insets.systemWindowInsetBottom
             bottomSheetBehavior.setPeekHeight(initialPeekHeight + nbInset, true)
+            tabLayout.updatePadding(
+                top = 0,
+                bottom = nbInset
+            )
             insets
         }
         bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -159,7 +177,6 @@ class GalleryFragment : Fragment() {
                     top = (sbInset * slideOffset).toInt(),
                     bottom = (nbInset * (1 - slideOffset)).toInt()
                 )
-                //bottomSheet.requestLayout()
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -208,27 +225,6 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    private fun Activity.showAbout() {
-        val version: String = try {
-            val manager = packageManager.getPackageInfo(packageName, 0)
-            manager.versionName
-        } catch (e1: PackageManager.NameNotFoundException) {
-            "100500"
-        }
-
-        val message = getString(R.string.abouttext, getString(R.string.changelog))
-
-        val d = MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.about_title_) + version)
-            .setMessage(message)
-            .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                dialog.cancel()
-            }
-            .create()
-        d.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        d.show()
-
-    }
 }
 
 

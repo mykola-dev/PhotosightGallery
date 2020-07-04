@@ -16,6 +16,7 @@
         <!--<item name="progressIndicatorStyle">@style/ProgressIndicatorStyle</item>-->
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--<item name="android:windowSharedElementsUseOverlay">true</item>-->
         <!--        <item name="android:windowTranslucentStatus">true</item>
                 <item name="android:windowTranslucentNavigation">true</item>-->
     </style>

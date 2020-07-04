@@ -52,7 +52,8 @@
 
 	<string name="changelog" translatable="false">"
 Change Log:
-v 1.0
+
+v1.0
 - the app has been rewritten from scratch
 
 v0.9
@@ -107,13 +108,12 @@ v0.33
 v0.32
 - fix #2
 
-Change Log:
 v0.3
 - Set photo as wallpaper or contact
 - Add Outrun category
 - bugfixes and improvements
 
-v.0.21
+v0.21
 - bugfixes
 
 v0.2

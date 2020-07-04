@@ -6,20 +6,24 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
     >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        tools:background="#0f0"
         >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
             app:title="Photosight Gallery"
+            android:fitsSystemWindows="false"
             />
 
 
@@ -39,17 +43,18 @@
         />
 
 
-    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-
     <include layout="@layout/view_menu" />
 
-    <com.google.android.material.progressindicator.ProgressIndicator
+    <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progress"
-        style="@style/IndeterminateLinearProgressIndicatorStyle"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:indeterminate="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
+        android:background="@null"
         android:fitsSystemWindows="true"
+        android:layout_marginTop="-6dp"
+        android:elevation="8dp"
         />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
