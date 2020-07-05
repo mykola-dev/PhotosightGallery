@@ -13,7 +13,8 @@ data class PhotoInfo(
     val page: String,
     val title: String,
     val authorName: String,
-    val authorUrl: String?
+    val authorUrl: String?,
+    var failed: Boolean = false
 )
 
 data class PhotoDetails(

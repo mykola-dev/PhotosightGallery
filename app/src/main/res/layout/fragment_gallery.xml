@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
@@ -13,8 +13,6 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="false"
-        tools:background="#0f0"
         >
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -23,7 +21,6 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:title="Photosight Gallery"
-            android:fitsSystemWindows="false"
             />
 
 
@@ -43,18 +40,46 @@
         />
 
 
-    <include layout="@layout/view_menu" />
+    <include
+        android:id="@+id/bottomSheet"
+        layout="@layout/view_menu"
+        />
 
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progress"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:indeterminate="true"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/snackbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:fitsSystemWindows="true"
-        android:layout_marginTop="-6dp"
-        android:elevation="8dp"
+        android:layout_gravity="top"
+        android:fitsSystemWindows="false"
+        app:layout_anchor="@id/bottomSheet"
+        app:layout_anchorGravity="top"
         />
+
+    <FrameLayout
+        android:id="@+id/fittedContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        >
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-7dp"
+            android:background="@null"
+            android:elevation="8dp"
+            android:indeterminate="true"
+            />
+
+        <View
+            android:id="@+id/screenBottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom"
+            />
+
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

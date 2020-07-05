@@ -3,13 +3,18 @@ package ds.photosight.viewmodel
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.lifecycle.liveData
-import androidx.paging.*
+import com.hadilq.liveevent.LiveEvent
 import ds.photosight.core.Prefs
+import ds.photosight.model.SnackbarEvent
 import ds.photosight.repo.PhotosightRepo
 import ds.photosight.model.toMenuItemState
 import ds.photosight.repo.ResourcesRepo
 import ds.photosight.parser.*
-import ds.photosight.repo.PhotosPagingSource
+import ds.photosight.utils.invoke
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retry
 import timber.log.Timber
 
 class GalleryViewModel @ViewModelInject constructor(
@@ -19,8 +24,17 @@ class GalleryViewModel @ViewModelInject constructor(
     private val resourcesRepo: ResourcesRepo
 ) : BaseViewModel() {
 
+    val retrySnackbarCommand = LiveEvent<String>()
+
     private val categoriesLiveData: LiveData<List<PhotoCategory>> = liveData {
-        emit(photosightRepo.getCategories())
+        flow { emit(photosightRepo.getCategories()) }
+            .retry {
+                log.w("retry!")
+                delay(2000)
+                true
+            }
+            .asLiveData(coroutineContext)
+            .also { emitSource(it) }
     }
 
     val menuStateLiveData: LiveData<MenuState> = MutableLiveData<MenuState>(MenuState(emptyList(), emptyList()))
@@ -33,7 +47,6 @@ class GalleryViewModel @ViewModelInject constructor(
         }
 
 
-
     val loadingState = MutableLiveData<Boolean>(true)
 
 
@@ -43,6 +56,10 @@ class GalleryViewModel @ViewModelInject constructor(
 
     fun onFilterChanged(filter: PhotosFilter) {
         TODO()
+    }
+
+    fun onLoadingError() {
+        retrySnackbarCommand("Loading Failed")
     }
 
 

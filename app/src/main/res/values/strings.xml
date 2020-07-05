@@ -196,6 +196,7 @@ deviantstudio.software@gmail.com
 	<string name="copyright" translatable="false">© 1997-2020 Deviant Studio</string>
 	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
 	<string name="ratings">Ratings</string>
+	<string name="retry">Retry</string>
 
 
 </resources>

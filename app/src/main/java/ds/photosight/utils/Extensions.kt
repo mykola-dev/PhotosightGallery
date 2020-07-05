@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
@@ -16,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 // for tests only
@@ -39,13 +40,15 @@ inline fun View.snack(message: String, length: Int = Snackbar.LENGTH_SHORT, f: S
     snack.show()
 }
 
-fun Snackbar.action(@StringRes actionRes: Int, color: Int? = null, listener: (View) -> Unit) {
+fun Snackbar.action(@StringRes actionRes: Int, @ColorRes color: Int? = null, listener: (View) -> Unit) {
     action(view.resources.getString(actionRes), color, listener)
 }
 
-fun Snackbar.action(action: String, color: Int? = null, listener: (View) -> Unit) {
+fun Snackbar.action(action: String, @ColorRes colorRes: Int? = null, listener: (View) -> Unit) {
     setAction(action, listener)
-    color?.let { setActionTextColor(ContextCompat.getColor(context, color)) }
+    if (colorRes != null) {
+        setActionTextColor(ContextCompat.getColor(context, colorRes))
+    }
 }
 
 fun ProgressIndicator.toggle(show: Boolean) {
@@ -59,3 +62,9 @@ fun ProgressBar.toggle(show: Boolean) {
 
 val ViewPager2.recyclerView: RecyclerView
     get() = this[0] as RecyclerView
+
+inline fun <reified T> Any.getWithReflection(fieldName: String): T {
+    val f = javaClass.getDeclaredField(fieldName)
+    f.isAccessible = true
+    return f.get(this) as T
+}

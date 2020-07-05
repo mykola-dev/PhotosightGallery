@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
@@ -21,7 +20,6 @@ import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.view.SharedElementsHelper
 import kotlinx.android.synthetic.main.item_gallery_photo.*
-import timber.log.Timber
 
 class GalleryAdapter(
     val transitionHelper: SharedElementsHelper,
@@ -37,7 +35,7 @@ class GalleryAdapter(
     private var clickedItem: Int? = null
 
     private lateinit var placeholder: Drawable
-    private lateinit var layoutManager: StaggeredGridLayoutManager
+    //private lateinit var layoutManager: StaggeredGridLayoutManager
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -47,7 +45,8 @@ class GalleryAdapter(
             setExitFadeDuration(1000)
             start()
         }
-        layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
+        //layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
+
         // fixes grid re-layout on each click
         recyclerView.itemAnimator = null
 
@@ -57,8 +56,11 @@ class GalleryAdapter(
         val holder = SimpleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_photo, parent, false))
         holder.itemView.setOnClickListener {
             val position = holder.absoluteAdapterPosition
-            clickedItem = position
-            onClick(ClickedItem(holder.photoImage, position, true))
+            val item = getItem(position)!!
+            if (!item.failed) {
+                clickedItem = position
+                onClick(ClickedItem(holder.photoImage, position, true))
+            }
             notifyItemChanged(position)
         }
         return holder
@@ -88,12 +90,15 @@ class GalleryAdapter(
                 }
             }
             .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+            .error(R.drawable.ic_photo_error)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    item.failed = true
                     return false
                 }
 
                 override fun onResourceReady(resource: Drawable, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    item.failed = false
                     if (afterClick) {
                         clickedItem = null
                         onClick(ClickedItem(photoView, position, false))
@@ -111,11 +116,6 @@ class GalleryAdapter(
 
     }
 
-}
-
-object PhotoInfoDiffCallback : DiffUtil.ItemCallback<PhotoInfo>() {
-    override fun areItemsTheSame(oldItem: PhotoInfo, newItem: PhotoInfo): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: PhotoInfo, newItem: PhotoInfo): Boolean = oldItem == newItem
 }
 
 val properTransition = DrawableTransitionOptions.with { dataSource, isFirstResource ->

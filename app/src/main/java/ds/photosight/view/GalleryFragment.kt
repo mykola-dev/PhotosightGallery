@@ -1,9 +1,8 @@
 package ds.photosight.view
 
-import android.app.Activity
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,17 +17,21 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
+import ds.photosight.utils.action
+import ds.photosight.utils.postDelayed
+import ds.photosight.utils.snack
 import ds.photosight.utils.toggle
 import ds.photosight.view.adapter.GalleryAdapter
 import ds.photosight.view.adapter.MenuAdapter
 import ds.photosight.view.adapter.MenuPagerAdapter
+import ds.photosight.view.widget.HideableBottomSheet
 import ds.photosight.viewmodel.GalleryViewModel
 import ds.photosight.viewmodel.MainViewModel
 import ds.photosight.viewmodel.MenuItemState
@@ -48,7 +51,7 @@ class GalleryFragment : Fragment() {
     @Inject
     lateinit var log: Timber.Tree
 
-    private val galleryViewModel: GalleryViewModel by viewModels()
+    private val viewModel: GalleryViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private val transitionHelper = SharedElementsHelper(this)
@@ -60,7 +63,7 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
         requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 
         findNavController()
             .currentBackStackEntry
@@ -76,12 +79,13 @@ class GalleryFragment : Fragment() {
         fixInsets()
         observeData()
 
+
     }
 
     private fun observeData() {
         val onMenuSelected = { item: MenuItemState ->
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            galleryViewModel.onMenuSelected(item)
+            viewModel.onMenuSelected(item)
         }
         val categoriesAdapter = MenuAdapter(onMenuSelected)
         val ratingsAdapter = MenuAdapter(onMenuSelected)
@@ -95,7 +99,7 @@ class GalleryFragment : Fragment() {
         val photosAdapter = GalleryAdapter(transitionHelper) { clickedItem ->
             log.v("clicked on ${clickedItem.view.transitionName} pos=${clickedItem.position}")
             if (clickedItem.isLoading) {
-                galleryViewModel.loadingState.value = true
+                viewModel.loadingState.value = true
             } else {
                 val extras = FragmentNavigatorExtras(
                     clickedItem.view to clickedItem.view.transitionName
@@ -113,9 +117,9 @@ class GalleryFragment : Fragment() {
 
         photosRecyclerView.adapter = photosAdapter
 
-        mainViewModel.setMenuStateLiveData(galleryViewModel.menuStateLiveData)
+        mainViewModel.setMenuStateLiveData(viewModel.menuStateLiveData)
 
-        galleryViewModel.menuStateLiveData.observe(viewLifecycleOwner) {
+        viewModel.menuStateLiveData.observe(viewLifecycleOwner) {
             log.v("menu state observed")
             categoriesAdapter.updateData(it.categories)
             ratingsAdapter.updateData(it.ratings)
@@ -126,7 +130,12 @@ class GalleryFragment : Fragment() {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 photosAdapter.addLoadStateListener { state ->
-                    galleryViewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
+                    log.v("loading state: $state")
+                    viewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
+                    if (state.refresh is LoadState.Error || state.append is LoadState.Error || state.prepend is LoadState.Error) {
+                        viewModel.onLoadingError()
+                    }
+
                 }
             }
 
@@ -136,11 +145,18 @@ class GalleryFragment : Fragment() {
             log.v("photos list observed")
             photosAdapter.submitData(lifecycle, photos)
             transitionHelper.moveToCurrentItem(photosRecyclerView)
+
         }
-        galleryViewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
+        viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
             log.v("isloading observed")
             progress.toggle(isLoading)
         }
+        viewModel.retrySnackbarCommand.observe(viewLifecycleOwner) { message ->
+            showRetrySnackbar(message) {
+                photosAdapter.retry()
+            }
+        }
+
     }
 
     private fun setupAppBar() {
@@ -160,7 +176,7 @@ class GalleryFragment : Fragment() {
         var sbInset = 0
         var nbInset = 0
 
-        ViewCompat.setOnApplyWindowInsetsListener(bottomSheetLayout) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(bottomSheet) { view, insets ->
             sbInset = insets.systemWindowInsetTop
             nbInset = insets.systemWindowInsetBottom
             bottomSheetBehavior.setPeekHeight(initialPeekHeight + nbInset, true)
@@ -182,6 +198,17 @@ class GalleryFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
             }
         })
+
+        (bottomSheetBehavior as HideableBottomSheet).stateCallback = { state ->
+            // snack bar placeholder setup
+            val lp = snackbarLayout.layoutParams as CoordinatorLayout.LayoutParams
+            if (state == HideableBottomSheet.State.VISIBLE) {
+                lp.anchorId = bottomSheet.id
+            } else {
+                lp.anchorId = screenBottom.id
+            }
+            snackbarLayout.layoutParams = lp
+        }
     }
 
     private fun setupMenu() {
@@ -222,6 +249,13 @@ class GalleryFragment : Fragment() {
     private fun openMenu() {
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
+    private fun showRetrySnackbar(message: String, callback: (View) -> Unit) {
+        snackbarLayout.snack(R.string.retry, Snackbar.LENGTH_INDEFINITE) {
+            anchorView = snackbarLayout
+            action(R.string.retry, R.color.accent, callback)
         }
     }
 
