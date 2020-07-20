@@ -5,7 +5,6 @@ import androidx.lifecycle.*
 import androidx.lifecycle.liveData
 import com.hadilq.liveevent.LiveEvent
 import ds.photosight.core.Prefs
-import ds.photosight.model.SnackbarEvent
 import ds.photosight.repo.PhotosightRepo
 import ds.photosight.model.toMenuItemState
 import ds.photosight.repo.ResourcesRepo

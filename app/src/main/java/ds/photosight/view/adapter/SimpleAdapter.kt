@@ -49,4 +49,4 @@ abstract class SimpleAdapter<D : Any>(
     abstract fun onBind(holder: SimpleViewHolder, item: D, position: Int)
 }
 
-class SimpleViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
+open class SimpleViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer

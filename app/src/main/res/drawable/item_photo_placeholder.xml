@@ -5,14 +5,10 @@
     >
     <item
         android:drawable="@color/grey_dark"
-        android:duration="1000"
+        android:duration="1500"
         />
     <item
         android:drawable="@color/grey"
-        android:duration="1000"
-        />
-    <item
-        android:drawable="@color/grey_dark"
         android:duration="1000"
         />
 </animation-list>

@@ -148,7 +148,7 @@ class GalleryFragment : Fragment() {
 
         }
         viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
-            log.v("isloading observed")
+            log.v("isloading observed: $isLoading")
             progress.toggle(isLoading)
         }
         viewModel.retrySnackbarCommand.observe(viewLifecycleOwner) { message ->
@@ -253,7 +253,7 @@ class GalleryFragment : Fragment() {
     }
 
     private fun showRetrySnackbar(message: String, callback: (View) -> Unit) {
-        snackbarLayout.snack(R.string.retry, Snackbar.LENGTH_INDEFINITE) {
+        snackbarLayout.snack(message, Snackbar.LENGTH_INDEFINITE) {
             anchorView = snackbarLayout
             action(R.string.retry, R.color.accent, callback)
         }

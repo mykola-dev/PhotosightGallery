@@ -49,12 +49,10 @@ class ViewerFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_viewer, container, false)
 
-    /*val contextThemeWrapper: Context = ContextThemeWrapper(activity, R.style.AppTheme_Black)
-    val localInflater = inflater.cloneInContext(contextThemeWrapper)
-    return localInflater.inflate(R.layout.fragment_viewer, container, false)*/
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().window.navigationBarColor = Color.TRANSPARENT
+        requireActivity().window.statusBarColor = Color.TRANSPARENT
         log.v("viewer created")
         transitionHelper.postpone(args.position)
 
@@ -98,11 +96,6 @@ class ViewerFragment : Fragment() {
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         actionBar?.setDisplayHomeAsUpEnabled(true)
         drawerToggle = object : ActionBarDrawerToggle(requireActivity(), drawerLayout, toolbar, 0, 0) {
-            override fun onDrawerClosed(view: View) {
-                super.onDrawerClosed(view)
-                //toggleActionBar(false)
-            }
-
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
@@ -119,15 +112,8 @@ class ViewerFragment : Fragment() {
         val ab = (activity as AppCompatActivity).supportActionBar
         if (show) {
             ab?.show()
-            //requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         } else {
             ab?.hide()
-            /* requireActivity().window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                 )*/
-            requireActivity().window.navigationBarColor = Color.TRANSPARENT
-            requireActivity().window.statusBarColor = Color.TRANSPARENT
         }
     }
 

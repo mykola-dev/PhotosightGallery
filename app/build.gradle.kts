@@ -104,7 +104,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("androidx.fragment:fragment-ktx:1.2.5")
-    implementation("androidx.paging:paging-runtime:$pagingVersion")
+    implementation("androidx.paging:paging-runtime:3.0.0-SNAPSHOT")
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
     implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")

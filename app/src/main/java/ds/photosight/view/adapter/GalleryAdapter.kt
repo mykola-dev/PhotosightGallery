@@ -3,6 +3,7 @@ package ds.photosight.view.adapter
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.item_gallery_photo.*
 class GalleryAdapter(
     val transitionHelper: SharedElementsHelper,
     val onClick: (ClickedItem) -> Unit
-) : PagingDataAdapter<PhotoInfo, SimpleViewHolder>(PhotoInfoDiffCallback) {
+) : PagingDataAdapter<PhotoInfo, PhotoViewHolder>(PhotoInfoDiffCallback) {
 
     data class ClickedItem(
         val view: ImageView,
@@ -34,26 +35,18 @@ class GalleryAdapter(
 
     private var clickedItem: Int? = null
 
-    private lateinit var placeholder: Drawable
-    //private lateinit var layoutManager: StaggeredGridLayoutManager
-
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         recyclerView.setHasFixedSize(true)
-        recyclerView.setItemViewCacheSize(24)
-        placeholder = (ContextCompat.getDrawable(recyclerView.context, R.drawable.item_photo_placeholder) as AnimationDrawable).apply {
-            setExitFadeDuration(1000)
-            start()
-        }
-        //layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
+        recyclerView.setItemViewCacheSize(24)   // page size
 
         // fixes grid re-layout on each click
         recyclerView.itemAnimator = null
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleViewHolder {
-        val holder = SimpleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_photo, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
+        val holder = PhotoViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_gallery_photo, parent, false))
         holder.itemView.setOnClickListener {
             val position = holder.absoluteAdapterPosition
             val item = getItem(position)!!
@@ -67,7 +60,7 @@ class GalleryAdapter(
     }
 
 
-    override fun onBindViewHolder(holder: SimpleViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val item = getItem(position)!!
         val photoView = holder.photoImage
         transitionHelper.bindView(photoView, item.id.toString())
@@ -84,7 +77,7 @@ class GalleryAdapter(
             .load(url)
             .run {
                 if (!afterClick) {
-                    placeholder(placeholder).transition(properTransition)
+                    placeholder(holder.placeholder).transition(properTransition)
                 } else {
                     placeholder(photoView.drawable)
                 }
@@ -116,6 +109,13 @@ class GalleryAdapter(
 
     }
 
+}
+
+class PhotoViewHolder(v: View) : SimpleViewHolder(v) {
+    val placeholder = (ContextCompat.getDrawable(v.context, R.drawable.item_photo_placeholder) as AnimationDrawable).apply {
+        setExitFadeDuration(1000)
+        start()
+    }
 }
 
 val properTransition = DrawableTransitionOptions.with { dataSource, isFirstResource ->
