@@ -3,6 +3,7 @@ package ds.photosight.view
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
 import ds.photosight.model.asViewModel
@@ -30,6 +32,7 @@ import ds.photosight.viewmodel.CommentsState
 import ds.photosight.viewmodel.MainViewModel
 import ds.photosight.viewmodel.ViewerViewModel
 import kotlinx.android.synthetic.main.fragment_viewer.*
+import kotlinx.android.synthetic.main.item_comment.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -122,27 +125,17 @@ class ViewerFragment : Fragment() {
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        viewModel.commentsState.observe(viewLifecycleOwner) {
-            drawerProgress.isVisible = it.loading
-            errorView.isVisible = it.error
-            commentsList.isVisible = it is CommentsState.Payload
+        viewModel.commentsState.observe(viewLifecycleOwner) { state ->
+            drawerProgress.isVisible = state.loading
+            errorView.isVisible = state.error
+            commentsList.isVisible = state is CommentsState.Payload
 
-            if (it is CommentsState.Payload) {
-                log.v("data: ${it.details}")
-                val data = it.details
-                val infoAdapter = object : SimpleAdapter<PhotoDetails>(R.layout.item_photo_stats, listOf(data)) {
-                    override fun onBind(holder: SimpleViewHolder, item: PhotoDetails, position: Int) {
-                        log.v("onBind stats $position")
-                        val votesView = holder.itemView as VotesWidget
-                        votesView.init(
-                            item.stats.asViewModel(),
-                            item.awards.map { resources.getIdentifier(it.toString(),"drawable",context.packageName) }
-                        )
-                        votesView.runAnimations()
-                    }
-
-                }
-                commentsList.adapter = ConcatAdapter(infoAdapter)
+            if (state is CommentsState.Payload) {
+                log.v("data: ${state.details}")
+                val data = state.details
+                val infoAdapter = PhotoStatsAdapter(data)
+                val commentsAdapter = CommentsAdapter(data.comments)
+                commentsList.adapter = ConcatAdapter(infoAdapter, commentsAdapter)
             }
         }
     }
@@ -163,5 +156,34 @@ class ViewerFragment : Fragment() {
         drawerToggle.onConfigurationChanged(newConfig)
         Timber.v("onConfigurationChanged")
     }
+}
+
+class PhotoStatsAdapter(data: PhotoDetails) : SimpleAdapter<PhotoDetails>(R.layout.item_photo_stats, listOf(data)) {
+    override fun onBind(holder: SimpleViewHolder, item: PhotoDetails, position: Int) {
+        val votesView = holder.itemView as VotesWidget
+        votesView.init(
+            item.stats.asViewModel(),
+            item.awards.map { votesView.resources.getIdentifier(it.toString(), "drawable", context.packageName) }
+        )
+        votesView.runAnimations()
+    }
+
+}
+
+class CommentsAdapter(comments: List<PhotoDetails.Comment>) : SimpleAdapter<PhotoDetails.Comment>(R.layout.item_comment, comments) {
+
+    override fun onBind(holder: SimpleViewHolder, item: PhotoDetails.Comment, position: Int) {
+        holder.name.text = if (item.isAuthor) context.getString(R.string.photo_author)
+        else item.author
+        holder.content.text = item.text
+        holder.date.text = DateUtils.getRelativeDateTimeString(context, item.timestamp, 0, DateUtils.DAY_IN_MILLIS, 0)
+        holder.rating.text = if (item.likes != 0) "+${item.likes}" else ""
+        Glide.with(holder.itemView)
+            .load(item.avatar)
+            .circleCrop()
+            .error(R.drawable.anonymous)
+            .into(holder.avatar)
+    }
+
 }
 

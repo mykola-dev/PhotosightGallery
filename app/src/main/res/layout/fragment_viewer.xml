@@ -58,6 +58,7 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/item_comment"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:fitsSystemWindows="true"
             />
         <!--android:divider="@color/dark_divider"-->
         <com.google.android.material.progressindicator.ProgressIndicator
