@@ -1,4 +1,5 @@
 package ds.photosight_legacy.model
+/*
 
 import android.os.Handler
 import ds.photosight.utils.L
@@ -112,3 +113,4 @@ class AdvancedInfoParser {
     }
 
 }
+*/

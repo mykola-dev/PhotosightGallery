@@ -1,4 +1,5 @@
 package ds.photosight_legacy.ui
+/*
 
 import android.content.Context
 import android.content.Intent
@@ -112,11 +113,6 @@ public class GalleryActivity : AppCompatActivity(), Constants, ViewPager.OnPageC
         }
 
         var t = ""
-        when (currTab) {
-            Constants.TAB_CATEGORIES -> t = getResources().getStringArray(R.array.categories_array)[currCategory]
-            Constants.TAB_TOPS -> t = getString(R.string.top_in) + getResources().getStringArray(R.array.ratings_array)[currCategory]
-        }
-
 
         setContentView(R.layout.gallery)
         pager = findViewById(R.id.pager)
@@ -165,9 +161,11 @@ public class GalleryActivity : AppCompatActivity(), Constants, ViewPager.OnPageC
         aq!!.id(R.id.drawer_list).visible()
         if (aq!!.listView.headerViewsCount == 0) {
             //final View header = new View(this);
-            /*AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, Utils.dp(48));
+            */
+/*AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, Utils.dp(48));
 			header.setLayoutParams(params);
-			aq.getListView().addHeaderView(header);*/
+			aq.getListView().addHeaderView(header);*//*
+
             aq!!.listView.setHeaderDividersEnabled(false)
 
             mVotesView = layoutInflater.inflate(R.layout.votes, null) as VotesWidget
@@ -709,3 +707,4 @@ public class GalleryActivity : AppCompatActivity(), Constants, ViewPager.OnPageC
 
 
 }
+*/

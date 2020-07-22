@@ -21,7 +21,7 @@ import javax.inject.Singleton
 @Singleton
 class PhotosightRepo @Inject constructor(@ApplicationContext private val context: Context) {
 
-    suspend fun <T> apiRequest(request: Request<T>): T = withContext(Dispatchers.Default) {
+    private suspend fun <T> apiRequest(request: Request<T>): T = withContext(Dispatchers.Default) {
         request.invoke()
     }
 
@@ -37,6 +37,7 @@ class PhotosightRepo @Inject constructor(@ApplicationContext private val context
         .getStringArray(R.array.ratings_array)
         .mapIndexed { idx, title -> MenuItemState(MenuState.MENU_RATINGS, idx, title, false) }
 
+    suspend fun getPhotoDetails(photoId: Int) = apiRequest(PhotoDetailsRequest(photoId))
 
 
 }

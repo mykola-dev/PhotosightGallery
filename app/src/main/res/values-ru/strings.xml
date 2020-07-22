@@ -1,65 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
-	<string-array name="categories_array">
-		<item>Архитектура и Интерьер</item>
-		<item>Город</item>
-		<item>Жанр</item>
-		<item>Животные</item>
-		<item>Макро</item>
-		<item>Музей</item>
-		<item>Ню</item>
-		<item>Папарацци</item>
-		<item>Подводный мир</item>
-		<item>Природа</item>
-		<item>Рекламное фото</item>
-		<item>Свадебное фото</item>
-		<item>Техно</item>
-		<item>Фото.сайт</item>
-		<item>Юмор</item>
-		<item>Гламур</item>
-		<item>Детский мир</item>
-		<item>Жанровый портрет</item>
-		<item>Комп. искусство</item>
-		<item>Мобильное фото</item>
-		<item>Натюрморт</item>
-		<item>Остальное</item>
-		<item>Пейзаж</item>
-		<item>Портрет</item>
-		<item>Путешествия</item>
-		<item>Репортаж</item>
-		<item>Спорт</item>
-		<item>Фото.охота</item>
-		<item>Фотомодели</item>
 
-	</string-array>
-	<string-array name="ratings_array">
-		<item>Фото Дня</item>
-		<item>Фото Недели</item>
-		<item>Фото Месяца</item>
-		<item>Художественно</item>
-		<item>Оригинально</item>
-		<item>Технично</item>
-		<item>Избранные</item>		
+	<string name="category_2">Портрет</string>
+	<string name="category_3">Природа</string>
+	<string name="category_4">Натюрморт</string>
+	<string name="category_5">Макро</string>
+	<string name="category_6">Путешествия</string>
+	<string name="category_7">Город</string>
+	<string name="category_8">Животные</string>
+	<string name="category_15">Ню</string>
+	<string name="category_14">Компьютерное искусство</string>
+	<string name="category_13">Музей</string>
+	<string name="category_9">Репортаж</string>
+	<string name="category_10">Спорт</string>
+	<string name="category_11">Юмор</string>
+	<string name="category_12">Жанр</string>
+	<string name="category_16">Трэш</string>
+	<string name="category_17">Фото.сайт</string>
+	<string name="category_18">Гламур</string>
+	<string name="category_19">Рекламное фото</string>
+	<string name="category_27">Папарацци</string>
+	<string name="category_36">Пейзаж</string>
+	<string name="category_64">Фотоохота</string>
+	<string name="category_65">Подводный мир</string>
+	<string name="category_70">Жанровый портрет</string>
+	<string name="category_78">Мобильное фото</string>
+	<string name="category_80">Детский мир</string>
+	<string name="category_82">Архитектура и интерьер</string>
+	<string name="category_87">Фотомодели</string>
+	<string name="category_91">Свадебное фото</string>
+	<string name="category_92">Техно</string>
 
-	</string-array>
-	
 
-	<string name="abouttext">"Photosight Gallery - это приложение для быстрого и удобного доступа к крупнейшему в мире архиву высокохудожественных фоторабот профессиональных фотографов из России и ближнего зарубежья www.photosight.ru
-Для полноценной работы рекомендуется скоростное Wi-Fi интернет соединение.
+	<string name="abouttext">"Photosight Gallery - это неофициальное приложение для быстрого и удобного доступа к крупнейшему в мире архиву высокохудожественных фоторабот профессиональных фотографов (преимущественно из стран СНГ) photosight.ru
 
 Пожелания и багрепорты принимаются на email:
 deviantstudio.software@gmail.com
 
 %1$s
 
-Все торговые марки, используемые в этом приложении, принадлежат компании ООО Фотосайт.ру
-Права на все фотографии, размещенные на Фотосайте, принадлежат авторам этих фото.
 "</string>
 	
-	<string name="categories">КАТЕГОРИИ</string>
-	<string name="top">"ЛУЧШЕЕ"</string>
-	<string name="authors">АВТОРЫ</string>
+	<string name="categories">Категории</string>
 	<string name="share_subj">Отличная фотография!</string>
 	<string name="share_text">Отправлено с помощью Photosight Gallery</string>
 	<string name="loading">Загрузка…</string>
@@ -72,18 +54,12 @@ deviantstudio.software@gmail.com
 	<string name="clearing_notify">Вы можете отключить автоматическую очистку кэша в настройках программы Photosight Gallery</string>
 	<string name="saved_to_">"Сохранено в "</string>
 	<string name="failed">Неудача</string>
-	<string name="loading_next_page">Загрузка следующей страницы</string>
-	<string name="page_">"стр "</string>
 	<string name="photo_">"фото "</string>
 	<string name="top_in">"Топ "</string>
-	<string name="no_photos_try_next_page_">Нет фоток. Полистайте дальше.</string>
 	<string name="connection_error">Ошибка соединения</string>
 	<string name="sort_by_">Упорядочить по…</string>
 	<string name="disabled">Нет</string>
 	<string name="recommendations">Рекомендации</string>
-	<string name="artistic">Художественно</string>
-	<string name="original">Оригинально</string>
-	<string name="technic">Технично</string>
 	<string name="open_in_web_browser">Открыть в Браузере</string>
 	<string name="detailed_info_">Подробнее…</string>
 	<string name="save_to_sd">Сохранить на SD</string>
@@ -106,5 +82,19 @@ deviantstudio.software@gmail.com
     <string name="dislikes">Не нравится</string>
     <string name="processing">Обработка…</string>
     <string name="histogram">Гистограмма</string>
+	<string name="rating_day">Фото дня</string>
+	<string name="rating_week">Фото недели</string>
+	<string name="rating_month">Фото месяца</string>
+	<string name="rating_best">Лучшее</string>
+	<string name="rating_artistic">Художественность</string>
+	<string name="rating_original">Оригинальность</string>
+	<string name="rating_technic">Техничность</string>
+	<string name="rating_favorites">Избранное</string>
+	<string name="rating_applicants">Фото Претендентов</string>
+	<string name="rating_outrun">Претенденты на Фото дня</string>
+	<string name="views">Просмотры</string>
+	<string name="ratings">Рейтинги</string>
+	<string name="retry">Обновить</string>
+
 
 </resources>

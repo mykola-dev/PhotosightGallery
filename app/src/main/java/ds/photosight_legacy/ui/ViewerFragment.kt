@@ -1,3 +1,4 @@
+/*
 package ds.photosight_legacy.ui
 
 import android.content.Context
@@ -108,12 +109,7 @@ class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListener {
         L.v("setting 2 line title")
         ab.setDisplayShowCustomEnabled(false)
         ab.setSubtitle(resources.getString(R.string.page_) + (currPage + 1))
-        val t: String? = when (getRoot().currentTab) {
-            Constants.TAB_CATEGORIES -> resources.getStringArray(R.array.categories_array)[getRoot().getCurrentListSelection()]
-            Constants.TAB_TOPS -> getString(R.string.top_in) + resources.getStringArray(R.array.ratings_array)[getRoot().getCurrentListSelection()]
-            else -> null
-        }
-        ab.setTitle(t!!.toUpperCase())
+
     }
 
 
@@ -466,3 +462,4 @@ class ViewerFragment : Fragment(), Constants, ViewPager.OnPageChangeListener {
     }
 
 }
+*/

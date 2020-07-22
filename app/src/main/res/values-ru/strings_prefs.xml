@@ -3,8 +3,7 @@
 
 	<string name="main_settings">Основные</string>
 	<string name="parental_control">Цензура</string>
-	<string name="nu_photos_disabled">Голые телеса не доступны</string>
-	<string name="nu_photos_enabled">Обнаженная натура во всей красе</string>
+    <string name="nu_photos_enabled">Обнаженная натура во всей красе</string>
 	<string name="cache_folder">Папка кэша</string>
 	<string name="where_to_cache_photos">Не забывайте иногда очищать кэш!</string>
 	<string name="save_folder">Сохраненные фото</string>

@@ -1,51 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!--deprecated-->
-	<string-array name="categories_array">
-		<item>Architecture and Interiors</item>
-		<item>City</item>
-		<item>Genre</item>
-		<item>Animals</item>
-		<item>Macro</item>
-		<item>Museum</item>
-		<item>Nu</item>
-		<item>Paparazzi</item>
-		<item>Underwater Nature</item>
-		<item>Nature</item>
-		<item>Advertising Photo</item>
-		<item>Wedding Photo</item>
-		<item>Techno</item>
-		<item>Photo.Sight</item>
-		<item>Humor</item>
-		<item>Glamour</item>
-		<item>Children\'s World</item>
-		<item>Genre Portrait</item>
-		<item>Computer Art</item>
-		<item>Mobile Photo</item>
-		<item>Still Life</item>
-		<item>Other</item>
-		<item>Landscape</item>
-		<item>Portrait</item>
-		<item>Travel</item>
-		<item>Reportage</item>
-		<item>Sport</item>
-		<item>Photohunting</item>
-		<item>Fashion</item>
-
-	</string-array>
-
+	<string name="category_2">Portrait</string>
+	<string name="category_3">Nature</string>
+	<string name="category_4">Still Life</string>
+	<string name="category_5">Macro</string>
+	<string name="category_6">Travels</string>
+	<string name="category_7">Urban</string>
+	<string name="category_8">Animals</string>
+	<string name="category_9">Reportage</string>
+	<string name="category_10">Sport</string>
+	<string name="category_11">Humor</string>
+	<string name="category_12">Genre</string>
+	<string name="category_13">Museum</string>
+	<string name="category_14">Digital Art</string>
 	<string name="category_15">Nu</string>
+	<string name="category_16">Other</string>
+	<string name="category_17">Photosight</string>
+	<string name="category_18">Glamour</string>
+	<string name="category_19">Advertising</string>
+	<string name="category_27">Paparazzi</string>
+	<string name="category_36">Landscape</string>
+	<string name="category_64">Photo Hunt</string>
+	<string name="category_65">Undersea World</string>
+	<string name="category_70">Genre Portrait</string>
+	<string name="category_78">Mobile</string>
+	<string name="category_80">Kids World</string>
+	<string name="category_82">Architecture and Interior</string>
+	<string name="category_87">Photo Models</string>
+	<string name="category_91">Wedding</string>
+	<string name="category_92">Techno</string>
 
 	<string-array name="ratings_array">
-		<item>Day</item>
-		<item>Week</item>
-		<item>Month</item>
-		<item>@string/artistic</item>
-		<item>@string/original</item>
-		<item>@string/technic</item>
-		<item>Favorites</item>
+		<item>@string/rating_day</item>
+		<item>@string/rating_week</item>
+		<item>@string/rating_month</item>
+		<item>@string/rating_best</item>
+		<item>@string/rating_artistic</item>
+		<item>@string/rating_original</item>
+		<item>@string/rating_technic</item>
+		<item>@string/rating_favorites</item>
+		<item>@string/rating_applicants</item>
+		<item>@string/rating_outrun</item>
 	</string-array>
+
+	<string name="rating_day">Day</string>
+	<string name="rating_week">Week</string>
+	<string name="rating_month">Month</string>
+	<string name="rating_best">Best</string>
+	<string name="rating_artistic">Artistry</string>
+	<string name="rating_original">Originality</string>
+	<string name="rating_technic">Technique</string>
+	<string name="rating_favorites">Favorites</string>
+	<string name="rating_applicants">Applicants</string>
+	<string name="rating_outrun">Outrun</string>
 
     <string name="thin_font" translatable="false">sans-serif-light</string>
     <string name="light_font" translatable="false">sans-serif</string>
@@ -134,13 +142,9 @@ deviantstudio.software@gmail.com
 %1$s
 
 "</string>
-	<string name="thumb_size_1">140</string>
-    <string name="thumb_size_2">210</string>
-    <string name="thumb_size_3">400</string>
-	<string name="app_name">Photosight Gallery</string>
+	<string name="app_name" translatable="false">Photosight Gallery</string>
 	<string name="categories">Categories</string>
-	<string name="top">" TOP "</string>
-	<string name="authors">AUTHORS</string>
+	<string name="ratings">Ratings</string>
 	<string name="share_subj">Check this out!</string>
 	<string name="share_text">Sent from Photosight Gallery</string>
 	<string name="loading">Loading…</string>
@@ -162,9 +166,7 @@ deviantstudio.software@gmail.com
 	<string name="sort_by_">Sort by…</string>
 	<string name="disabled">Disabled</string>
 	<string name="recommendations">Recommendations</string>
-	<string name="artistic">Artistry</string>
-	<string name="original">Originality</string>
-	<string name="technic">Technique</string>
+
 	<string name="open_in_web_browser">Open in Browser</string>
 	<string name="detailed_info_">Detailed Info…</string>
 	<string name="save_to_sd">Save to SD</string>
@@ -181,22 +183,19 @@ deviantstudio.software@gmail.com
 	<string name="award">Award</string>
 	<string name="denied_by_parental_control">Denied by Parental Control</string>
 	<string name="set_as">Set as…</string>
-    <string name="cache_cleared">Cache cleared</string>
-    <string name="drawer_open">Open Comments</string>
-    <string name="drawer_close">Close Comments</string>
+	<string name="drawer_open" translatable="false">Open Comments</string>
+    <string name="drawer_close" translatable="false">Close Comments</string>
     <string name="photo_author">"&lt;AUTHOR&gt;"</string>
-    <string name="default_cache_dir">Photosight/cache</string>
-    <string name="persistence">Persistence</string>
+	<string name="persistence">Persistence</string>
     <string name="likes">Likes</string>
     <string name="dislikes">Dislikes</string>
     <string name="processing">Processing…</string>
     <string name="histogram">Histogram</string>
-	<string name="low_resolution">Low Image Resolution</string>
-	<string name="thumb_columns">Thumbs Columns</string>
 	<string name="copyright" translatable="false">© 1997-2020 Deviant Studio</string>
 	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
-	<string name="ratings">Ratings</string>
+
 	<string name="retry">Retry</string>
+    <string name="views">Views</string>
 
 
 </resources>

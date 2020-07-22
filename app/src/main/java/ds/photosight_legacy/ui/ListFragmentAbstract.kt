@@ -1,4 +1,5 @@
 package ds.photosight_legacy.ui
+/*
 
 import android.content.Context
 import android.os.Bundle
@@ -77,3 +78,4 @@ public abstract class ListFragmentAbstract : ListFragment(), Constants {
 
     }
 }
+*/

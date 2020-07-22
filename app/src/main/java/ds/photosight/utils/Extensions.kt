@@ -1,6 +1,7 @@
 package ds.photosight.utils
 
 import android.content.Context
+import android.content.res.Resources
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -68,3 +69,5 @@ inline fun <reified T> Any.getWithReflection(fieldName: String): T {
     f.isAccessible = true
     return f.get(this) as T
 }
+
+val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()

@@ -1,4 +1,5 @@
 package ds.photosight_legacy.model
+/*
 
 import android.annotation.SuppressLint
 import java.io.IOException
@@ -125,10 +126,12 @@ class DataLoader(private val tab: Int, private val item: Int, private val page: 
 
             // award parsing
             award = ""
-            /*
+            */
+/*
 			 * e = photo.getElementsByAttributeValueStarting("src", "/images/icon/"); if (!e.isEmpty()) { award = e.get(0).attr("alt"); }
 			 * else award = "";
-			 */
+			 *//*
+
 
            author=photo.select("a[href^=\"/users\"]").text()
 
@@ -229,3 +232,4 @@ class DataLoader(private val tab: Int, private val item: Int, private val page: 
     }
 
 }
+*/

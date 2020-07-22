@@ -9,7 +9,6 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -112,7 +111,7 @@ class GalleryAdapter(
 }
 
 class PhotoViewHolder(v: View) : SimpleViewHolder(v) {
-    val placeholder = (ContextCompat.getDrawable(v.context, R.drawable.item_photo_placeholder) as AnimationDrawable).apply {
+    val placeholder = (ContextCompat.getDrawable(v.context, R.drawable.photo_placeholder) as AnimationDrawable).apply {
         setExitFadeDuration(1000)
         start()
     }

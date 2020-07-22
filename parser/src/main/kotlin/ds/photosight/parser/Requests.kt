@@ -86,9 +86,10 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
             .onEach { println(it) }
 
         // is_editors_choice, is_week_top, is_top, is_top_art, is_month_top_20, is_month_top_200, is_week_top_20, is_week_top_50
-        val avards = doc
+        val awards = doc
             .avardsSection()
             .map { e -> e.classNames().first { it != "medal" } }
+            .mapNotNull { PhotoDetails.Award.fromString(it) }
 
         val stats = doc
             .infoSection()
@@ -102,7 +103,7 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
                 PhotoDetails.Stats(art, original, tech, likes, dislikes, views)
             }
 
-        return PhotoDetails(comments, avards, stats)
+        return PhotoDetails(comments, awards, stats)
     }
 
     private fun Document.commentsSection() = parse("div.comments div.comment-content")

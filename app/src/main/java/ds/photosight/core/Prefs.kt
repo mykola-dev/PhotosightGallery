@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2016. Deviant Studio
- */
-
 package ds.photosight.core
 
 import android.content.Context

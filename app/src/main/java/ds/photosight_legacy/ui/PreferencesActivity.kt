@@ -1,4 +1,5 @@
 package ds.photosight_legacy.ui
+/*
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -97,3 +98,4 @@ class PreferencesActivity : PreferenceActivity(), Constants, SharedPreferences.O
     }
 
 }
+*/

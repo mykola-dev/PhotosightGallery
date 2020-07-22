@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ds.photosight_legacy.ui.widget.VotesWidget
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
     android:background="#2888"
+    android:paddingTop="40dp"
     android:paddingRight="10dp"
     android:paddingBottom="30dp"
-    android:paddingTop="40dp"
-    android:animateLayoutChanges="true"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    tools:ignore="RtlSymmetry"
+    tools:parentTag="LinearLayout"
+    >
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        >
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layoutAnimation="@anim/cascade"
             android:id="@+id/labelsContainer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layoutAnimation="@anim/cascade"
+            android:orientation="vertical"
+            >
 
             <TextView
                 style="@style/aot_labels"
-                android:text="@string/artistic"/>
-
-            <TextView
-                style="@style/aot_labels"
-                android:text="@string/original"
+                android:text="@string/views"
                 />
 
             <TextView
                 style="@style/aot_labels"
-                android:text="@string/technic"
+                android:text="@string/rating_artistic"
+                />
+
+            <TextView
+                style="@style/aot_labels"
+                android:text="@string/rating_original"
+                />
+
+            <TextView
+                style="@style/aot_labels"
+                android:text="@string/rating_technic"
                 />
 
             <TextView
@@ -49,19 +61,18 @@
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/redBar"
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/red"
             >
 
-            <View
-                android:id="@+id/redBar"
+            <!--<View
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/red"
-                >
-            </View>
+                />-->
 
             <View
                 android:id="@+id/greenBar"
@@ -69,57 +80,50 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="@color/blue"
-                >
-            </View>
-
-            <!-- <TextView
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:shadowRadius="1"
-                 android:shadowColor="#000"
-                 android:shadowDx="0"
-                 android:shadowDy="0"
-                 android:textColor="@android:color/white"
-                 android:layout_gravity="center"
-                 android:textSize="12sp"
-                 android:text="95%"/>-->
-
+                />
 
         </FrameLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/views"
+                style="@style/aot_values"
+                tools:text="0"
+                />
 
             <TextView
                 android:id="@+id/aRate"
                 style="@style/aot_values"
-                android:text="0"/>
+                tools:text="0"
+                />
 
             <TextView
                 android:id="@+id/oRate"
                 style="@style/aot_values"
-                android:text="0"
+                tools:text="0"
                 />
 
             <TextView
                 android:id="@+id/tRate"
                 style="@style/aot_values"
-                android:text="0"
+                tools:text="0"
                 />
 
             <TextView
                 android:id="@+id/lRate"
                 style="@style/aot_values"
-                android:text="0"
+                tools:text="0"
                 />
 
             <TextView
                 android:id="@+id/dRate"
                 style="@style/aot_values"
-                android:text="0"
+                tools:text="0"
                 />
 
         </LinearLayout>
@@ -127,13 +131,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/avardsContainer"
-        android:orientation="vertical"
-        android:animateLayoutChanges="true"
+        android:id="@+id/awardsContainer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
     </LinearLayout>
 
-</ds.photosight_legacy.ui.widget.VotesWidget>
+</LinearLayout>

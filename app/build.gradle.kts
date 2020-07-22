@@ -86,18 +86,19 @@ androidExtensions {
 dependencies {
     val androidX = "1.3.0"
     val lifecycleVersion = "2.2.0"
-    //val koinVersion = "2.1.6"
     val archVersion = "2.1.0"
-    val composeVersion = "0.1.0-dev13"
     val hiltJetpackVersion = "1.0.0-alpha01"
     val pagingVersion = "3.0.0-alpha02"
-    val coroutinesVersion = "1.3.6"
+    val coroutinesVersion = "1.3.8"
     val hiltVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra
+    //val koinVersion = "2.1.6"
+    //val composeVersion = "0.1.0-dev13"
 
     implementation("androidx.multidex:multidex:2.0.1")
-    //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.6")
     implementation(project(":parser"))
+
+    //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.6")
 
     // androidx
     implementation("androidx.core:core-ktx:$androidX")
@@ -122,10 +123,9 @@ dependencies {
     // ui
     implementation("com.google.android.material:material:1.3.0-alpha01")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
-    //implementation("androidx.slidingpanelayout:slidingpanelayout:1.0.0")
-    implementation("androidx.ui:ui-tooling:$composeVersion")
-    implementation("androidx.ui:ui-layout:$composeVersion")
-    implementation("androidx.ui:ui-material:$composeVersion")
+    //implementation("androidx.ui:ui-tooling:$composeVersion")
+    //implementation("androidx.ui:ui-layout:$composeVersion")
+    //implementation("androidx.ui:ui-material:$composeVersion")
 
     // kotlin
     implementation(kotlin("stdlib-jdk8"))
@@ -148,12 +148,6 @@ dependencies {
     implementation("com.github.hadilq.liveevent:liveevent:1.2.0")                               // https://github.com/hadilq/LiveEvent
     implementation("com.github.bumptech.glide:glide:4.11.0")                                    // https://github.com/bumptech/glide
     kapt("com.github.bumptech.glide:compiler:4.11.0")
-
-    // legacy todo remove
-    implementation("com.github.castorflex.smoothprogressbar:library-circular:+")
-    implementation("com.googlecode.android-query:android-query:0.25.9")
-    implementation("de.greenrobot:eventbus:2.4.0")
-    implementation("org.jsoup:jsoup:1.13.1")
 
     // tests
     testImplementation("junit:junit:4.13")

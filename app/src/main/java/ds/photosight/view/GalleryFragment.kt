@@ -123,7 +123,7 @@ class GalleryFragment : Fragment() {
             log.v("menu state observed")
             categoriesAdapter.updateData(it.categories)
             ratingsAdapter.updateData(it.ratings)
-
+            toolbar.title = (it.categories + it.ratings).find { it.isSelected }?.title
             if (bottomSheetBehavior.isHideable) {
                 Handler().post {
                     bottomSheetBehavior.isHideable = false

@@ -1,4 +1,5 @@
 package ds.photosight_legacy.ui
+/*
 
 import android.content.Context
 import android.content.Intent
@@ -202,16 +203,20 @@ class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChangeListe
 
         when (item.itemId) {
 
-           /* R.id.im_settings -> {
+           */
+/* R.id.im_settings -> {
                 i = Intent(applicationContext, PreferencesActivity::class.java)
                 startActivity(i)
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-            }*/
-            /*R.id.im_open_photosight -> {
+            }*//*
+
+            */
+/*R.id.im_open_photosight -> {
                 i = Intent(Intent.ACTION_VIEW)
                 i.data = Uri.parse(Constants.URL_MAIN)
                 startActivity(i)
-            }*/
+            }*//*
+
             R.id.im_about -> showAbout()
         }
         return super.onOptionsItemSelected(item)
@@ -287,3 +292,4 @@ class MainActivity : AppCompatActivity(), Constants, ViewPager.OnPageChangeListe
     }
 }
 
+*/

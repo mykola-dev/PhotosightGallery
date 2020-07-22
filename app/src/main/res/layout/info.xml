@@ -20,7 +20,7 @@
             android:layout_gravity="center_horizontal"
             android:text="a" />
 
-		<ds.photosight_legacy.ui.widget.Histogram
+		<ds.photosight.view.widget.Histogram
 			android:id="@+id/histogram"
             android:layout_marginTop="10dp"
 			android:layout_width="match_parent"

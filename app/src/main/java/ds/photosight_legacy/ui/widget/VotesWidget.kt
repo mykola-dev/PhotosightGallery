@@ -1,5 +1,6 @@
 package ds.photosight_legacy.ui.widget
 
+/*
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -146,3 +147,4 @@ class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(context,
 
 
 }
+*/

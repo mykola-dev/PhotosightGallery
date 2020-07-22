@@ -62,5 +62,6 @@ class ViewerAdapter(
 
     }
 
+    fun getItemAt(position: Int): PhotoInfo = getItem(position) ?: error("wrong position")
 
 }

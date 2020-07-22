@@ -53,10 +53,11 @@
         >
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/drawerList"
+            android:id="@+id/commentsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/item_comment"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
         <!--android:divider="@color/dark_divider"-->
         <com.google.android.material.progressindicator.ProgressIndicator
@@ -67,6 +68,13 @@
             android:layout_gravity="center"
             />
         <!--android:layout_marginTop="48dp"-->
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/errorView"
+            android:src="@drawable/ic_photo_error"
+            android:layout_gravity="center"
+            android:layout_width="128dp"
+            android:layout_height="128dp"/>
 
     </FrameLayout>
 

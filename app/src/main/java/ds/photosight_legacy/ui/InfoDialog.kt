@@ -1,3 +1,4 @@
+/*
 package ds.photosight_legacy.ui
 
 import java.io.Serializable
@@ -19,7 +20,7 @@ import com.androidquery.callback.AjaxStatus
 import com.androidquery.util.AQUtility
 import ds.photosight.R
 import ds.photosight_legacy.Constants
-import ds.photosight_legacy.ui.widget.Histogram
+import ds.photosight.view.widget.Histogram
 import ds.photosight.utils.L
 
 class InfoDialog(var data: Map<Int, String>?) : DialogFragment(), Constants {
@@ -184,3 +185,4 @@ class InfoDialog(var data: Map<Int, String>?) : DialogFragment(), Constants {
 
 }
 
+*/
