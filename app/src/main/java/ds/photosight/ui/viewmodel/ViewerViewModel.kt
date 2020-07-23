@@ -20,6 +20,7 @@ class ViewerViewModel @ViewModelInject constructor(
 ) : BaseViewModel() {
 
     val position: Int get() = savedStateHandle.position!!
+    private val photoDetailsMap: MutableMap<Int, PhotoDetails> = mutableMapOf()
 
     init {
         log.v("saved state: ${savedStateHandle.keys()}")
@@ -30,7 +31,7 @@ class ViewerViewModel @ViewModelInject constructor(
 
     fun loadComments(photoId: Int) = launch {
         try {
-            val details = photosightRepo.getPhotoDetails(photoId)
+            val details = photoDetailsMap.getOrPut(photoId) { photosightRepo.getPhotoDetails(photoId) }
             _commentsState.value = CommentsState.Payload(details)
         } catch (e: Exception) {
             _commentsState.value = CommentsState.Error

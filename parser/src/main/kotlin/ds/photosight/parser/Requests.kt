@@ -26,7 +26,10 @@ abstract class JsoupRequest<T> : Request<T> {
 
     protected fun Document.parse(selector: String): Elements {
         val elements = getDocument().select(selector)
-        if (debugEnabled) println(elements)
+        if (debugEnabled) {
+            println("url=$url")
+            println(elements)
+        }
         return elements
     }
 
@@ -159,19 +162,39 @@ class BestPhotosRequest(sort: Sort = Sort.BEST, time: Time = Time.DAY) : PhotosR
 }
 
 class DailyPhotosRequest(datePage: DatePage, category: Int? = null) : PhotosRequest(), Multipage {
-    override val page: Int = datePage.calculatePage()
+    constructor(page: Int, category: Int? = null) : this(DatePage.fromPage(page), category)
+    constructor(year: Int, month: Int, day: Int, category: Int? = null) : this(DatePage.fromDate(year, month, day), category)
+
+    override val page: Int = datePage.page
     override val url: String = "$baseUrl/outrun/date/${datePage.year}/${datePage.month}/${datePage.day}/${category?.let { "?category=$it" } ?: ""}"
 
-    class DatePage(val year: Int, val month: Int, val day: Int) {
-        fun calculatePage(): Int {
-            val date = Calendar.getInstance()
-            date.set(year, month, day)
-            val start: Long = date.timeInMillis
-            val end: Long = now.timeInMillis
-            return TimeUnit.MILLISECONDS.toDays(abs(end - start)).toInt()
-        }
+    class DatePage(private val calendar: Calendar) {
+        val year: Int = calendar.get(Calendar.YEAR)
+        val month: Int = calendar.get(Calendar.MONTH) + 1
+        val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
-        private val now: Calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"))
+        val page: Int
+            get() {
+                val start: Long = calendar.timeInMillis
+                val end: Long = now.timeInMillis
+                return TimeUnit.MILLISECONDS.toDays(end - start).toInt() + 1
+            }
+
+        companion object {
+            fun fromPage(page: Int): DatePage {
+                val date = now
+                date.add(Calendar.DAY_OF_YEAR, 1 - page)
+                return DatePage(date)
+            }
+
+            fun fromDate(year: Int, month: Int, day: Int): DatePage {
+                val date = Calendar.getInstance()
+                date.set(year, month - 1, day)
+                return DatePage(date)
+            }
+
+            val now: Calendar get() = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"))
+        }
     }
 }
 

@@ -2,6 +2,8 @@ package ds.photosight.parser
 
 import org.junit.Before
 import org.junit.Test
+import java.util.*
+import kotlin.test.assertEquals
 
 class PhotosightParserTest {
 
@@ -48,8 +50,19 @@ class PhotosightParserTest {
 
     @Test
     fun `daily outrun photos`() {
-        DailyPhotosRequest(DailyPhotosRequest.DatePage(2013, 12, 31), 15)()
+        DailyPhotosRequest(2013, 12, 31, 15)()
             .forEach { println(it) }
+    }
+
+    @Test
+    fun `date page with index 1 should aim on today`() {
+        val datePage = DailyPhotosRequest.DatePage.fromPage(1)
+        println("${datePage.year}/${datePage.month}/${datePage.day}")
+        val now = DailyPhotosRequest.DatePage.now
+        assertEquals(1, datePage.page)
+        assertEquals(now.get(Calendar.YEAR), datePage.year)
+        assertEquals(now.get(Calendar.MONTH), datePage.month - 1)
+        assertEquals(now.get(Calendar.DAY_OF_MONTH), datePage.day)
     }
 
     @Test

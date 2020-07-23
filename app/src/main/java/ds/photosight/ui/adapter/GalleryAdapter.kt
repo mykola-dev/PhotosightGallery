@@ -9,6 +9,7 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -41,6 +42,8 @@ class GalleryAdapter(
 
         // fixes grid re-layout on each click
         recyclerView.itemAnimator = null
+        //val lm=recyclerView.layoutManager as StaggeredGridLayoutManager
+        //lm.gapStrategy= StaggeredGridLayoutManager.GAP_HANDLING_NONE
 
     }
 

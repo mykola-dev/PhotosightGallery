@@ -37,7 +37,7 @@ class PhotosightRepo @Inject constructor(@ApplicationContext private val context
     )
         .map { it(context) }
 
-    suspend fun getPhotoDetails(photoId: Int) = apiRequest(PhotoDetailsRequest(photoId))
+    suspend fun getPhotoDetails(photoId: Int): PhotoDetails = apiRequest(PhotoDetailsRequest(photoId))
 
 
 }

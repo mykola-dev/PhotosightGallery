@@ -34,9 +34,7 @@ class PhotosPagingSource(
     }
 
     private fun buildRequest(page: Int): PhotosRequest {
-        val selected = menuState.getSelected()
-
-        return when (selected) {
+        return when (val selected = menuState.getSelected()) {
             is CategoryMenuItemState -> {
                 CategoriesPhotosRequest(
                     selected.category,
@@ -45,7 +43,7 @@ class PhotosPagingSource(
                     menuState.categoriesFilter.sortTypeCategory
                 )
             }
-            is RatingMenuItemState.Day -> error("not implemented")
+            is RatingMenuItemState.Day -> DailyPhotosRequest(page)
             is RatingMenuItemState.Week -> Top50PhotosRequest()
             is RatingMenuItemState.Month -> Top200PhotosRequest()
             is RatingMenuItemState.Art -> TopArtPhotosRequest()

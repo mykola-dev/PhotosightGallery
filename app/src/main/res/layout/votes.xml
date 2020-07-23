@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:background="#2888"
-    android:paddingTop="32dp"
+    android:paddingTop="50dp"
     android:paddingRight="10dp"
     android:paddingBottom="32dp"
     tools:ignore="RtlSymmetry"

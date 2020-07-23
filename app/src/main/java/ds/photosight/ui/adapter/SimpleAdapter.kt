@@ -15,6 +15,7 @@ abstract class SimpleAdapter<D : Any>(
     protected lateinit var context: Context
 
     init {
+        @Suppress("LeakingThis")
         setHasStableIds(true)
     }
 

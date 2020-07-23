@@ -5,18 +5,14 @@
         <item name="colorPrimary">@color/grey_light</item>
         <item name="colorSurface">@color/primary</item>
         <item name="colorSecondary">@color/accent</item>
-        <!--<item name="colorPrimaryDark">@android:color/transparent</item>-->
-        <!--<item name="colorOnPrimary">?colorOnBackground</item>-->
         <item name="android:statusBarColor">@color/primary</item>
         <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="elevationOverlayEnabled">false</item>
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
-        <!--    <item name="toolbarStyle">@style/ToolBarStyle</item>-->
-        <!--<item name="progressIndicatorStyle">@style/ProgressIndicatorStyle</item>-->
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <!--<item name="android:windowSharedElementsUseOverlay">true</item>-->
+        <item name="android:textColorLink">?colorSecondary</item>
         <!--        <item name="android:windowTranslucentStatus">true</item>
                 <item name="android:windowTranslucentNavigation">true</item>-->
     </style>
@@ -34,7 +30,6 @@
 
     </style>
 
-
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:windowTranslucentStatus">true</item>
@@ -44,16 +39,11 @@
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="colorPrimary">@color/primary</item>
         <item name="android:background">@color/grey_light</item>
+        <item name="android:textColorLink">@color/accent</item>
     </style>
-    <!--
-        <style name="ToolBarStyle" parent="Widget.AppCompat.Toolbar">
-            <item name="android:background">?colorPrimary</item>
-        </style>-->
 
     <style name="BottomTabsShapeAppearance" parent="ShapeAppearance.MaterialComponents">
         <item name="cornerFamily">rounded</item>
-        <!--<item name="cornerSizeBottomLeft">0dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>-->
         <item name="cornerSizeTopLeft">16dp</item>
         <item name="cornerSizeTopRight">16dp</item>
     </style>
@@ -61,32 +51,6 @@
     <style name="IndeterminateLinearProgressIndicatorStyle" parent="Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate">
         <item name="indicatorColor">?colorSecondary</item>
     </style>
-
-    <style name="ActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="titleTextStyle">@style/ActionBar.Title</item>
-        <item name="subtitleTextStyle">@style/ActionBar.SubTitle</item>
-        <item name="displayOptions">showTitle</item>
-        <!-- remove shadow below action bar -->
-        <item name="elevation">0dp</item>
-    </style>
-
-    <style name="ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/primary_text</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="ActionBar.SubTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/primary_text</item>
-    </style>
-
-
-    <style name="ListView" parent="android:Widget.ListView">
-        <item name="android:divider">@color/list_divider</item>
-        <item name="android:dividerHeight">1dp</item>
-    </style>
-
 
     <style name="aot_labels">
         <item name="android:layout_width">wrap_content</item>
@@ -103,12 +67,6 @@
         <item name="android:fontFamily">@string/light_font</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/primary_text</item>
-    </style>
-
-    <style name="big_progress">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_gravity">center</item>
     </style>
 
 

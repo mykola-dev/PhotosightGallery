@@ -44,41 +44,16 @@ deviantstudio.software@gmail.com
 	<string name="categories">Категории</string>
 	<string name="share_subj">Отличная фотография!</string>
 	<string name="share_text">Отправлено с помощью Photosight Gallery</string>
-	<string name="loading">Загрузка…</string>
 	<string name="share">Поделиться</string>
 	<string name="share_link">Поделиться ссылкой</string>
 	<string name="share_img">Отправить фото</string>
-	<string name="photosight">ФОТО.САЙТ</string>
-	<string name="activity_name">Фотосайт</string>
-	<string name="clearing_the_cache">Очистка кэша</string>
-	<string name="clearing_notify">Вы можете отключить автоматическую очистку кэша в настройках программы Photosight Gallery</string>
 	<string name="saved_to_">"Сохранено в "</string>
 	<string name="failed">Неудача</string>
-	<string name="photo_">"фото "</string>
-	<string name="top_in">"Топ "</string>
-	<string name="connection_error">Ошибка соединения</string>
-	<string name="sort_by_">Упорядочить по…</string>
-	<string name="disabled">Нет</string>
-	<string name="recommendations">Рекомендации</string>
-	<string name="open_in_web_browser">Открыть в Браузере</string>
-	<string name="detailed_info_">Подробнее…</string>
-	<string name="save_to_sd">Сохранить на SD</string>
-	<string name="info_">Инфо…</string>
+	<string name="open_in_web_browser">Открыть в браузере</string>
+	<string name="save_to_sd">Сохранить</string>
 	<string name="settings">Настройки</string>
-	<string name="refresh">Обновить</string>
-	<string name="share_app_subj">Зацени новое приложение!</string>
-	<string name="share_app_text">Photosight Gallery - программа просмотра фотографий photosight.ru для Android OS</string>
-	<string name="do_you_want_to_clear_the_cache_now_">Вы уверены, что хотите удалить все кэшированные фото?</string>
-	<string name="coming_soon">В разработке</string>
-	<string name="title">Название</string>
-	<string name="author">Автор</string>
-	<string name="date">Дата</string>
-	<string name="award">Место</string>
-	<string name="denied_by_parental_control">Блокировано Родительским контролем</string>
-	<string name="set_as">Установить как…</string>
-    <string name="photo_author">"&lt;АВТОР&gt;"</string>
-    <string name="persistence">Хранилище</string>
-    <string name="likes">Нравится</string>
+	<string name="photo_author">"&lt;АВТОР&gt;"</string>
+	<string name="likes">Нравится</string>
     <string name="dislikes">Не нравится</string>
     <string name="processing">Обработка…</string>
     <string name="histogram">Гистограмма</string>
@@ -94,7 +69,8 @@ deviantstudio.software@gmail.com
 	<string name="rating_outrun">Претенденты на Фото дня</string>
 	<string name="views">Просмотры</string>
 	<string name="ratings">Рейтинги</string>
-	<string name="retry">Обновить</string>
+	<string name="retry">Повторить</string>
+	<string name="about_">О программе…</string>
 
 
 </resources>

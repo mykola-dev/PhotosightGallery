@@ -2,9 +2,14 @@ package ds.photosight.ui.view
 
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.ViewGroup
+import android.widget.TextView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ds.photosight.R
+
 
 internal fun Activity.showAbout() {
     val version: String = try {
@@ -15,15 +20,20 @@ internal fun Activity.showAbout() {
     }
 
     val message = getString(R.string.abouttext, getString(R.string.changelog))
+    val spannable = SpannableString(message)
+    Linkify.addLinks(spannable, Linkify.EMAIL_ADDRESSES)
 
-    val d = MaterialAlertDialogBuilder(this)
+    MaterialAlertDialogBuilder(this)
         .setTitle(getString(R.string.about_title_) + version)
-        .setMessage(message)
-        .setPositiveButton(android.R.string.ok) { dialog, _ ->
-            dialog.cancel()
-        }
+        .setMessage(spannable)
+        .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.cancel() }
         .create()
-    d.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-    d.show()
+        .apply {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            show()
+
+            // clickable links
+            findViewById<TextView>(android.R.id.message)!!.movementMethod = LinkMovementMethod.getInstance()
+        }
 
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="category_2">Портрет</string>
+    <string name="category_3">Природа</string>
+    <string name="category_4">Натюрморт</string>
+    <string name="category_5">Макро</string>
+    <string name="category_6">Подорожі</string>
+    <string name="category_7">Місто</string>
+    <string name="category_8">Тварини</string>
+    <string name="category_9">Репортаж</string>
+    <string name="category_10">Спорт</string>
+    <string name="category_11">Гумор</string>
+    <string name="category_12">Жанр</string>
+    <string name="category_13">Музей</string>
+    <string name="category_14">Компьютерне мистецтво</string>
+    <string name="category_15">Ню</string>
+    <string name="category_16">Різне</string>
+    <string name="category_17">Фото.сайт</string>
+    <string name="category_18">Гламур</string>
+    <string name="category_19">Рекламне фото</string>
+    <string name="category_27">Папарацці</string>
+    <string name="category_36">Пейзаж</string>
+    <string name="category_64">Фотополювання</string>
+    <string name="category_65">Підводний світ</string>
+    <string name="category_70">Жанровий портрет</string>
+    <string name="category_78">Мобільне фото</string>
+    <string name="category_80">Дитячий світ</string>
+    <string name="category_82">Архітектура та інтер´єр</string>
+    <string name="category_87">Фотомоделі</string>
+    <string name="category_91">Весільне фото</string>
+    <string name="category_92">Техно</string>
+
+    <string name="rating_day">Фото дня</string>
+    <string name="rating_week">Фото тижня</string>
+    <string name="rating_month">Фото місяця</string>
+    <string name="rating_best">Найкраще</string>
+    <string name="rating_artistic">Художність</string>
+    <string name="rating_original">Оригінальність</string>
+    <string name="rating_technic">Технічність</string>
+    <string name="rating_favorites">Обране</string>
+    <string name="rating_applicants">Фото претендентів</string>
+    <string name="rating_outrun">Претенденти на Фото дня</string>
+
+    <string name="categories">Категорії</string>
+    <string name="ratings">Рейтинги</string>
+    <string name="share_subj">Чудова світлина!</string>
+    <string name="share_text">Надіслано за допомогою Photosight Gallery</string>
+    <string name="share">Поділитися</string>
+    <string name="share_link">Поділитися посиланням</string>
+    <string name="share_img">Надіслати фото</string>
+    <string name="saved_to_">Збережено в</string>
+    <string name="failed">Невдача</string>
+    <string name="open_in_web_browser">Відкрити в браузері</string>
+    <string name="save_to_sd">Зберегти</string>
+    <string name="settings">Налаштування</string>
+    <string name="photo_author">&lt;АВТОР&gt;</string>
+    <string name="likes">Уподобання</string>
+    <string name="dislikes">Невподоби</string>
+    <string name="processing">Обробка…</string>
+    <string name="histogram">Гістограмма</string>
+    <string name="retry">Повторити</string>
+    <string name="views">Перегляди</string>
+    <string name="abouttext">"Photosight Gallery - це неофіційний застосунок для швидкого та зручного доступу до великого архіву високохудожніх світлин професійних фотографів (переважно москалів) photosight.ru \nПобажання та звіти про помилки приймаються на deviantstudio.software@gmail.com\n %1$s"</string>
+    <string name="about_">Про застосунок…</string>
+</resources>
