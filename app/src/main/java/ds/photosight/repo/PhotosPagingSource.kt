@@ -1,11 +1,10 @@
 package ds.photosight.repo
 
 import androidx.paging.PagingSource
-import ds.photosight.parser.CategoriesPhotosRequest
-import ds.photosight.parser.Multipage
-import ds.photosight.parser.PhotoInfo
-import ds.photosight.parser.PhotosRequest
-import ds.photosight.viewmodel.MenuState
+import ds.photosight.parser.*
+import ds.photosight.ui.viewmodel.CategoryMenuItemState
+import ds.photosight.ui.viewmodel.MenuState
+import ds.photosight.ui.viewmodel.RatingMenuItemState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -35,18 +34,27 @@ class PhotosPagingSource(
     }
 
     private fun buildRequest(page: Int): PhotosRequest {
-        val category = menuState.categories.find { it.isSelected }
+        val selected = menuState.getSelected()
 
-        return when {
-            category != null -> {
+        return when (selected) {
+            is CategoryMenuItemState -> {
                 CategoriesPhotosRequest(
-                    category.id,
+                    selected.category,
                     page,
                     menuState.categoriesFilter.sortDumpCategory,
                     menuState.categoriesFilter.sortTypeCategory
                 )
             }
-            else -> error("not implemented")
+            is RatingMenuItemState.Day -> error("not implemented")
+            is RatingMenuItemState.Week -> Top50PhotosRequest()
+            is RatingMenuItemState.Month -> Top200PhotosRequest()
+            is RatingMenuItemState.Art -> TopArtPhotosRequest()
+            is RatingMenuItemState.Orig -> TopOrigPhotosRequest()
+            is RatingMenuItemState.Tech -> TopTechPhotosRequest()
+            is RatingMenuItemState.Favs -> TopFavoritesPhotosRequest()
+            is RatingMenuItemState.Applicants -> TopApplicantsPhotosRequest()
+            is RatingMenuItemState.Outrun -> OutrunPhotosRequest()
+            else -> error("illegal menu item")
         }
     }
 }

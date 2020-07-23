@@ -12,7 +12,7 @@
     android:orientation="vertical"
     android:theme="@style/AppTheme.Light"
     app:behavior_peekHeight="@dimen/peek_height"
-    app:layout_behavior=".view.widget.HideableBottomSheet"
+    app:layout_behavior=".ui.widget.HideableBottomSheet"
     app:shapeAppearance="@style/BottomTabsShapeAppearance"
     tools:showIn="@layout/fragment_gallery"
     >

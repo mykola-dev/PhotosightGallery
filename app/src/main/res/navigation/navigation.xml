@@ -8,7 +8,7 @@
     >
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="ds.photosight.view.GalleryFragment"
+        android:name="ds.photosight.ui.view.GalleryFragment"
         android:label="Gallery"
         tools:layout="@layout/fragment_gallery"
         >
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/viewerFragment"
-        android:name="ds.photosight.view.ViewerFragment"
+        android:name="ds.photosight.ui.view.ViewerFragment"
         android:label="Viewer"
         tools:layout="@layout/fragment_viewer"
         >

@@ -31,22 +31,9 @@
 	<string name="category_91">Wedding</string>
 	<string name="category_92">Techno</string>
 
-	<string-array name="ratings_array">
-		<item>@string/rating_day</item>
-		<item>@string/rating_week</item>
-		<item>@string/rating_month</item>
-		<item>@string/rating_best</item>
-		<item>@string/rating_artistic</item>
-		<item>@string/rating_original</item>
-		<item>@string/rating_technic</item>
-		<item>@string/rating_favorites</item>
-		<item>@string/rating_applicants</item>
-		<item>@string/rating_outrun</item>
-	</string-array>
-
-	<string name="rating_day">Day</string>
-	<string name="rating_week">Week</string>
-	<string name="rating_month">Month</string>
+	<string name="rating_day">Top of the Day</string>
+	<string name="rating_week">Top of the Week</string>
+	<string name="rating_month">Top of the Month</string>
 	<string name="rating_best">Best</string>
 	<string name="rating_artistic">Artistry</string>
 	<string name="rating_original">Originality</string>
@@ -147,53 +134,30 @@ deviantstudio.software@gmail.com
 	<string name="ratings">Ratings</string>
 	<string name="share_subj">Check this out!</string>
 	<string name="share_text">Sent from Photosight Gallery</string>
-	<string name="loading">Loading…</string>
 	<string name="share">Share</string>
 	<string name="share_link">Share URL</string>
 	<string name="share_img">Share Image</string>
-	<string name="photosight">PHOTO.SIGHT</string>
-	<string name="activity_name">Photosight Gallery</string>
-	<string name="clearing_the_cache">Clearing the cache</string>
 	<string name="clearing_notify">Make take few minutes…</string>
 	<string name="saved_to_">"Saved to "</string>
 	<string name="failed">Failed</string>
-	<string name="loading_next_page">Loading Next Page</string>
-	<string name="page_">"page "</string>
-	<string name="photo_">"photo "</string>
-	<string name="top_in">"Top of the "</string>
-	<string name="no_photos_try_next_page_">No photos. Try next page.</string>
 	<string name="connection_error">Connection Error</string>
-	<string name="sort_by_">Sort by…</string>
-	<string name="disabled">Disabled</string>
-	<string name="recommendations">Recommendations</string>
 
 	<string name="open_in_web_browser">Open in Browser</string>
-	<string name="detailed_info_">Detailed Info…</string>
-	<string name="save_to_sd">Save to SD</string>
-	<string name="info_">Info…</string>
+	<string name="save_to_sd">Download</string>
 	<string name="settings">Settings</string>
 	<string name="refresh">Refresh</string>
 	<string name="share_app_subj">You should check out this app!</string>
 	<string name="share_app_text">Photosight Gallery is a client of the largest online gallery of art photography in Europe, photosight.ru</string>
 	<string name="do_you_want_to_clear_the_cache_now_">Do you want to clear the cache now?</string>
-	<string name="coming_soon">Coming Soon!</string>
-	<string name="title">Title</string>
-	<string name="author">Author</string>
-	<string name="date">Date</string>
-	<string name="award">Award</string>
-	<string name="denied_by_parental_control">Denied by Parental Control</string>
-	<string name="set_as">Set as…</string>
 	<string name="drawer_open" translatable="false">Open Comments</string>
     <string name="drawer_close" translatable="false">Close Comments</string>
     <string name="photo_author">"&lt;AUTHOR&gt;"</string>
-	<string name="persistence">Persistence</string>
     <string name="likes">Likes</string>
     <string name="dislikes">Dislikes</string>
     <string name="processing">Processing…</string>
     <string name="histogram">Histogram</string>
 	<string name="copyright" translatable="false">© 1997-2020 Deviant Studio</string>
 	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
-
 	<string name="retry">Retry</string>
     <string name="views">Views</string>
 

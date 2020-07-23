@@ -1,73 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--todo constraint layout-->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
 
-                android:paddingLeft="8dp"
-                android:paddingTop="16dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="20dp">
+    android:paddingLeft="16dp"
+    android:paddingTop="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="20dp"
+    >
 
     <ImageView
+        android:id="@+id/avatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/anonymous"
-        android:id="@+id/avatar"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="5dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:textColor="@color/primary_text"
-        android:id="@+id/name"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/avatar"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Small Text"
-        android:textColor="@color/primary_text"
-        android:id="@+id/content"
-        android:layout_below="@+id/avatar"
-        android:layout_alignParentLeft="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/anonymous"
         />
 
     <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_secondary"
-        android:textSize="12sp"
-        android:fontFamily="sans-serif-light"
-        android:text="Small Text"
-        android:id="@+id/date"
-        android:layout_below="@+id/name"
-        android:layout_toRightOf="@+id/avatar"/>
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_toRightOf="@+id/avatar"
+        android:fontFamily="sans-serif-condensed"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/primary_text"
+        app:layout_constraintStart_toEndOf="@+id/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="John Smith"
+        />
 
     <TextView
+        android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:text="New Text"
-        android:id="@+id/rating"
-        android:layout_marginTop="4dp"
+        android:layout_below="@+id/avatar"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/primary_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avatar"
+        tools:text="Great photo!"
+        />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_marginStart="16dp"
+        android:layout_toRightOf="@+id/avatar"
+        android:fontFamily="sans-serif-light"
         android:textColor="@color/text_secondary"
-        android:layout_alignParentRight="true"/>
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/avatar"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        tools:text="22.07.2020"
+        />
 
-   <!-- &lt;!&ndash;todo remove&ndash;&gt;
-    <ImageView
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:id="@+id/status"
-        android:alpha=".5"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"/>-->
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="+10"
+        />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

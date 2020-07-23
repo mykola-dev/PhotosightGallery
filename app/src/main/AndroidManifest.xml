@@ -15,8 +15,7 @@
         >
 
         <activity
-            android:name=".view.MainActivity"
-            android:label="@string/activity_name"
+            android:name="ds.photosight.ui.view.MainActivity"
             android:theme="@style/SplashTheme"
             >
             <intent-filter>

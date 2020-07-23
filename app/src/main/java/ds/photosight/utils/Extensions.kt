@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.core.view.isVisible
+import androidx.lifecycle.SavedStateHandle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.progressindicator.ProgressIndicator
@@ -71,3 +72,9 @@ inline fun <reified T> Any.getWithReflection(fieldName: String): T {
 }
 
 val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+var SavedStateHandle.position: Int?
+    get() = get("position")
+    set(value) {
+        set("position", value)
+    }

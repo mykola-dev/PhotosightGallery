@@ -45,7 +45,7 @@
 
     <!--drawer-->
     <FrameLayout
-        android:layout_width="@dimen/drawer_width"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:animateLayoutChanges="true"
@@ -56,11 +56,11 @@
             android:id="@+id/commentsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_comment"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:fitsSystemWindows="true"
+            tools:listitem="@layout/item_comment"
             />
-        <!--android:divider="@color/dark_divider"-->
+
         <com.google.android.material.progressindicator.ProgressIndicator
             android:id="@+id/drawerProgress"
             style="@style/Widget.MaterialComponents.ProgressIndicator.Circular.Indeterminate"
@@ -68,14 +68,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             />
-        <!--android:layout_marginTop="48dp"-->
+
         <ImageView
-            android:visibility="gone"
             android:id="@+id/errorView"
-            android:src="@drawable/ic_photo_error"
-            android:layout_gravity="center"
             android:layout_width="128dp"
-            android:layout_height="128dp"/>
+            android:layout_height="128dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_photo_error"
+            android:visibility="gone"
+            />
 
     </FrameLayout>
 
