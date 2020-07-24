@@ -15,6 +15,7 @@ import ds.photosight.ui.view.PhotoGestureListener
 import ds.photosight.ui.view.SharedElementsHelper
 import kotlinx.android.synthetic.main.item_viewer_photo.*
 import timber.log.Timber
+import java.io.FileNotFoundException
 
 class ViewerAdapter(
     val transitionHelper: SharedElementsHelper,
@@ -49,8 +50,17 @@ class ViewerAdapter(
                     return false
                 }
 
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>, isFirstResource: Boolean): Boolean =
-                    onCompleted()
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
+                    return if (e?.rootCauses?.any { it is FileNotFoundException } == true) {
+                        Timber.e("file not found! $model isFirst=$isFirstResource")
+                        item.large = item.altLarge
+                        notifyItemChanged(position)
+                        true
+                    } else {
+                        onCompleted()
+                    }
+
+                }
 
                 override fun onResourceReady(resource: Drawable, model: Any?, target: Target<Drawable>, dataSource: DataSource?, isFirstResource: Boolean): Boolean =
                     onCompleted()

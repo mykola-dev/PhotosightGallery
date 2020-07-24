@@ -9,7 +9,6 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -21,6 +20,8 @@ import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.ui.view.SharedElementsHelper
 import kotlinx.android.synthetic.main.item_gallery_photo.*
+import timber.log.Timber
+import java.io.FileNotFoundException
 
 class GalleryAdapter(
     val transitionHelper: SharedElementsHelper,
@@ -86,8 +87,14 @@ class GalleryAdapter(
             .error(R.drawable.ic_photo_error)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    item.failed = true
-                    return false
+                    return if (e?.rootCauses?.any { it is FileNotFoundException } == true) {
+                        Timber.e("file not found! $model isFirst=$isFirstResource")
+                        item.large = item.altLarge
+                        notifyItemChanged(position)
+                        true
+                    } else {
+                        false
+                    }
                 }
 
                 override fun onResourceReady(resource: Drawable, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {

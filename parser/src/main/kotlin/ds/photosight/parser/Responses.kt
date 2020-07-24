@@ -9,14 +9,17 @@ data class PhotoCategory(
 data class PhotoInfo(
     val id: Int,
     val thumb: String,
-    val large: String,
+    var large: String,
     val pageUrl: String,
     val title: String,
     val authorName: String,
     val authorUrl: String?,
     var paginationKey: String?,
     var failed: Boolean = false
-)
+) {
+    // workaround for old photos
+    val altLarge: String get() = large.replace("_xlarge", "_large")
+}
 
 data class PhotoDetails(
     val comments: List<Comment>,

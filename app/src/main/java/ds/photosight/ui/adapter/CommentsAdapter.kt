@@ -17,6 +17,7 @@ class CommentsAdapter(comments: List<PhotoDetails.Comment>) : SimpleAdapter<Phot
         Glide.with(holder.itemView)
             .load(item.avatar)
             .circleCrop()
+            .transition(properTransition)
             .error(R.drawable.anonymous)
             .into(holder.avatar)
     }

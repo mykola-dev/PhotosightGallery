@@ -20,13 +20,19 @@ class PhotosightParserTest {
 
     @Test
     fun `simple category fetch`() {
-        CategoriesPhotosRequest(15, 1)()
+        CategoriesPhotosRequest(15, SimplePage(1))()
             .forEach { println(it) }
     }
 
     @Test
     fun `category sorting`() {
-        CategoriesPhotosRequest(15, 1, CategoriesPhotosRequest.SortDumpCategory.ALL, CategoriesPhotosRequest.SortTypeCategory.COMMENTS_COUNT)()
+        CategoriesPhotosRequest(15, SimplePage(1), CategoriesPhotosRequest.SortDumpCategory.ALL, CategoriesPhotosRequest.SortTypeCategory.COMMENTS_COUNT)()
+            .forEach { println(it) }
+    }
+
+    @Test
+    fun `old photos url formatting`() {
+        CategoriesPhotosRequest(15, SimplePage(1), CategoriesPhotosRequest.SortDumpCategory.ALL, CategoriesPhotosRequest.SortTypeCategory.COUNT)()
             .forEach { println(it) }
     }
 
@@ -56,10 +62,10 @@ class PhotosightParserTest {
 
     @Test
     fun `date page with index 1 should aim on today`() {
-        val datePage = DailyPhotosRequest.DatePage.fromPage(1)
-        println("${datePage.year}/${datePage.month}/${datePage.day}")
-        val now = DailyPhotosRequest.DatePage.now
-        assertEquals(1, datePage.page)
+        val datePage = DatePage.fromPage(1)
+        println("$datePage")
+        val now = DatePage.now
+        assertEquals(1, datePage.index)
         assertEquals(now.get(Calendar.YEAR), datePage.year)
         assertEquals(now.get(Calendar.MONTH), datePage.month - 1)
         assertEquals(now.get(Calendar.DAY_OF_MONTH), datePage.day)
