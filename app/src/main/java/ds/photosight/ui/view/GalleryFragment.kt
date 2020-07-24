@@ -1,5 +1,6 @@
 package ds.photosight.ui.view
 
+import android.animation.LayoutTransition
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -16,11 +17,15 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.filter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
+import ds.photosight.parser.PhotoInfo
 import ds.photosight.utils.action
 import ds.photosight.utils.snack
 import ds.photosight.utils.toggle
@@ -113,6 +118,25 @@ class GalleryFragment : Fragment() {
         }
 
         photosRecyclerView.adapter = photosAdapter
+        photosAdapter.addLoadStateListener { state ->
+            log.v("loading state: $state")
+            viewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
+            if (state.refresh is LoadState.Error || state.append is LoadState.Error || state.prepend is LoadState.Error) {
+                viewModel.onLoadingError()
+            }
+        }
+        photosRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                recyclerView
+                    .getFirstVisibleItem()
+                    ?.paginationKey
+                    ?.let {
+                        val subtitle = if ("/" in it) it
+                        else getString(R.string.page_,it)
+                        toolbar.subtitle = subtitle
+                    }
+            }
+        })
 
         mainViewModel.setMenuStateLiveData(viewModel.menuStateLiveData)
 
@@ -121,18 +145,13 @@ class GalleryFragment : Fragment() {
             categoriesAdapter.updateData(it.categories)
             ratingsAdapter.updateData(it.ratings)
             toolbar.title = it.getSelected().title
+            toolbar.subtitle = null
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             if (bottomSheetBehavior.isHideable) {
                 Handler().post {
                     bottomSheetBehavior.isHideable = false
                 }
-                photosAdapter.addLoadStateListener { state ->
-                    log.v("loading state: $state")
-                    viewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
-                    if (state.refresh is LoadState.Error || state.append is LoadState.Error || state.prepend is LoadState.Error) {
-                        viewModel.onLoadingError()
-                    }
-                }
+
             }
 
         }
@@ -147,8 +166,8 @@ class GalleryFragment : Fragment() {
             log.v("isloading observed: $isLoading")
             progress.toggle(isLoading)
         }
-        viewModel.retrySnackbarCommand.observe(viewLifecycleOwner) { message ->
-            showRetrySnackbar(message) {
+        viewModel.retrySnackbarCommand.observe(viewLifecycleOwner) {
+            showRetrySnackbar(getString(R.string.loading_failed)) {
                 photosAdapter.retry()
             }
         }
@@ -165,6 +184,11 @@ class GalleryFragment : Fragment() {
             view.updatePadding(top = topPadding + sbInset)
             insets
         }
+        // animate subtitle
+        val layoutTransitiont = LayoutTransition()
+        layoutTransitiont.disableTransitionType(LayoutTransition.DISAPPEARING)
+        layoutTransitiont.disableTransitionType(LayoutTransition.CHANGE_DISAPPEARING)
+        toolbar.layoutTransition = layoutTransitiont
     }
 
     private fun fixInsets() {
@@ -219,31 +243,13 @@ class GalleryFragment : Fragment() {
     }
 
     private fun setupTabs() {
-        //tabLayout.isClickable=true
-        /*bottomSheet.setOnClickListener {
-            openMenu()
-        }*/
-        /*tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                openMenu()
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                openMenu()
-            }
-
-        })*/
-
         TabLayoutMediator(tabLayout, menuViewPager) { tab, position ->
             tab.view.setOnClickListener {
                 openMenu()
             }
             tab.text = when (position) {
-                MENU_CATEGORIES -> getString(R.string.categories)
                 MENU_RATINGS -> getString(R.string.ratings)
+                MENU_CATEGORIES -> getString(R.string.categories)
                 else -> error("wrong tab")
             }
         }.attach()
@@ -264,5 +270,11 @@ class GalleryFragment : Fragment() {
     }
 
 }
+
+private fun RecyclerView.getFirstVisibleItem(): PhotoInfo? = (layoutManager as StaggeredGridLayoutManager)
+    .findFirstCompletelyVisibleItemPositions(null)
+    .firstOrNull()
+    ?.takeIf { it >= 0 }
+    ?.let { (adapter as GalleryAdapter).getItemAt(it) }
 
 

@@ -26,13 +26,13 @@ sealed class RatingMenuItemState(@StringRes val titleId: Int) : MenuItemState {
     data class Day(override val context: Context) : RatingMenuItemState(R.string.rating_day)
     data class Week(override val context: Context) : RatingMenuItemState(R.string.rating_week)
     data class Month(override val context: Context) : RatingMenuItemState(R.string.rating_month)
-    data class Best(override val context: Context) : RatingMenuItemState(R.string.rating_best)
     data class Art(override val context: Context) : RatingMenuItemState(R.string.rating_artistic)
     data class Orig(override val context: Context) : RatingMenuItemState(R.string.rating_original)
     data class Tech(override val context: Context) : RatingMenuItemState(R.string.rating_technic)
     data class Favs(override val context: Context) : RatingMenuItemState(R.string.rating_favorites)
     data class Applicants(override val context: Context) : RatingMenuItemState(R.string.rating_applicants)
     data class Outrun(override val context: Context) : RatingMenuItemState(R.string.rating_outrun)
+    data class All(override val context: Context) : RatingMenuItemState(R.string.all_photos)
 
 }
 
@@ -44,8 +44,8 @@ data class MenuState(
     fun getSelected(): MenuItemState = (categories + ratings).first { it.isSelected }
 
     companion object {
-        const val MENU_CATEGORIES = 0
-        const val MENU_RATINGS = 1
+        const val MENU_RATINGS = 0
+        const val MENU_CATEGORIES = 1
     }
 
 }

@@ -14,9 +14,7 @@ interface Request<T> {
     val cookies: Map<String, String>
 }
 
-interface Multipage {
-    val page: Int
-}
+
 
 abstract class JsoupRequest<T> : Request<T> {
     private val nudeModeCookie: Pair<String, String> = "show_nude" to "1"
@@ -118,6 +116,7 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
 }
 
 abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
+
     override fun invoke(): List<PhotoInfo> = getDocument()
         .parse("div.photo-item")
         .map {
@@ -126,18 +125,22 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
                 .getElementsByTag("img")
                 .run { attr("src") to attr("alt").trim() }
             val large = thumb.thumbToLarge()
-            val page = it.getElementsByTag("a").attr("abs:data-href")
+            val pageUrl = it.getElementsByTag("a").attr("abs:data-href")
             val (author, authorUrl) = it
                 .getElementsByTag("p")
                 .first()
                 .let { e -> e.getElementsByTag("a").first() ?: e }
                 .let { e -> e.text() to e.attr("abs:href") }
 
-            PhotoInfo(id, thumb, large, page, title, author, authorUrl)
+            val paginationKey = (this as? Multipage)?.page?.key
+
+            PhotoInfo(id, thumb, large, pageUrl, title, author, authorUrl, paginationKey)
         }
 
 }
 
+@Deprecated("use tops instead")
+// pagination?
 class BestPhotosRequest(sort: Sort = Sort.BEST, time: Time = Time.DAY) : PhotosRequest() {
 
     enum class Sort(private val value: String) {
@@ -161,52 +164,21 @@ class BestPhotosRequest(sort: Sort = Sort.BEST, time: Time = Time.DAY) : PhotosR
     override val url: String = "$baseUrl/best/?sort=$sort&time=$time"
 }
 
-class DailyPhotosRequest(datePage: DatePage, category: Int? = null) : PhotosRequest(), Multipage {
+class DailyPhotosRequest(override val page: DatePage, category: Int? = null) : PhotosRequest(), Multipage {
     constructor(page: Int, category: Int? = null) : this(DatePage.fromPage(page), category)
     constructor(year: Int, month: Int, day: Int, category: Int? = null) : this(DatePage.fromDate(year, month, day), category)
 
-    override val page: Int = datePage.page
-    override val url: String = "$baseUrl/outrun/date/${datePage.year}/${datePage.month}/${datePage.day}/${category?.let { "?category=$it" } ?: ""}"
+    override val url: String = "$baseUrl/outrun/date/${page.key}/${category?.let { "?category=$it" } ?: ""}"
 
-    class DatePage(private val calendar: Calendar) {
-        val year: Int = calendar.get(Calendar.YEAR)
-        val month: Int = calendar.get(Calendar.MONTH) + 1
-        val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val page: Int
-            get() {
-                val start: Long = calendar.timeInMillis
-                val end: Long = now.timeInMillis
-                return TimeUnit.MILLISECONDS.toDays(end - start).toInt() + 1
-            }
-
-        companion object {
-            fun fromPage(page: Int): DatePage {
-                val date = now
-                date.add(Calendar.DAY_OF_YEAR, 1 - page)
-                return DatePage(date)
-            }
-
-            fun fromDate(year: Int, month: Int, day: Int): DatePage {
-                val date = Calendar.getInstance()
-                date.set(year, month - 1, day)
-                return DatePage(date)
-            }
-
-            val now: Calendar get() = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"))
-        }
-    }
 }
 
 class CategoriesPhotosRequest(
     category: Int,
-    override val page: Int = 1,
+    override val page: SimplePage,
     sortDumpCategory: SortDumpCategory = SortDumpCategory.ALL,
     sortTypeCategory: SortTypeCategory = SortTypeCategory.DEFAULT
 ) : PhotosRequest(), Multipage {
-    init {
-        if (page < 1) error("currentPage must be > 0")
-    }
 
     enum class SortDumpCategory(private val value: String) {
         ALL("all"),
@@ -227,7 +199,7 @@ class CategoriesPhotosRequest(
     }
 
 
-    override val url: String = "https://photosight.ru/photos/category/$category?pager=$page"
+    override val url: String = "https://photosight.ru/photos/category/$category?pager=${page.key}"
 
     override val cookies: Map<String, String> = mapOf(
         "sort_dump_category" to sortDumpCategory.toString(),
@@ -268,10 +240,10 @@ class OutrunPhotosRequest : PhotosRequest() {
     override val url: String = "$baseUrl/outrun"
 }
 
-class NewPhotosRequest(override val page: Int = 1) : PhotosRequest(), Multipage {
-    override val url: String = "$baseUrl/new_on_site/photos/?pager=$page"
+class NewPhotosRequest(override val page: SimplePage) : PhotosRequest(), Multipage {
+    override val url: String = "$baseUrl/new_on_site/photos/?pager=${page.key}"
 }
 
-class PretenderPhotosRequest(override val page: Int = 1) : PhotosRequest(), Multipage {
-    override val url: String = "$baseUrl/pretender/photos/?pager=$page"
+class PretenderPhotosRequest(override val page: SimplePage) : PhotosRequest(), Multipage {
+    override val url: String = "$baseUrl/pretender/photos/?pager=${page.key}"
 }

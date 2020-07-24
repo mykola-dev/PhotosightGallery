@@ -30,16 +30,15 @@
     <string name="category_91">Весільне фото</string>
     <string name="category_92">Техно</string>
 
-    <string name="rating_day">Фото дня</string>
-    <string name="rating_week">Фото тижня</string>
-    <string name="rating_month">Фото місяця</string>
-    <string name="rating_best">Найкраще</string>
+    <string name="rating_day">Світлина дня</string>
+    <string name="rating_week">Світлина тижня</string>
+    <string name="rating_month">Світлина місяця</string>
     <string name="rating_artistic">Художність</string>
     <string name="rating_original">Оригінальність</string>
     <string name="rating_technic">Технічність</string>
-    <string name="rating_favorites">Обране</string>
-    <string name="rating_applicants">Фото претендентів</string>
-    <string name="rating_outrun">Претенденти на Фото дня</string>
+    <string name="rating_favorites">Обрані</string>
+    <string name="rating_applicants">Світлини претендентів</string>
+    <string name="rating_outrun">Претенденти на світлину дня</string>
 
     <string name="categories">Категорії</string>
     <string name="ratings">Рейтинги</string>
@@ -47,7 +46,7 @@
     <string name="share_text">Надіслано за допомогою Photosight Gallery</string>
     <string name="share">Поділитися</string>
     <string name="share_link">Поділитися посиланням</string>
-    <string name="share_img">Надіслати фото</string>
+    <string name="share_img">Надіслати світлину</string>
     <string name="saved_to_">Збережено в</string>
     <string name="failed">Невдача</string>
     <string name="open_in_web_browser">Відкрити в браузері</string>
@@ -62,4 +61,7 @@
     <string name="views">Перегляди</string>
     <string name="abouttext">"Photosight Gallery - це неофіційний застосунок для швидкого та зручного доступу до великого архіву високохудожніх світлин професійних фотографів (переважно москалів) photosight.ru \nПобажання та звіти про помилки приймаються на deviantstudio.software@gmail.com\n %1$s"</string>
     <string name="about_">Про застосунок…</string>
+    <string name="page_">Сторінка %s</string>
+    <string name="loading_failed">Помилка завантаження</string>
+    <string name="all_photos">Всі світлини</string>
 </resources>

@@ -34,7 +34,6 @@
 	<string name="rating_day">Top of the Day</string>
 	<string name="rating_week">Top of the Week</string>
 	<string name="rating_month">Top of the Month</string>
-	<string name="rating_best">Best</string>
 	<string name="rating_artistic">Artistry</string>
 	<string name="rating_original">Originality</string>
 	<string name="rating_technic">Technique</string>
@@ -87,6 +86,9 @@ deviantstudio.software@gmail.com
 	<string name="retry">Retry</string>
     <string name="views">Views</string>
 	<string name="about_">About…</string>
+    <string name="loading_failed">Loading Failed</string>
+    <string name="page_">Page %s</string>
+	<string name="all_photos">All Photos</string>
 
 
 </resources>

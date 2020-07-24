@@ -87,8 +87,8 @@ dependencies {
     val androidX = "1.3.0"
     val lifecycleVersion = "2.2.0"
     val archVersion = "2.1.0"
-    val hiltJetpackVersion = "1.0.0-alpha01"
-    val pagingVersion = "3.0.0-alpha02"
+    val hiltJetpackVersion = "1.0.0-alpha02"
+    val pagingVersion = "3.0.0-alpha03"
     val coroutinesVersion = "1.3.8"
     val hiltVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra
@@ -105,11 +105,11 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("androidx.fragment:fragment-ktx:1.2.5")
-    implementation("androidx.paging:paging-runtime:3.0.0-SNAPSHOT")
+    implementation("androidx.paging:paging-runtime:$pagingVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
     implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha04")
+    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha05")
 
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")              // https://developer.android.com/jetpack/androidx

@@ -60,17 +60,19 @@ deviantstudio.software@gmail.com
 	<string name="rating_day">Фото дня</string>
 	<string name="rating_week">Фото недели</string>
 	<string name="rating_month">Фото месяца</string>
-	<string name="rating_best">Лучшее</string>
 	<string name="rating_artistic">Художественность</string>
 	<string name="rating_original">Оригинальность</string>
 	<string name="rating_technic">Техничность</string>
-	<string name="rating_favorites">Избранное</string>
-	<string name="rating_applicants">Фото Претендентов</string>
-	<string name="rating_outrun">Претенденты на Фото дня</string>
+	<string name="rating_favorites">Избранные</string>
+	<string name="rating_applicants">Фото претендентов</string>
+	<string name="rating_outrun">Претенденты на фото дня</string>
 	<string name="views">Просмотры</string>
 	<string name="ratings">Рейтинги</string>
 	<string name="retry">Повторить</string>
 	<string name="about_">О программе…</string>
+    <string name="page_">Страница %s</string>
+	<string name="loading_failed">Ошибка загрузки</string>
+	<string name="all_photos">Все фото</string>
 
 
 </resources>

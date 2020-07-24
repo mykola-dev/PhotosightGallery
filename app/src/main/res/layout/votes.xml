@@ -25,6 +25,7 @@
             android:layoutAnimation="@anim/cascade"
             android:orientation="vertical"
             android:paddingLeft="30dp"
+            android:clipToPadding="false"
             >
 
             <TextView

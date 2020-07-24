@@ -42,8 +42,6 @@ class GalleryAdapter(
 
         // fixes grid re-layout on each click
         recyclerView.itemAnimator = null
-        //val lm=recyclerView.layoutManager as StaggeredGridLayoutManager
-        //lm.gapStrategy= StaggeredGridLayoutManager.GAP_HANDLING_NONE
 
     }
 
@@ -110,6 +108,8 @@ class GalleryAdapter(
             .into(photoView)
 
     }
+
+    fun getItemAt(position: Int): PhotoInfo = getItem(position) ?: error("wrong position")
 
 }
 

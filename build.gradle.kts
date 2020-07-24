@@ -1,6 +1,5 @@
 buildscript {
     val kotlinVersion by extra("1.3.72")
-    //val coroutinesVersion by extra("1.3.6")
     val navVersion by extra("2.3.0")
     val hiltVersion by extra ("2.28-alpha")
 
@@ -21,6 +20,5 @@ allprojects {
         google()
         jcenter()
         maven("https://jitpack.io")
-        maven("https://androidx.dev/snapshots/builds/6693217/artifacts/repository") // todo remove
     }
 }

@@ -17,15 +17,22 @@ class PhotosPagingSource(
         val key = params.key ?: 1
 
         val request = buildRequest(key)
-        val page = withContext(Dispatchers.Default) { request() }
+        val page = withContext(Dispatchers.Default) {
+            request().ifEmpty {
+                // https://issuetracker.google.com/issues/161925081
+                listOf(PhotoInfo(0, "", "", "", "", "", "", null))
+            }
+        }
 
         Timber.d("loaded page $key, ${page.size} items")
 
         val prevKey = if (request is Multipage && key > 1) key - 1
         else null
 
-        val nextKey = if (page.isNotEmpty() && request is Multipage) key + 1
+        val nextKey = if ((key == 1 || page.isNotEmpty()) && request is Multipage) key + 1
         else null
+
+        Timber.d("prevKey=$prevKey nextKey=$nextKey")
 
         LoadResult.Page(page, prevKey, nextKey)
     } catch (e: Exception) {
@@ -38,11 +45,12 @@ class PhotosPagingSource(
             is CategoryMenuItemState -> {
                 CategoriesPhotosRequest(
                     selected.category,
-                    page,
+                    SimplePage(page),
                     menuState.categoriesFilter.sortDumpCategory,
                     menuState.categoriesFilter.sortTypeCategory
                 )
             }
+            is RatingMenuItemState.All -> NewPhotosRequest(SimplePage(page))
             is RatingMenuItemState.Day -> DailyPhotosRequest(page)
             is RatingMenuItemState.Week -> Top50PhotosRequest()
             is RatingMenuItemState.Month -> Top200PhotosRequest()

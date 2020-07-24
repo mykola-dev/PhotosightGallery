@@ -22,7 +22,7 @@ class GalleryViewModel @ViewModelInject constructor(
     private val resourcesRepo: ResourcesRepo
 ) : BaseViewModel() {
 
-    val retrySnackbarCommand = LiveEvent<String>()
+    val retrySnackbarCommand = LiveEvent<Unit>()
 
     private val categoriesLiveData: LiveData<List<PhotoCategory>> = liveData {
         flow { emit(photosightRepo.getCategories()) }
@@ -39,8 +39,8 @@ class GalleryViewModel @ViewModelInject constructor(
         .switchMap { categoriesLiveData }
         .map { categories ->
             MenuState(
-                categories.map { it.toMenuItemState() }.also { it.first().isSelected = true },
-                photosightRepo.getRatingsList()
+                categories.map { it.toMenuItemState() },
+                photosightRepo.getRatingsList().also { it.first().isSelected = true }
             )
         }
 
@@ -57,7 +57,7 @@ class GalleryViewModel @ViewModelInject constructor(
     }
 
     fun onLoadingError() {
-        retrySnackbarCommand("Loading Failed")
+        retrySnackbarCommand()
     }
 
 

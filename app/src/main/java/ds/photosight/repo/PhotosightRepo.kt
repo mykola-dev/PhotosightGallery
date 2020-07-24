@@ -2,6 +2,7 @@ package ds.photosight.repo
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
+import ds.photosight.R
 import ds.photosight.parser.*
 import ds.photosight.ui.viewmodel.RatingMenuItemState
 import kotlinx.coroutines.Dispatchers
@@ -24,10 +25,10 @@ class PhotosightRepo @Inject constructor(@ApplicationContext private val context
         .map { it.copy(name = it.getLocalizedCategory(context)) }
 
     fun getRatingsList(): List<RatingMenuItemState> = listOf(
+        RatingMenuItemState::All,
         RatingMenuItemState::Day,
         RatingMenuItemState::Week,
         RatingMenuItemState::Month,
-        RatingMenuItemState::Best,
         RatingMenuItemState::Art,
         RatingMenuItemState::Orig,
         RatingMenuItemState::Tech,

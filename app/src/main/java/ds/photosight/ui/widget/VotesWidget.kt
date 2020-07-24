@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.votes.view.*
 class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
     companion object {
-        private const val ANIMATION_DURATION = 2000L
+        private const val ANIMATION_DURATION = 1500L
     }
 
     data class Stats(
@@ -87,7 +87,6 @@ class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(context,
             img.setImageDrawable(context.getDrawable(id))
             img.updatePadding(bottom = 4.dp)
             awardsContainer.addView(img)
-            //img.layoutParams = lp
         }
         awardsContainer.isVisible = true
     }
