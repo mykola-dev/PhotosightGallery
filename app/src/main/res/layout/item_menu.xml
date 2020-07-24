@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/textLabel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    android:gravity="center_vertical"
+    android:marqueeRepeatLimit="marquee_forever"
+    android:minHeight="54dp"
+    android:paddingStart="16dip"
+    android:paddingEnd="16dip"
+	android:textSize="20sp"
+    android:scrollHorizontally="true"
+    tools:text="Sample Text!"
+	android:textColor="@color/menu_item_color"
+	android:background="@drawable/menu_selector"
+    />
+

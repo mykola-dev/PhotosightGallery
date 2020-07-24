@@ -1,16 +1,9 @@
 .idea
 .gradle
 local.properties
-build
+**/build/
 *.iml
 keystore.properties
 lint.xml
 gradlew*
 
-# Log Files
-*.log
-
-# Android Studio Navigation editor temp files
-.navigation/
-
-# Created by .ignore support plugin (hsz.mobi)

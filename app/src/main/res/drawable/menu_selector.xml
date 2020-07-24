@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?colorControlHighlight"
+    >
+
+    <item android:id="@android:id/mask">
+        <color android:color="#000" />
+    </item>
+
+    <item>
+        <selector
+            android:enterFadeDuration="1"
+            android:exitFadeDuration="@android:integer/config_shortAnimTime">
+            <item android:state_activated="false">
+                <color android:color="@android:color/transparent" />
+            </item>
+
+            <item android:state_activated="true">
+                <color android:color="@color/background" />
+            </item>
+
+        </selector>
+    </item>
+
+
+</ripple>

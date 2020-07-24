@@ -2,41 +2,34 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="ds.photosight"
-    android:installLocation="auto"
-
     >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".App"
-        android:icon="@drawable/icon"
         android:hardwareAccelerated="true"
-        android:allowBackup="true"
-        android:label="@string/app_name">
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        >
 
         <activity
-            android:name=".ui.MainActivity"
-            android:label="@string/activity_name"
-            android:theme="@style/Theme.MySherlock">
+            android:name="ds.photosight.ui.view.MainActivity"
+            android:theme="@style/SplashTheme"
+            >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.PreferencesActivity"/>
-
-
-        <activity
-            android:label=".ui.GalleryActivity"
-            android:name=".ui.GalleryActivity"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:theme="@style/Theme.MySherlockBlack"/>
-
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1"
+            />
 
     </application>
+
 </manifest>

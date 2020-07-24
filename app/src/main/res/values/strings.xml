@@ -1,199 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-	<string-array name="categories_array">
-		<item>Architecture and Interiors</item>
-		<item>City</item>
-		<item>Genre</item>
-		<item>Animals</item>
-		<item>Macro</item>
-		<item>Museum</item>
-		<item>Nu</item>
-		<item>Paparazzi</item>
-		<item>Underwater Nature</item>
-		<item>Nature</item>
-		<item>Advertising Photo</item>
-		<item>Wedding Photo</item>
-		<item>Techno</item>
-		<item>Photo.Sight</item>
-		<item>Humor</item>
-		<item>Glamour</item>
-		<item>Children\'s World</item>
-		<item>Genre Portrait</item>
-		<item>Computer Art</item>
-		<item>Mobile Photo</item>
-		<item>Still Life</item>
-		<item>Other</item>
-		<item>Landscape</item>
-		<item>Portrait</item>
-		<item>Travel</item>
-		<item>Reportage</item>
-		<item>Sport</item>
-		<item>Photohunting</item>
-		<item>Fashion</item>
 
-	</string-array>
+	<string name="category_2">Portrait</string>
+	<string name="category_3">Nature</string>
+	<string name="category_4">Still Life</string>
+	<string name="category_5">Macro</string>
+	<string name="category_6">Travels</string>
+	<string name="category_7">Urban</string>
+	<string name="category_8">Animals</string>
+	<string name="category_9">Reportage</string>
+	<string name="category_10">Sport</string>
+	<string name="category_11">Humor</string>
+	<string name="category_12">Genre</string>
+	<string name="category_13">Museum</string>
+	<string name="category_14">Digital Art</string>
+	<string name="category_15">Nu</string>
+	<string name="category_16">Other</string>
+	<string name="category_17">Photosight</string>
+	<string name="category_18">Glamour</string>
+	<string name="category_19">Advertising</string>
+	<string name="category_27">Paparazzi</string>
+	<string name="category_36">Landscape</string>
+	<string name="category_64">Photo Hunt</string>
+	<string name="category_65">Undersea World</string>
+	<string name="category_70">Genre Portrait</string>
+	<string name="category_78">Mobile</string>
+	<string name="category_80">Kids World</string>
+	<string name="category_82">Architecture and Interior</string>
+	<string name="category_87">Photo Models</string>
+	<string name="category_91">Wedding</string>
+	<string name="category_92">Techno</string>
 
-	<string-array name="tops_array">
-		<item>Day</item>
-		<item>Week</item>
-		<item>Month</item>
-		<item>@string/artistic</item>
-		<item>@string/original</item>
-		<item>@string/technic</item>
-		<item>Favorites</item>
-	</string-array>
+	<string name="rating_day">Top of the Day</string>
+	<string name="rating_week">Top of the Week</string>
+	<string name="rating_month">Top of the Month</string>
+	<string name="rating_artistic">Artistry</string>
+	<string name="rating_original">Originality</string>
+	<string name="rating_technic">Technique</string>
+	<string name="rating_favorites">Favorites</string>
+	<string name="rating_applicants">Applicants</string>
+	<string name="rating_outrun">Outrun</string>
 
-    <string name="thin_font">sans-serif-light</string>
-    <string name="light_font">sans-serif</string>
+    <string name="thin_font" translatable="false">sans-serif-light</string>
+    <string name="light_font" translatable="false">sans-serif</string>
 
-	<string name="changelog">"
+	<string name="changelog" translatable="false">"
 Change Log:
 
-v0.9
-- Comments fix
+v1.0
+- the app has been rewritten from scratch
 
-v0.8.3
-- Bugfixes
-
-v0.8.1
-- Fixed landscape orientation bug
-
-v0.8
-- Bugfixes
-- Increased photos quality
-- Adware removed
-- Sources published on GitHub https://github.com/deviant-studio/PhotosightGallery
-
-v0.7
-- Histogram
-- Better zooming/panning behavior
-
-v0.6
-- Photo rates and awards
-- bugfixes
-
-v0.51
-- Restored custom cache path
-- unexpected gallery scroll fix
-
-v0.5
-- Comments
-- various bugfixes
-
-v0.42
-- Hot fix
-
-v0.41
-- Added title text in landscape mode
-
-v0.40
-- Back to life!
-
-v0.35
-- Fixed ICS+ visual bugs
-
-v0.34
-- Performance improvements
-
-v0.33
-- Android 2.1 fixes
-
-v0.32
-- fix #2
-
-Change Log:
-v0.3
-- Set photo as wallpaper or contact
-- Add Outrun category
-- bugfixes and improvements
-
-v.0.21
-- bugfixes
-
-v0.2
-- Add photo info dialog
-- Add rescaling photos option (for low-end devices)
-- Bugfixes and optimizations
-
-v0.1
-- Initial release
 "
 	</string>
 	<string name="abouttext">"Photosight.ru is a photographic community of talented photographers mostly from Europe. You can find there daily updated archive of creative artistic photos or share your own.
-Photosight Gallery is an easy way to browse photos from www.photosight.ru on your Android device.
+Photosight Gallery is an easy way to browse photos from photosight.ru on your Android device.
 
 Please e-mail bugreports:
 deviantstudio.software@gmail.com
 
-If you like this app, please rate:
-%2$s
-
-and feel free to comment:
-http://deviantstudio-software.blogspot.com
 %1$s
-
-All Photosight trademarks displayed on this application are property of Photosight.ru. All photographs hosted on photosight.ru are property of their owners.
 "</string>
-	<string name="thumb_size_1">140</string>
-    <string name="thumb_size_2">210</string>
-    <string name="thumb_size_3">400</string>
-	<string name="app_name">Photosight Gallery</string>
-	<string name="categories">CATEGORIES</string>
-	<string name="top">" TOP "</string>
-	<string name="authors">AUTHORS</string>
+	<string name="app_name" translatable="false">Photosight Gallery</string>
+	<string name="categories">Categories</string>
+	<string name="ratings">Ratings</string>
 	<string name="share_subj">Check this out!</string>
 	<string name="share_text">Sent from Photosight Gallery</string>
-	<string name="loading">Loading…</string>
 	<string name="share">Share</string>
 	<string name="share_link">Share URL</string>
 	<string name="share_img">Share Image</string>
-	<string name="photosight">PHOTO.SIGHT</string>
-	<string name="activity_name">Photosight Gallery</string>
-	<string name="clearing_the_cache">Clearing the cache</string>
-	<string name="clearing_notify">Make take few minutes…</string>
 	<string name="saved_to_">"Saved to "</string>
 	<string name="failed">Failed</string>
-	<string name="loading_next_page">Loading Next Page</string>
-	<string name="page_">"page "</string>
-	<string name="photo_">"photo "</string>
-	<string name="top_in">"Top of the "</string>
-	<string name="no_photos_try_next_page_">No photos. Try next page.</string>
-	<string name="connection_error">Connection Error</string>
-	<string name="sort_by_">Sort by…</string>
-	<string name="disabled">Disabled</string>
-	<string name="recommendations">Recommendations</string>
-	<string name="artistic">Artistry</string>
-	<string name="original">Originality</string>
-	<string name="technic">Technique</string>
+
 	<string name="open_in_web_browser">Open in Browser</string>
-	<string name="detailed_info_">Detailed Info…</string>
-	<string name="save_to_sd">Save to SD</string>
-	<string name="info_">Info…</string>
+	<string name="save_to_sd">Download</string>
 	<string name="settings">Settings</string>
-	<string name="refresh">Refresh</string>
-	<string name="share_app_subj">You should check out this app!</string>
-	<string name="share_app_text">Photosight Gallery is a client of the largest online gallery of art photography in Europe, photosight.ru</string>
-	<string name="do_you_want_to_clear_the_cache_now_">Do you want to clear the cache now?</string>
-	<string name="coming_soon">Coming Soon!</string>
-	<string name="title">Title</string>
-	<string name="author">Author</string>
-	<string name="date">Date</string>
-	<string name="award">Award</string>
-	<string name="denied_by_parental_control">Denied by Parental Control</string>
-	<string name="set_as">Set as…</string>
-    <string name="cache_cleared">Cache cleared</string>
-    <string name="drawer_open">Open Comments</string>
-    <string name="drawer_close">Close Comments</string>
+	<string name="drawer_open" translatable="false">Open Comments</string>
+    <string name="drawer_close" translatable="false">Close Comments</string>
     <string name="photo_author">"&lt;AUTHOR&gt;"</string>
-    <string name="default_cache_dir">Photosight/cache</string>
-    <string name="persistence">Persistence</string>
     <string name="likes">Likes</string>
     <string name="dislikes">Dislikes</string>
     <string name="processing">Processing…</string>
     <string name="histogram">Histogram</string>
-	<string name="low_resolution">Low Image Resolution</string>
-	<string name="thumb_columns">Thumbs Columns</string>
+	<string name="copyright" translatable="false">© 1997-2020 Deviant Studio</string>
+	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
+	<string name="retry">Retry</string>
+    <string name="views">Views</string>
+	<string name="about_">About…</string>
+    <string name="loading_failed">Loading Failed</string>
+    <string name="page_">Page %s</string>
+	<string name="all_photos">All Photos</string>
 
 
 </resources>

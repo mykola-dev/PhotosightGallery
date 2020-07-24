@@ -1,72 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory android:title="@string/main_settings">
+	<PreferenceCategory android:title="asd">
 
-		<CheckBoxPreference
-			android:title="@string/parental_control"
-			android:summaryOn="@string/nu_photos_disabled"
-			android:summaryOff="@string/nu_photos_enabled"
-			android:defaultValue="false"
-			android:key="parental" />
-
-
+		<!--todo-->
 
 	</PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/persistence">
-
-        <CheckBoxPreference
-            android:title="Internal Cache"
-            android:summaryOn="Used internal cache directory"
-            android:summaryOff="Used custom cache path"
-            android:defaultValue="true"
-            android:key="internalCache"
-            android:disableDependentsState="true"
-             />
-
-        <ds.photosight.ui.widget.SummaryEditTextPreference
-            android:title="@string/cache_folder"
-            android:summary="@string/where_to_cache_photos"
-            android:key="cachePath"
-            android:dependency="internalCache"
-            android:defaultValue="@string/default_cache_dir"
-             />
-
-        <ds.photosight.ui.widget.SummaryEditTextPreference
-            android:key="savePath"
-            android:title="@string/save_folder"
-            android:defaultValue="Photosight/saved"
-            android:summary="@string/manually_saved_photos_placed_here" />
-
-        <CheckBoxPreference
-            android:title="@string/clear_cache_on_exit"
-            android:defaultValue="true"
-            android:key="autoClearCache"
-            android:summary="@string/clear_cache_on_exit_sub" />
-
-    </PreferenceCategory>
-
-	<PreferenceCategory android:title="@string/appearance">
-		<ListPreference
-			android:entryValues="@array/thumb_size"
-			android:title="@string/thumb_columns"
-			android:entries="@array/thumb_size"
-			android:key="thumbColumns"
-			android:defaultValue="2" />
-		<CheckBoxPreference
-			android:summaryOff="@string/enable_if_you_have_problems_with_image_downloading"
-			android:summaryOn="@string/enable_if_you_have_problems_with_image_downloading"
-			android:title="@string/low_resolution"
-			android:key="lowres" />
-	</PreferenceCategory>
-
-	<PreferenceCategory android:title="@string/other">
-
-		<Preference
-			android:title="@string/about_"
-			android:key="about" />
-	</PreferenceCategory>
-
-
 
 </PreferenceScreen>

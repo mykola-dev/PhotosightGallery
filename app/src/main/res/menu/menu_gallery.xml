@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <group
+        android:id="@+id/group_categories"
+        android:visible="false"
+        >
+        <item
+            android:id="@+id/item_category_sorter"
+            android:icon="@drawable/ic_action_sort"
+            android:title="Sort By"
+            app:showAsAction="always"
+            >
+            <menu>
+                <group
+                    android:id="@+id/group_categories_sorter"
+                    android:checkableBehavior="single"
+                    >
+                    <item
+                        android:id="@+id/item_category_sort_time"
+                        android:checked="true"
+                        android:title="Time"
+                        />
+                    <item
+                        android:id="@+id/item_category_sort_rating"
+                        android:title="Rating"
+                        />
+                    <item
+                        android:id="@+id/item_category_sort_art"
+                        android:title="Artistry"
+                        />
+                    <item
+                        android:id="@+id/item_category_sort_orig"
+                        android:title="Originality"
+                        />
+                    <item
+                        android:id="@+id/item_category_sort_tech"
+                        android:title="Technique"
+                        />
+                    <item
+                        android:id="@+id/item_category_sort_comments"
+                        android:title="Comments"
+                        />
+                </group>
+            </menu>
+        </item>
+
+        <item
+            android:id="@+id/item_category_filter"
+            android:icon="@drawable/ic_action_filter"
+            android:title="Filter By"
+            app:showAsAction="always"
+            >
+
+            <menu>
+                <group
+                    android:id="@+id/group_categories_filter"
+                    android:checkableBehavior="single"
+                    >
+                    <item
+                        android:id="@+id/item_category_filter_all"
+                        android:checked="true"
+                        android:title="All Authors"
+                        />
+                    <item
+                        android:id="@+id/item_category_filter_rating"
+                        android:title="Rating Authors"
+                        />
+                </group>
+            </menu>
+        </item>
+    </group>
+
+    <item
+        android:id="@+id/im_about"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/about_"
+        android:orderInCategory="11"/>
+
+</menu>

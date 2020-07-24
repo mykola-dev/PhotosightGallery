@@ -1,58 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.MySherlock" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!--<item name="actionBarItemBackground">@drawable/ab_button_selector</item>-->
-        <!--<item name="android:actionBarItemBackground">@drawable/ab_button_selector</item>-->
-        <item name="android:listViewStyle">@style/ListView</item>
-        <item name="actionBarStyle">@style/ActionBarStyle</item>
-        <item name="android:windowContentOverlay">@null</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/grey_light</item>
+        <item name="colorSurface">@color/primary</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:navigationBarColor">@color/primary</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="materialAlertDialogTheme">@style/DialogTheme</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/tabs</item>
-        <item name="colorPrimary">@color/tabs</item>
-        <item name="colorAccent">@color/background_selected</item>
-
+        <item name="android:textColorLink">?colorSecondary</item>
+        <!--        <item name="android:windowTranslucentStatus">true</item>
+                <item name="android:windowTranslucentNavigation">true</item>-->
     </style>
 
-    <style name="Theme.MySherlockBlack" parent="Theme.AppCompat">
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="windowActionBarOverlay">true</item>
-        <item name="colorAccent">@color/background_selected</item>
-
+    <style name="AppTheme.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSurface">@color/grey_light</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="android:windowBackground">@color/grey_light</item>
     </style>
 
-    <style name="ActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="titleTextStyle">@style/ActionBar.Title</item>
-        <item name="subtitleTextStyle">@style/ActionBar.SubTitle</item>
-        <item name="displayOptions">showTitle</item>
-        <!-- remove shadow below action bar -->
-        <item name="elevation">0dp</item>
+    <style name="AppTheme.Black" parent="AppTheme">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="colorSurface">@color/drawer_background</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
-    <style name="ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/primary_text</item>
-        <item name="android:textSize">16sp</item>
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="ActionBar.SubTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/primary_text</item>
+    <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:background">@color/grey_light</item>
+        <item name="android:textColorLink">@color/accent</item>
     </style>
 
-
-    <style name="ListView" parent="android:Widget.ListView">
-        <item name="android:divider">@color/list_divider</item>
-        <item name="android:dividerHeight">1dp</item>
+    <style name="BottomTabsShapeAppearance" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeTopRight">16dp</item>
     </style>
 
+    <style name="IndeterminateLinearProgressIndicatorStyle" parent="Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate">
+        <item name="indicatorColor">?colorSecondary</item>
+    </style>
 
     <style name="aot_labels">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@string/thin_font</item>
-        <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_gravity">right</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/ab_text</item>
@@ -64,24 +67,6 @@
         <item name="android:fontFamily">@string/light_font</item>
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/primary_text</item>
-    </style>
-
-    <style name="TabStrip">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="pstsIndicatorColor">@color/primary_text</item>
-        <item name="pstsIndicatorHeight">4dp</item>
-        <item name="pstsUnderlineColor">@color/primary_text</item>
-        <item name="pstsUnderlineHeight">1dp</item>
-        <item name="android:textColor">@color/primary_text</item>
-        <item name="pstsTabBackground">@drawable/list_item_background</item>
-        <item name="android:background">@color/tabs</item>
-    </style>
-
-    <style name="big_progress">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_gravity">center</item>
     </style>
 
 

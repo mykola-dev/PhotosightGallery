@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:backgroundTint="@color/grey_light"
+    android:elevation="20dp"
+    android:maxWidth="360dp"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme.Light"
+    app:behavior_peekHeight="@dimen/peek_height"
+    app:layout_behavior=".ui.widget.HideableBottomSheet"
+    app:shapeAppearance="@style/BottomTabsShapeAppearance"
+    tools:showIn="@layout/fragment_gallery"
+    >
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        style="@style/Widget.MaterialComponents.TabLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:tabGravity="center"
+        >
+
+        <!-- <com.google.android.material.tabs.TabItem
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="@string/categories"
+             />
+
+         <com.google.android.material.tabs.TabItem
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="@string/ratings"
+             />-->
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/menuViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="1dp"
+
+        />
+
+
+</LinearLayout>
