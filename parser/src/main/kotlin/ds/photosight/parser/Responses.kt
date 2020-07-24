@@ -42,6 +42,7 @@ data class PhotoDetails(
         val views: Int
     )
 
+    @Suppress("EnumEntryName", "unused")
     enum class Award {
         is_week_top,
         is_month_top,

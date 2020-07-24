@@ -1,7 +1,10 @@
 package ds.photosight.ui.viewmodel
 
 import android.content.Context
+import android.view.Menu
+import android.view.MenuItem
 import androidx.annotation.StringRes
+import androidx.lifecycle.MutableLiveData
 import ds.photosight.R
 import ds.photosight.parser.BestPhotosRequest
 import ds.photosight.parser.CategoriesPhotosRequest
@@ -39,7 +42,7 @@ sealed class RatingMenuItemState(@StringRes val titleId: Int) : MenuItemState {
 data class MenuState(
     val categories: List<CategoryMenuItemState>,
     val ratings: List<RatingMenuItemState>,
-    val categoriesFilter: CategoriesFilter = CategoriesFilter(true)
+    val categoriesFilter: PhotosFilter.Categories = PhotosFilter.Categories()
 ) {
     fun getSelected(): MenuItemState = (categories + ratings).first { it.isSelected }
 
@@ -51,24 +54,38 @@ data class MenuState(
 }
 
 interface PhotosFilter {
-    val enabled: Boolean
+    var enabled: Boolean
+
+    data class Categories(
+        val sortDumpCategory: CategoriesPhotosRequest.SortDumpCategory = CategoriesPhotosRequest.SortDumpCategory.ALL,
+        val sortTypeCategory: CategoriesPhotosRequest.SortTypeCategory = CategoriesPhotosRequest.SortTypeCategory.DEFAULT,
+        override var enabled: Boolean = false
+    ) : PhotosFilter
+
+    data class BestPhotos(
+        val sort: BestPhotosRequest.Sort = BestPhotosRequest.Sort.BEST,
+        val time: BestPhotosRequest.Time = BestPhotosRequest.Time.DAY,
+        override var enabled: Boolean
+    ) : PhotosFilter
+
+    data class DailyPhotos(
+        val category: Int? = null,
+        override var enabled: Boolean = false
+    ) : PhotosFilter
+
 }
 
-data class CategoriesFilter(
-    override val enabled: Boolean,
-    val sortDumpCategory: CategoriesPhotosRequest.SortDumpCategory = CategoriesPhotosRequest.SortDumpCategory.ALL,
-    val sortTypeCategory: CategoriesPhotosRequest.SortTypeCategory = CategoriesPhotosRequest.SortTypeCategory.DEFAULT
-) : PhotosFilter
+fun MutableLiveData<MenuState>.reduce(item: MenuItemState) = with(value!!) {
+    value = copy(
+        categories = categories.onEach { it.isSelected = item is CategoryMenuItemState && item.category == it.category },
+        ratings = ratings.onEach { it.isSelected = item.javaClass == it.javaClass },
+        categoriesFilter = categoriesFilter.copy(enabled = item is CategoryMenuItemState)
+    )
+}
 
-data class BestPhotosFilter(
-    override val enabled: Boolean,
-    val sort: BestPhotosRequest.Sort = BestPhotosRequest.Sort.BEST,
-    val time: BestPhotosRequest.Time = BestPhotosRequest.Time.DAY
-) : PhotosFilter
-
-data class DailyPhotosFilter(
-    override val enabled: Boolean,
-    val category: Int? = null
-) : PhotosFilter
-
-
+fun MutableLiveData<MenuState>.reduce(filter: PhotosFilter) = with(value!!) {
+    value = when (filter) {
+        is PhotosFilter.Categories -> copy(categoriesFilter = filter)
+        else -> error("not supported")
+    }
+}

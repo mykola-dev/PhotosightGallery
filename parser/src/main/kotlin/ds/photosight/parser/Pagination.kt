@@ -24,9 +24,9 @@ class DatePage(private val calendar: Calendar) : Page {
         if (index < 1) error("currentPage must be > 0")
     }
 
-    val year: Int = calendar.get(Calendar.YEAR)
-    val month: Int = calendar.get(Calendar.MONTH) + 1
-    val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
+    private val year: Int = calendar.get(Calendar.YEAR)
+    private val month: Int = calendar.get(Calendar.MONTH) + 1
+    private val day: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
     override val index: Int
         get() {
@@ -34,6 +34,7 @@ class DatePage(private val calendar: Calendar) : Page {
             val end: Long = now.timeInMillis
             return TimeUnit.MILLISECONDS.toDays(end - start).toInt() + 1
         }
+
     override val key: String = "$year/$month/$day"
 
     companion object {

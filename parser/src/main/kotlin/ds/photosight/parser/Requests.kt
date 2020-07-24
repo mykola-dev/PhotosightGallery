@@ -5,16 +5,12 @@ import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.math.abs
 
 interface Request<T> {
     operator fun invoke(): T
     val url: String
     val cookies: Map<String, String>
 }
-
-
 
 abstract class JsoupRequest<T> : Request<T> {
     private val nudeModeCookie: Pair<String, String> = "show_nude" to "1"
@@ -23,7 +19,7 @@ abstract class JsoupRequest<T> : Request<T> {
     protected val baseUrl = "https://photosight.ru"
 
     protected fun Document.parse(selector: String): Elements {
-        val elements = getDocument().select(selector)
+        val elements = select(selector)
         if (debugEnabled) {
             println("url=$url")
             println(elements)
@@ -86,9 +82,8 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
             }
             .onEach { println(it) }
 
-        // is_editors_choice, is_week_top, is_top, is_top_art, is_month_top_20, is_month_top_200, is_week_top_20, is_week_top_50
         val awards = doc
-            .avardsSection()
+            .awardsSection()
             .map { e -> e.classNames().first { it != "medal" } }
             .mapNotNull { PhotoDetails.Award.fromString(it) }
 
@@ -108,7 +103,7 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
     }
 
     private fun Document.commentsSection() = parse("div.comments div.comment-content")
-    private fun Document.avardsSection() = parse("div.medals > div.medal")
+    private fun Document.awardsSection() = parse("div.medals > div.medal")
     private fun Document.infoSection() = parse("div.photo-info")
 
     override val url: String = "$baseUrl/photos/$photoId"
@@ -139,37 +134,11 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
 
 }
 
-@Deprecated("use tops instead")
-// pagination?
-class BestPhotosRequest(sort: Sort = Sort.BEST, time: Time = Time.DAY) : PhotosRequest() {
-
-    enum class Sort(private val value: String) {
-        BEST("best"),
-        ART("art"),
-        ORIG("orig"),
-        TECH("tech");
-
-        override fun toString(): String = value
-    }
-
-    enum class Time(private val value: String) {
-        DAY("day"),
-        WEEK("week"),
-        MONTH("month");
-
-        override fun toString(): String = value
-
-    }
-
-    override val url: String = "$baseUrl/best/?sort=$sort&time=$time"
-}
-
 class DailyPhotosRequest(override val page: DatePage, category: Int? = null) : PhotosRequest(), Multipage {
     constructor(page: Int, category: Int? = null) : this(DatePage.fromPage(page), category)
     constructor(year: Int, month: Int, day: Int, category: Int? = null) : this(DatePage.fromDate(year, month, day), category)
 
     override val url: String = "$baseUrl/outrun/date/${page.key}/${category?.let { "?category=$it" } ?: ""}"
-
 
 }
 
@@ -246,4 +215,29 @@ class NewPhotosRequest(override val page: SimplePage) : PhotosRequest(), Multipa
 
 class PretenderPhotosRequest(override val page: SimplePage) : PhotosRequest(), Multipage {
     override val url: String = "$baseUrl/pretender/photos/?pager=${page.key}"
+}
+
+@Deprecated("use tops instead")
+// pagination?
+class BestPhotosRequest(sort: Sort = Sort.BEST, time: Time = Time.DAY) : PhotosRequest() {
+
+    enum class Sort(private val value: String) {
+        BEST("best"),
+        ART("art"),
+        ORIG("orig"),
+        TECH("tech");
+
+        override fun toString(): String = value
+    }
+
+    enum class Time(private val value: String) {
+        DAY("day"),
+        WEEK("week"),
+        MONTH("month");
+
+        override fun toString(): String = value
+
+    }
+
+    override val url: String = "$baseUrl/best/?sort=$sort&time=$time"
 }

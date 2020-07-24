@@ -53,7 +53,7 @@ class GalleryViewModel @ViewModelInject constructor(
     }
 
     fun onFilterChanged(filter: PhotosFilter) {
-        TODO()
+        (menuStateLiveData as MutableLiveData<MenuState>).reduce(filter)
     }
 
     fun onLoadingError() {
@@ -61,11 +61,4 @@ class GalleryViewModel @ViewModelInject constructor(
     }
 
 
-}
-
-fun MutableLiveData<MenuState>.reduce(item: MenuItemState) = with(value!!) {
-    value = copy(
-        categories = categories.onEach { it.isSelected = item is CategoryMenuItemState && item.category == it.category },
-        ratings = ratings.onEach { it.isSelected = item.javaClass == it.javaClass }
-    )
 }

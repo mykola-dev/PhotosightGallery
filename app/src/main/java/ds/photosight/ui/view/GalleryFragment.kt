@@ -3,9 +3,8 @@ package ds.photosight.ui.view
 import android.animation.LayoutTransition
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -17,7 +16,6 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.filter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -26,22 +24,18 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
-import ds.photosight.utils.action
-import ds.photosight.utils.snack
-import ds.photosight.utils.toggle
 import ds.photosight.ui.adapter.GalleryAdapter
 import ds.photosight.ui.adapter.MenuAdapter
 import ds.photosight.ui.adapter.MenuPagerAdapter
+import ds.photosight.ui.viewmodel.*
 import ds.photosight.ui.widget.HideableBottomSheet
-import ds.photosight.ui.viewmodel.GalleryViewModel
-import ds.photosight.ui.viewmodel.MainViewModel
-import ds.photosight.ui.viewmodel.MenuItemState
 import ds.photosight.ui.viewmodel.MenuState.Companion.MENU_CATEGORIES
 import ds.photosight.ui.viewmodel.MenuState.Companion.MENU_RATINGS
-import ds.photosight.utils.position
+import ds.photosight.utils.*
 import kotlinx.android.synthetic.main.fragment_gallery.*
 import kotlinx.android.synthetic.main.view_menu.*
 import timber.log.Timber
+import ds.photosight.ui.CategoriesFilterMapper
 import javax.inject.Inject
 
 
@@ -76,11 +70,11 @@ class GalleryFragment : Fragment() {
                 transitionHelper.postpone(position)
             }
 
-        setupMenu()
         setupAppBar()
-        fixInsets()
-        observeData()
 
+        fixInsets()
+
+        observeData()
 
     }
 
@@ -132,7 +126,7 @@ class GalleryFragment : Fragment() {
                     ?.paginationKey
                     ?.let {
                         val subtitle = if ("/" in it) it
-                        else getString(R.string.page_,it)
+                        else getString(R.string.page_, it)
                         toolbar.subtitle = subtitle
                     }
             }
@@ -146,12 +140,14 @@ class GalleryFragment : Fragment() {
             ratingsAdapter.updateData(it.ratings)
             toolbar.title = it.getSelected().title
             toolbar.subtitle = null
+
+            requireActivity().invalidateOptionsMenu()
+
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             if (bottomSheetBehavior.isHideable) {
                 Handler().post {
                     bottomSheetBehavior.isHideable = false
                 }
-
             }
 
         }
@@ -175,6 +171,9 @@ class GalleryFragment : Fragment() {
     }
 
     private fun setupAppBar() {
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+        setHasOptionsMenu(true)
+
         // fixes returning image transition glitch
         appBar.setExpanded(true, false)
 
@@ -231,15 +230,26 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    private fun setupMenu() {
-        toolbar.inflateMenu(R.menu.menu_main)
-        toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.im_about -> requireActivity().showAbout()
-                else -> error("not implemented")
-            }
-            true
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_gallery, menu)
+        viewModel.menuStateLiveData.value?.categoriesFilter?.also { f ->
+            val categoriesMapper = CategoriesFilterMapper(f, menu)
+            categoriesMapper.fillTarget()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.isCheckable) item.isChecked = true
+
+        viewModel.menuStateLiveData.value?.categoriesFilter?.also { f ->
+            val categoriesMapper = CategoriesFilterMapper(f, toolbar.menu)
+            categoriesMapper.generateModel()?.also {
+                viewModel.onFilterChanged(it)
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupTabs() {

@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import ds.photosight.parser.*
 import ds.photosight.ui.viewmodel.CategoryMenuItemState
 import ds.photosight.ui.viewmodel.MenuState
+import ds.photosight.ui.viewmodel.PhotosFilter
 import ds.photosight.ui.viewmodel.RatingMenuItemState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,11 +44,12 @@ class PhotosPagingSource(
     private fun buildRequest(page: Int): PhotosRequest {
         return when (val selected = menuState.getSelected()) {
             is CategoryMenuItemState -> {
+                val filter = menuState.categoriesFilter
                 CategoriesPhotosRequest(
                     selected.category,
                     SimplePage(page),
-                    menuState.categoriesFilter.sortDumpCategory,
-                    menuState.categoriesFilter.sortTypeCategory
+                    filter.sortDumpCategory,
+                    filter.sortTypeCategory
                 )
             }
             is RatingMenuItemState.All -> NewPhotosRequest(SimplePage(page))
