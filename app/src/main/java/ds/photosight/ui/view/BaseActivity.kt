@@ -25,8 +25,5 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope {
         super.onCreate(savedInstanceState)
         log.v("${this::class.simpleName} onCreate")
 
-        vm.showSnackbarCommand.observe(this) {
-            root.snack(it)
-        }
     }
 }

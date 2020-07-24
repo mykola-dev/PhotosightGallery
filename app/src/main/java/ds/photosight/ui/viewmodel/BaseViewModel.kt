@@ -15,8 +15,6 @@ abstract class BaseViewModel() : ViewModel(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext = viewModelScope.coroutineContext
 
-    val showSnackbarCommand = LiveEvent<String>()
-
     init {
         L.v("${this::class.simpleName} init")
 

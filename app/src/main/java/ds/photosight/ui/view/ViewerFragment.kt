@@ -3,13 +3,13 @@ package ds.photosight.ui.view
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -27,6 +27,7 @@ import ds.photosight.ui.viewmodel.CommentsState
 import ds.photosight.ui.viewmodel.MainViewModel
 import ds.photosight.ui.viewmodel.ViewerViewModel
 import ds.photosight.utils.position
+import ds.photosight.utils.snack
 import kotlinx.android.synthetic.main.fragment_viewer.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -61,10 +62,40 @@ class ViewerFragment : Fragment() {
         transitionHelper.postpone(viewModel.position)
 
         setupDrawer()
+        setupBottomToolbar()
+
         toggleActionBar(false)
 
         setupViewPager()
 
+        setHasOptionsMenu(true)
+
+        fab.setOnClickListener {
+            // todo info
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_viewer, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+
+        }
+        root.snack("todo") {
+            anchorView = bottomToolbar
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupBottomToolbar() {
+        ViewCompat.setOnApplyWindowInsetsListener(bottomToolbar) { v, insets ->
+            val navBarInsets = insets.systemWindowInsetBottom
+            v.updatePadding(bottom = navBarInsets)
+            insets
+        }
     }
 
     private fun setupViewPager() {
@@ -98,12 +129,11 @@ class ViewerFragment : Fragment() {
         })
     }
 
-    private fun isActionBarVisible(): Boolean = (activity as AppCompatActivity).supportActionBar?.isShowing ?: false
+    private fun isActionBarVisible(): Boolean = toolbar.isVisible
 
     private fun setupDrawer() {
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        drawerToggle = object : ActionBarDrawerToggle(requireActivity(), drawerLayout, toolbar, 0, 0) {
+        (activity as AppCompatActivity).setSupportActionBar(bottomToolbar)
+        drawerToggle = object : ActionBarDrawerToggle(requireActivity(), drawerLayout, bottomToolbar, 0, 0) {
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
@@ -117,6 +147,8 @@ class ViewerFragment : Fragment() {
                 viewModel.onDrawerClosed()
             }
         }
+        //drawerToggle.isDrawerIndicatorEnabled = false
+        //bottomToolbar.navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_action_menu)
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
@@ -138,11 +170,15 @@ class ViewerFragment : Fragment() {
     private val actionBar: ActionBar? get() = (activity as AppCompatActivity).supportActionBar
 
     private fun toggleActionBar(show: Boolean) {
-        val ab = (activity as AppCompatActivity).supportActionBar
         if (show) {
-            ab?.show()
+            toolbar.isVisible = true
+            bottomToolbar.isVisible = true
+            bottomToolbar.performShow()
+            fab.show()
         } else {
-            ab?.hide()
+            toolbar.isVisible = false
+            bottomToolbar.performHide()
+            fab.hide()
         }
     }
 

@@ -38,13 +38,13 @@ class DatePage(private val calendar: Calendar) : Page {
     override val key: String = "$year/$month/$day"
 
     companion object {
-        fun fromPage(page: Int): DatePage {
+        operator fun invoke(page: Int): DatePage {
             val date = now
             date.add(Calendar.DAY_OF_YEAR, 1 - page)
             return DatePage(date)
         }
 
-        fun fromDate(year: Int, month: Int, day: Int): DatePage {
+        operator fun invoke(year: Int, month: Int, day: Int): DatePage {
             val date = Calendar.getInstance()
             date.set(year, month - 1, day)
             return DatePage(date)

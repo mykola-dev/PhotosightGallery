@@ -73,4 +73,12 @@
             </menu>
         </item>
     </group>
+
+    <item
+        android:id="@+id/im_about"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/about_"
+        android:orderInCategory="11"/>
+
 </menu>

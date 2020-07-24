@@ -240,13 +240,19 @@ class GalleryFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.isCheckable) item.isChecked = true
+        if (item.isCheckable) {
+            item.isChecked = true
 
-        viewModel.menuStateLiveData.value?.categoriesFilter?.also { f ->
-            val categoriesMapper = CategoriesFilterMapper(f, toolbar.menu)
-            categoriesMapper.generateModel()?.also {
-                viewModel.onFilterChanged(it)
+            viewModel.menuStateLiveData.value?.categoriesFilter?.also { f ->
+                val categoriesMapper = CategoriesFilterMapper(f, toolbar.menu)
+                categoriesMapper.generateModel()?.also {
+                    viewModel.onFilterChanged(it)
+                }
             }
+        }
+
+        when (item.itemId) {
+            R.id.im_about -> requireActivity().showAbout()
         }
 
         return super.onOptionsItemSelected(item)
@@ -279,12 +285,12 @@ class GalleryFragment : Fragment() {
         }
     }
 
-}
+    private fun RecyclerView.getFirstVisibleItem(): PhotoInfo? = (layoutManager as StaggeredGridLayoutManager)
+        .findFirstCompletelyVisibleItemPositions(null)
+        .firstOrNull()
+        ?.takeIf { it >= 0 }
+        ?.let { (adapter as GalleryAdapter).getItemAt(it) }
 
-private fun RecyclerView.getFirstVisibleItem(): PhotoInfo? = (layoutManager as StaggeredGridLayoutManager)
-    .findFirstCompletelyVisibleItemPositions(null)
-    .firstOrNull()
-    ?.takeIf { it >= 0 }
-    ?.let { (adapter as GalleryAdapter).getItemAt(it) }
+}
 
 

@@ -53,7 +53,7 @@ class PhotosPagingSource(
                 )
             }
             is RatingMenuItemState.All -> NewPhotosRequest(SimplePage(page))
-            is RatingMenuItemState.Day -> DailyPhotosRequest(page)
+            is RatingMenuItemState.Day -> DailyPhotosRequest(DatePage(page))
             is RatingMenuItemState.Week -> Top50PhotosRequest()
             is RatingMenuItemState.Month -> Top200PhotosRequest()
             is RatingMenuItemState.Art -> TopArtPhotosRequest()

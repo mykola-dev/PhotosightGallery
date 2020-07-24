@@ -31,7 +31,7 @@ class PhotosightParserTest {
     }
 
     @Test
-    fun `old photos url formatting`() {
+    fun `old photos`() {
         CategoriesPhotosRequest(15, SimplePage(1), CategoriesPhotosRequest.SortDumpCategory.ALL, CategoriesPhotosRequest.SortTypeCategory.COUNT)()
             .forEach { println(it) }
     }
@@ -56,13 +56,13 @@ class PhotosightParserTest {
 
     @Test
     fun `daily outrun photos`() {
-        DailyPhotosRequest(2013, 12, 31, 15)()
+        DailyPhotosRequest(DatePage(2013, 12, 31), 15)()
             .forEach { println(it) }
     }
 
     @Test
     fun `date page with index 1 should aim on today`() {
-        val datePage = DatePage.fromPage(1)
+        val datePage = DatePage(1)
         println("$datePage")
         val now = DatePage.now
         assertEquals(1, datePage.index)
