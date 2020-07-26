@@ -48,6 +48,10 @@
         <item name="cornerSizeTopRight">16dp</item>
     </style>
 
+    <style name="MenuShape" parent="ShapeAppearance.MaterialComponents.Tooltip">
+        <item name="cornerSize">8dp</item>
+    </style>
+
     <style name="IndeterminateLinearProgressIndicatorStyle" parent="Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate">
         <item name="indicatorColor">?colorSecondary</item>
     </style>

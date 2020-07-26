@@ -7,19 +7,22 @@ import android.view.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.transition.MaterialArcMotion
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
-import ds.photosight.utils.recyclerView
 import ds.photosight.ui.adapter.CommentsAdapter
 import ds.photosight.ui.adapter.PhotoStatsAdapter
 import ds.photosight.ui.adapter.ViewerAdapter
@@ -27,7 +30,9 @@ import ds.photosight.ui.viewmodel.CommentsState
 import ds.photosight.ui.viewmodel.MainViewModel
 import ds.photosight.ui.viewmodel.ViewerViewModel
 import ds.photosight.utils.position
+import ds.photosight.utils.recyclerView
 import ds.photosight.utils.snack
+import ds.photosight.utils.toggle
 import kotlinx.android.synthetic.main.fragment_viewer.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -62,7 +67,7 @@ class ViewerFragment : Fragment() {
         transitionHelper.postpone(viewModel.position)
 
         setupDrawer()
-        setupBottomToolbar()
+        setupInsets()
 
         toggleActionBar(false)
 
@@ -71,7 +76,7 @@ class ViewerFragment : Fragment() {
         setHasOptionsMenu(true)
 
         fab.setOnClickListener {
-            // todo info
+            toggleShareMenu()
         }
     }
 
@@ -90,10 +95,9 @@ class ViewerFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupBottomToolbar() {
-        ViewCompat.setOnApplyWindowInsetsListener(bottomToolbar) { v, insets ->
-            val navBarInsets = insets.systemWindowInsetBottom
-            v.updatePadding(bottom = navBarInsets)
+    private fun setupInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(shareMenuView) { v, insets ->
+            v.setPadding(0, 0, 0, 0)    // buggy NavigationView fix
             insets
         }
     }
@@ -125,6 +129,7 @@ class ViewerFragment : Fragment() {
                 toolbar.subtitle = item.authorName
                 val photoView = viewPager.recyclerView.findViewHolderForAdapterPosition(position)?.itemView?.findViewById<View>(R.id.photoImage) ?: return
                 transitionHelper.setupEnterCallback(photoView)
+                if (shareMenu.isVisible) toggleShareMenu()
             }
         })
     }
@@ -175,6 +180,8 @@ class ViewerFragment : Fragment() {
             bottomToolbar.isVisible = true
             bottomToolbar.performShow()
             fab.show()
+        } else if (shareMenu.isVisible) {
+            toggleShareMenu()
         } else {
             toolbar.isVisible = false
             bottomToolbar.performHide()
@@ -186,6 +193,28 @@ class ViewerFragment : Fragment() {
         super.onConfigurationChanged(newConfig)
         drawerToggle.onConfigurationChanged(newConfig)
         Timber.v("onConfigurationChanged")
+    }
+
+    private fun toggleShareMenu() {
+        val views = listOf<View>(fab, shareMenu).sortedBy { !it.isVisible }
+
+        val shareMenuTransform = MaterialContainerTransform().apply {
+            startView = views.first()
+            endView = views.last()
+            addTarget(views.last())
+            setPathMotion(MaterialArcMotion())
+            scrimColor = Color.TRANSPARENT
+            duration = 200
+            //fadeProgressThresholds = MaterialContainerTransform.ProgressThresholds(0f, 1f)
+            //scaleProgressThresholds = MaterialContainerTransform.ProgressThresholds(0f, 1f)
+            setAllContainerColors(ContextCompat.getColor(requireContext(), R.color.accent))
+            isElevationShadowEnabled = false
+        }
+        TransitionManager.beginDelayedTransition(root, shareMenuTransform)
+        views.first().isInvisible = true
+        views.last().isVisible = true
+
+        //bottomToolbar.toggle(!shareMenu.isVisible)
     }
 }
 

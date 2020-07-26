@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <!--<item
         android:id="@+id/im_share"
         android:icon="@drawable/ic_action_share"
         android:title="@string/share"
@@ -16,23 +18,32 @@
                 android:title="@string/share_img"
                 app:showAsAction="never" />
         </menu>
-    </item>
+    </item>-->
     <item
-        android:id="@+id/im_save_sdcard"
+        android:id="@+id/im_save"
         android:icon="@drawable/ic_action_save"
         android:title="@string/save_to_sd"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        />
 
     <item
-        android:id="@+id/im_info"
+        android:id="@+id/im_histogram"
         android:icon="@drawable/ic_action_histogram"
         android:title="@string/histogram"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        />
 
     <item
         android:id="@+id/im_open_in_browser"
         android:icon="@drawable/ic_action_web"
         android:title="@string/open_in_web_browser"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/im_info"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/info"
+        app:showAsAction="always"
+        />
 
 </menu>

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.children
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -76,6 +77,15 @@ class GalleryFragment : Fragment() {
 
         observeData()
 
+        fixBottomSheetBugs()
+
+    }
+
+    // https://stackoverflow.com/questions/61465262/bottomsheetbehavior-with-viewpager2-cant-be-scrolled-down-by-nested-recyclervie
+    private fun fixBottomSheetBugs() {
+        menuViewPager.children.find { it is RecyclerView }?.let {
+            (it as RecyclerView).isNestedScrollingEnabled = false
+        }
     }
 
     private fun observeData() {
@@ -200,9 +210,9 @@ class GalleryFragment : Fragment() {
             nbInset = insets.systemWindowInsetBottom
             bottomSheetBehavior.setPeekHeight(initialPeekHeight + nbInset, true)
             tabLayout.updatePadding(
-                top = 0,
                 bottom = nbInset
             )
+            menuViewPager.updatePadding(bottom = nbInset)
             insets
         }
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {

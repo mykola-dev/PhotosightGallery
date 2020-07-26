@@ -12,9 +12,9 @@
 
     <!-- The main content view -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/root"
         >
 
 
@@ -48,16 +48,46 @@
             android:layout_gravity="bottom"
             android:visibility="gone"
             app:fabAlignmentMode="end"
+            app:paddingBottomSystemWindowInsets="true"
             />
+<!--            app:fabCradleMargin="0dp"
+            app:fabCradleRoundedCornerRadius="0dp"-->
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_help"
-            android:visibility="gone"
+            android:src="@drawable/ic_action_share"
             app:layout_anchor="@id/bottomToolbar"
             />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/shareMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="invisible"
+            app:layout_anchor="@id/fab"
+            app:layout_anchorGravity="top|end"
+            app:shapeAppearanceOverlay="@style/MenuShape"
+            tools:visibility="visible"
+            >
+
+            <com.google.android.material.navigation.NavigationView
+                android:id="@+id/shareMenuView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/accent"
+                android:maxWidth="240dp"
+                app:itemIconTint="@color/primary"
+                app:itemTextColor="@color/primary"
+                app:menu="@menu/menu_share"
+                tools:minHeight="100dp"
+                tools:minWidth="100dp"
+                />
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

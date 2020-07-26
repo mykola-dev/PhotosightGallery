@@ -89,6 +89,17 @@ deviantstudio.software@gmail.com
     <string name="loading_failed">Loading Failed</string>
     <string name="page_">Page %s</string>
 	<string name="all_photos">All Photos</string>
+    <string name="info">Info</string>
+    <string name="sort_by">Sort By</string>
+	<string name="by_date">Date</string>
+	<string name="by_rating">Rating</string>
+	<string name="by_artistry">Artistry</string>
+	<string name="by_originality">Originality</string>
+	<string name="by_technique">Technique</string>
+	<string name="by_comments">Comments</string>
+	<string name="filter_by">Filter By</string>
+	<string name="all_authors">All Authors</string>
+	<string name="rating_authors">Rating Authors</string>
 
 
 </resources>

@@ -135,11 +135,7 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
 }
 
 class DailyPhotosRequest(override val page: DatePage, category: Int? = null) : PhotosRequest(), Multipage {
-    //constructor(page: Int, category: Int? = null) : this(DatePage.fromPage(page), category)
-    //constructor(year: Int, month: Int, day: Int, category: Int? = null) : this(DatePage.fromDate(year, month, day), category)
-
     override val url: String = "$baseUrl/outrun/date/${page.key}/${category?.let { "?category=$it" } ?: ""}"
-
 }
 
 class CategoriesPhotosRequest(

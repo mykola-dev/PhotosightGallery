@@ -11,7 +11,7 @@
         <item
             android:id="@+id/item_category_sorter"
             android:icon="@drawable/ic_action_sort"
-            android:title="Sort By"
+            android:title="@string/sort_by"
             app:showAsAction="always"
             >
             <menu>
@@ -22,27 +22,27 @@
                     <item
                         android:id="@+id/item_category_sort_time"
                         android:checked="true"
-                        android:title="Time"
+                        android:title="@string/by_date"
                         />
                     <item
                         android:id="@+id/item_category_sort_rating"
-                        android:title="Rating"
-                        />
-                    <item
-                        android:id="@+id/item_category_sort_art"
-                        android:title="Artistry"
-                        />
-                    <item
-                        android:id="@+id/item_category_sort_orig"
-                        android:title="Originality"
-                        />
-                    <item
-                        android:id="@+id/item_category_sort_tech"
-                        android:title="Technique"
+                        android:title="@string/by_rating"
                         />
                     <item
                         android:id="@+id/item_category_sort_comments"
-                        android:title="Comments"
+                        android:title="@string/by_comments"
+                        />
+                    <item
+                        android:id="@+id/item_category_sort_art"
+                        android:title="@string/by_artistry"
+                        />
+                    <item
+                        android:id="@+id/item_category_sort_orig"
+                        android:title="@string/by_originality"
+                        />
+                    <item
+                        android:id="@+id/item_category_sort_tech"
+                        android:title="@string/by_technique"
                         />
                 </group>
             </menu>
@@ -51,7 +51,7 @@
         <item
             android:id="@+id/item_category_filter"
             android:icon="@drawable/ic_action_filter"
-            android:title="Filter By"
+            android:title="@string/filter_by"
             app:showAsAction="always"
             >
 
@@ -63,11 +63,11 @@
                     <item
                         android:id="@+id/item_category_filter_all"
                         android:checked="true"
-                        android:title="All Authors"
+                        android:title="@string/all_authors"
                         />
                     <item
                         android:id="@+id/item_category_filter_rating"
-                        android:title="Rating Authors"
+                        android:title="@string/rating_authors"
                         />
                 </group>
             </menu>

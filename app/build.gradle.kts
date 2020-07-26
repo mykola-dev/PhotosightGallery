@@ -121,7 +121,7 @@ dependencies {
     implementation("androidx.preference:preference:1.1.1")
 
     // ui
-    implementation("com.google.android.material:material:1.3.0-alpha01")
+    implementation("com.google.android.material:material:1.3.0-alpha02")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
     //implementation("androidx.ui:ui-tooling:$composeVersion")
     //implementation("androidx.ui:ui-layout:$composeVersion")

@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.SavedStateHandle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.progressindicator.ProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +61,11 @@ fun ProgressIndicator.toggle(show: Boolean) {
 
 fun ProgressBar.toggle(show: Boolean) {
     isVisible = show
+}
+
+fun BottomAppBar.toggle(show: Boolean) {
+    if (show) performShow()
+    else performHide()
 }
 
 val ViewPager2.recyclerView: RecyclerView
