@@ -11,8 +11,6 @@ class MenuPagerAdapter(
 ) : SimpleAdapter<Any>(R.layout.page_menu, (0..1).toList()) {
 
     override fun onBind(holder: SimpleViewHolder, item: Any, position: Int) {
-        Timber.v("MenuPagerAdapter.onBind($position)")
-
         holder.menuList.adapter = when (position) {
             MenuState.MENU_CATEGORIES -> categoriesAdapter
             MenuState.MENU_RATINGS -> ratingsAdapter

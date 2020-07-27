@@ -26,6 +26,8 @@ import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
+import ds.photosight.core.shareImage
+import ds.photosight.core.shareUrl
 import ds.photosight.parser.PhotoDetails
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.ui.adapter.CommentsAdapter
@@ -87,33 +89,19 @@ class ViewerFragment : Fragment() {
             when (it.itemId) {
 
             }
-            root.snack("todo") {
-                anchorView = bottomToolbar
-            }
+            requireActivity().toast("todo")
+
             true
         }
         shareMenuView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.im_share_link -> shareUrl(getPhotoItem().pageUrl)
-                R.id.im_share_img -> shareImage(getPhotoItem().large)
+                R.id.im_share_link -> requireContext().shareUrl(getPhotoItem().pageUrl)
+                R.id.im_share_img -> requireContext().shareImage(getPhotoItem().large)
             }
             toggleShareMenu()
             true
         }
     }
-
-    private fun shareImage(imageUrl: String) {
-        requireActivity().toast("todo")
-    }
-
-    private fun shareUrl(pageUrl: String) {
-        val share = Intent(Intent.ACTION_SEND)
-        share.type = "text/plain"
-        share.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subj))
-        share.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + " " + pageUrl)
-        startActivity(Intent.createChooser(share, getString(R.string.share_link)))
-    }
-
 
     private fun setupInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(shareMenuView) { v, insets ->
@@ -193,8 +181,6 @@ class ViewerFragment : Fragment() {
     }
 
     private fun getPhotoItem(): PhotoInfo = (viewPager.adapter as ViewerAdapter).getItemAt(viewModel.position)
-
-    //private val actionBar: ActionBar? get() = (activity as AppCompatActivity).supportActionBar
 
     private fun toggleUiElements(show: Boolean) {
         when {

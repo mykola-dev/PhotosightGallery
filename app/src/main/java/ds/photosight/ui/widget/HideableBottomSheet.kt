@@ -24,8 +24,6 @@ class HideableBottomSheet<V : View>(context: Context, attrs: AttributeSet) : Bot
     private val hideBehavior = HideBottomViewOnScrollBehavior<V>(context, attrs)
     private var lastState: State = State.VISIBLE
 
-    //private var nestedScrollingChildRef: WeakReference<View> by reflection()
-    //private var viewRef: WeakReference<View> by reflection()
     private var currentState by hideBehavior.reflection<Int>()
 
     enum class State { VISIBLE, HIDDEN }
@@ -43,7 +41,6 @@ class HideableBottomSheet<V : View>(context: Context, attrs: AttributeSet) : Bot
         type: Int,
         consumed: IntArray
     ) {
-        Timber.v("onNestedScroll child=${child.javaClass.simpleName} target=${target.javaClass.simpleName}")
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
         // block when scrolling bottomsheet content
         if (target is RecyclerView && target.id == R.id.menuList) return
@@ -58,7 +55,6 @@ class HideableBottomSheet<V : View>(context: Context, attrs: AttributeSet) : Bot
     }
 
     override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
-        Timber.v("onLayoutChild ${child.javaClass.simpleName}")
         hideBehavior.onLayoutChild(parent, child, layoutDirection)
         return super.onLayoutChild(parent, child, layoutDirection)
     }
@@ -75,7 +71,6 @@ class HideableBottomSheet<V : View>(context: Context, attrs: AttributeSet) : Bot
         viewPager.recyclerView.isNestedScrollingEnabled = false
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                println("menu page $position selected")
                 val currentView: RecyclerView = (viewPager.recyclerView.layoutManager as LinearLayoutManager).findViewByPosition(position) as RecyclerView
                 viewPager
                     .recyclerView
