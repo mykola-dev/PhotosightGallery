@@ -1,10 +1,10 @@
 package ds.photosight.ui.viewmodel
 
 import android.content.Context
-import android.view.Menu
-import android.view.MenuItem
+import androidx.annotation.IntDef
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.bottomappbar.BottomAppBar
 import ds.photosight.R
 import ds.photosight.parser.BestPhotosRequest
 import ds.photosight.parser.CategoriesPhotosRequest
@@ -45,6 +45,9 @@ data class MenuState(
     val categoriesFilter: PhotosFilter.Categories = PhotosFilter.Categories()
 ) {
     fun getSelected(): MenuItemState = (categories + ratings).first { it.isSelected }
+
+    @IntDef(MENU_RATINGS, MENU_CATEGORIES)
+    annotation class MenuStatePosition
 
     companion object {
         const val MENU_RATINGS = 0

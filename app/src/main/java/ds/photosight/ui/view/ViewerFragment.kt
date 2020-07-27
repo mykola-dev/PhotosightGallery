@@ -1,12 +1,12 @@
 package ds.photosight.ui.view
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.isInvisible
@@ -17,22 +17,24 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
+import androidx.transition.Transition
+import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
+import ds.photosight.parser.PhotoDetails
+import ds.photosight.parser.PhotoInfo
 import ds.photosight.ui.adapter.CommentsAdapter
 import ds.photosight.ui.adapter.PhotoStatsAdapter
 import ds.photosight.ui.adapter.ViewerAdapter
 import ds.photosight.ui.viewmodel.CommentsState
 import ds.photosight.ui.viewmodel.MainViewModel
 import ds.photosight.ui.viewmodel.ViewerViewModel
-import ds.photosight.utils.position
-import ds.photosight.utils.recyclerView
-import ds.photosight.utils.snack
-import ds.photosight.utils.toggle
+import ds.photosight.utils.*
 import kotlinx.android.synthetic.main.fragment_viewer.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -69,31 +71,49 @@ class ViewerFragment : Fragment() {
         setupDrawer()
         setupInsets()
 
-        toggleActionBar(false)
+        toggleUiElements(false)
 
         setupViewPager()
 
-        setHasOptionsMenu(true)
+        menuSetup()
 
         fab.setOnClickListener {
             toggleShareMenu()
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_viewer, menu)
+    private fun menuSetup() {
+        bottomToolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+
+            }
+            root.snack("todo") {
+                anchorView = bottomToolbar
+            }
+            true
+        }
+        shareMenuView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.im_share_link -> shareUrl(getPhotoItem().pageUrl)
+                R.id.im_share_img -> shareImage(getPhotoItem().large)
+            }
+            toggleShareMenu()
+            true
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-
-        }
-        root.snack("todo") {
-            anchorView = bottomToolbar
-        }
-        return super.onOptionsItemSelected(item)
+    private fun shareImage(imageUrl: String) {
+        requireActivity().toast("todo")
     }
+
+    private fun shareUrl(pageUrl: String) {
+        val share = Intent(Intent.ACTION_SEND)
+        share.type = "text/plain"
+        share.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subj))
+        share.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + " " + pageUrl)
+        startActivity(Intent.createChooser(share, getString(R.string.share_link)))
+    }
+
 
     private fun setupInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(shareMenuView) { v, insets ->
@@ -105,7 +125,7 @@ class ViewerFragment : Fragment() {
     private fun setupViewPager() {
         val adapter = ViewerAdapter(transitionHelper) {
             log.v("on clicked")
-            toggleActionBar(!isActionBarVisible())
+            toggleUiElements(!isActionBarVisible())
         }
         viewPager.adapter = adapter
         var shouldSettle = true
@@ -137,12 +157,12 @@ class ViewerFragment : Fragment() {
     private fun isActionBarVisible(): Boolean = toolbar.isVisible
 
     private fun setupDrawer() {
-        (activity as AppCompatActivity).setSupportActionBar(bottomToolbar)
+        //(activity as AppCompatActivity).setSupportActionBar(bottomToolbar)
         drawerToggle = object : ActionBarDrawerToggle(requireActivity(), drawerLayout, bottomToolbar, 0, 0) {
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
-                val photoId = (viewPager.adapter as ViewerAdapter).getItemAt(viewModel.position).id
+                val photoId = getPhotoItem().id
                 viewModel.loadComments(photoId)
                 log.v("loading comments for position=${viewModel.position} id=$photoId")
             }
@@ -172,20 +192,26 @@ class ViewerFragment : Fragment() {
         }
     }
 
-    private val actionBar: ActionBar? get() = (activity as AppCompatActivity).supportActionBar
+    private fun getPhotoItem(): PhotoInfo = (viewPager.adapter as ViewerAdapter).getItemAt(viewModel.position)
 
-    private fun toggleActionBar(show: Boolean) {
-        if (show) {
-            toolbar.isVisible = true
-            bottomToolbar.isVisible = true
-            bottomToolbar.performShow()
-            fab.show()
-        } else if (shareMenu.isVisible) {
-            toggleShareMenu()
-        } else {
-            toolbar.isVisible = false
-            bottomToolbar.performHide()
-            fab.hide()
+    //private val actionBar: ActionBar? get() = (activity as AppCompatActivity).supportActionBar
+
+    private fun toggleUiElements(show: Boolean) {
+        when {
+            show -> {
+                toolbar.isVisible = true
+                bottomToolbar.isVisible = true
+                bottomToolbar.performShow()
+                fab.show()
+            }
+            shareMenu.isVisible -> {
+                toggleShareMenu()
+            }
+            else -> {
+                toolbar.isVisible = false
+                bottomToolbar.performHide()
+                fab.hide()
+            }
         }
     }
 
@@ -209,12 +235,15 @@ class ViewerFragment : Fragment() {
             //scaleProgressThresholds = MaterialContainerTransform.ProgressThresholds(0f, 1f)
             setAllContainerColors(ContextCompat.getColor(requireContext(), R.color.accent))
             isElevationShadowEnabled = false
-        }
-        TransitionManager.beginDelayedTransition(root, shareMenuTransform)
-        views.first().isInvisible = true
+        }.addListener(object : TransitionListenerAdapter() {
+            override fun onTransitionEnd(transition: Transition) {
+                // https://github.com/material-components/material-components-android/issues/1304
+                views.first().isInvisible = true
+            }
+        })
         views.last().isVisible = true
+        TransitionManager.beginDelayedTransition(root, shareMenuTransform)
 
-        //bottomToolbar.toggle(!shareMenu.isVisible)
     }
 }
 

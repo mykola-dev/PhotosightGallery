@@ -49,6 +49,8 @@
             android:visibility="gone"
             app:fabAlignmentMode="end"
             app:paddingBottomSystemWindowInsets="true"
+            app:menu="@menu/menu_viewer"
+
             />
 <!--            app:fabCradleMargin="0dp"
             app:fabCradleRoundedCornerRadius="0dp"-->

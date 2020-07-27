@@ -15,6 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.progressindicator.ProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -67,15 +68,13 @@ fun BottomAppBar.toggle(show: Boolean) {
     if (show) performShow()
     else performHide()
 }
+fun FloatingActionButton.toggle(show: Boolean) {
+    if (show) show()
+    else hide()
+}
 
 val ViewPager2.recyclerView: RecyclerView
     get() = this[0] as RecyclerView
-
-inline fun <reified T> Any.getWithReflection(fieldName: String): T {
-    val f = javaClass.getDeclaredField(fieldName)
-    f.isAccessible = true
-    return f.get(this) as T
-}
 
 val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 

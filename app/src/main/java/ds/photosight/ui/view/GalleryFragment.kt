@@ -9,6 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
+import androidx.core.view.get
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,8 +18,10 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -43,7 +46,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
 
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+    private lateinit var bottomSheetBehavior: HideableBottomSheet<*>
 
     @Inject
     lateinit var log: Timber.Tree
@@ -60,7 +63,7 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requireActivity().window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
         requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet) as HideableBottomSheet
 
         findNavController()
             .currentBackStackEntry
@@ -79,13 +82,6 @@ class GalleryFragment : Fragment() {
 
         fixBottomSheetBugs()
 
-    }
-
-    // https://stackoverflow.com/questions/61465262/bottomsheetbehavior-with-viewpager2-cant-be-scrolled-down-by-nested-recyclervie
-    private fun fixBottomSheetBugs() {
-        menuViewPager.children.find { it is RecyclerView }?.let {
-            (it as RecyclerView).isNestedScrollingEnabled = false
-        }
     }
 
     private fun observeData() {
@@ -293,6 +289,10 @@ class GalleryFragment : Fragment() {
             anchorView = snackbarLayout
             action(R.string.retry, R.color.accent, callback)
         }
+    }
+
+    private fun fixBottomSheetBugs() {
+        bottomSheetBehavior.fixScrollingBugs(menuViewPager)
     }
 
     private fun RecyclerView.getFirstVisibleItem(): PhotoInfo? = (layoutManager as StaggeredGridLayoutManager)
