@@ -65,12 +65,14 @@ interface PhotosFilter {
         override var enabled: Boolean = false
     ) : PhotosFilter
 
+    @Deprecated("not used")
     data class BestPhotos(
         val sort: BestPhotosRequest.Sort = BestPhotosRequest.Sort.BEST,
         val time: BestPhotosRequest.Time = BestPhotosRequest.Time.DAY,
         override var enabled: Boolean
     ) : PhotosFilter
 
+    @Deprecated("not used")
     data class DailyPhotos(
         val category: Int? = null,
         override var enabled: Boolean = false

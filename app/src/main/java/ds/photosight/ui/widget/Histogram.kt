@@ -7,6 +7,9 @@ import android.util.AttributeSet
 import android.view.View
 import ds.photosight.R
 import ds.photosight.utils.L
+import ds.photosight.utils.dp
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 class Histogram(context: Context, attrs: AttributeSet) : View(context, attrs) {
@@ -20,7 +23,7 @@ class Histogram(context: Context, attrs: AttributeSet) : View(context, attrs) {
     init {
 
         paint.color = Color.GRAY
-        //paint.textSize = AQUtility.dip2pixel(context, 14f).toFloat()
+        paint.textSize = 14.dp.toFloat()
 
         fillDemo()
     }
@@ -37,8 +40,9 @@ class Histogram(context: Context, attrs: AttributeSet) : View(context, attrs) {
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         L.v("w=$w h=$h")
-        if (bitmap != null)
+        if (bitmap != null) {
             process()
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -47,15 +51,13 @@ class Histogram(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
         if (bitmap != null) {
             if (result == null) {
-                // process
                 process()
             } else {
-                // draw
                 if (mAnimator == null && alpha == 0)
                     startAnimator()
 
                 paint.alpha = alpha
-                canvas.drawBitmap(result, 0f, 0f, paint)
+                canvas.drawBitmap(result!!, 0f, 0f, paint)
             }
 
         }
@@ -78,8 +80,7 @@ class Histogram(context: Context, attrs: AttributeSet) : View(context, attrs) {
     }
 
 
-    private fun process() {
-        //AQUtility.postAsync {
+    private fun process() = GlobalScope.launch {
             L.v("process...")
             val r = IntArray(256)
             val g = IntArray(256)
@@ -107,7 +108,7 @@ class Histogram(context: Context, attrs: AttributeSet) : View(context, attrs) {
             val pathG = Path()
             val pathB = Path()
             result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val c = Canvas(result)
+            val c = Canvas(result!!)
 
             pathR.moveTo(0f, height.toFloat())
             pathG.moveTo(0f, height.toFloat())
@@ -142,7 +143,6 @@ class Histogram(context: Context, attrs: AttributeSet) : View(context, attrs) {
             c.drawPath(pathB, paint)
 
             postInvalidate()
-        //}
     }
 
 

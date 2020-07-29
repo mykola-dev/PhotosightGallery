@@ -33,5 +33,20 @@
             android:name="position"
             app:argType="integer"
             />
+        <action
+            android:id="@+id/action_viewerFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            />
     </fragment>
+
+    <dialog
+        android:id="@+id/detailsFragment"
+        android:name="ds.photosight.ui.view.PhotoDetailsFragment"
+        tools:layout="@layout/fragment_details"
+        >
+        <argument
+            android:name="photoInfo"
+            app:argType="ds.photosight.parser.PhotoInfo"
+            />
+    </dialog>
 </navigation>

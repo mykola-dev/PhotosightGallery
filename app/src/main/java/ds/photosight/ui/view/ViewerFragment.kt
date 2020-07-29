@@ -1,19 +1,22 @@
 package ds.photosight.ui.view
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
@@ -21,14 +24,14 @@ import androidx.transition.Transition
 import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
+import ds.photosight.core.openInBrowser
+import ds.photosight.core.savePhoto
 import ds.photosight.core.shareImage
 import ds.photosight.core.shareUrl
-import ds.photosight.parser.PhotoDetails
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.ui.adapter.CommentsAdapter
 import ds.photosight.ui.adapter.PhotoStatsAdapter
@@ -36,8 +39,10 @@ import ds.photosight.ui.adapter.ViewerAdapter
 import ds.photosight.ui.viewmodel.CommentsState
 import ds.photosight.ui.viewmodel.MainViewModel
 import ds.photosight.ui.viewmodel.ViewerViewModel
-import ds.photosight.utils.*
+import ds.photosight.utils.position
+import ds.photosight.utils.recyclerView
 import kotlinx.android.synthetic.main.fragment_viewer.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -71,36 +76,56 @@ class ViewerFragment : Fragment() {
         transitionHelper.postpone(viewModel.position)
 
         setupDrawer()
+
         setupInsets()
 
         toggleUiElements(false)
 
         setupViewPager()
 
-        menuSetup()
+        setupMenu()
 
         fab.setOnClickListener {
             toggleShareMenu()
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            when {
+                drawerLayout.isDrawerOpen(GravityCompat.START) -> drawerLayout.close()
+                //toolbar.isVisible -> toggleUiElements(false)
+                else -> findNavController().popBackStack()
+            }
+        }
     }
 
-    private fun menuSetup() {
+    private fun setupMenu() {
         bottomToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-
+                R.id.im_info -> {
+                    val action = ViewerFragmentDirections.actionViewerFragmentToDetailsFragment(getPhotoItem())
+                    findNavController().navigate(action)
+                }
+                R.id.im_open_in_browser -> requireContext().openInBrowser(getPhotoItem().pageUrl)
+                R.id.im_save -> savePhoto()
             }
-            requireActivity().toast("todo")
-
             true
         }
         shareMenuView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.im_share_link -> requireContext().shareUrl(getPhotoItem().pageUrl)
-                R.id.im_share_img -> requireContext().shareImage(getPhotoItem().large)
+                R.id.im_share_img -> shareImage()
             }
             toggleShareMenu()
             true
         }
+    }
+
+    private fun shareImage() = lifecycleScope.launch {
+        requireContext().shareImage(getPhotoItem().large)
+    }
+
+    private fun savePhoto() = lifecycleScope.launch {
+        requireContext().savePhoto(getPhotoItem().large)
     }
 
     private fun setupInsets() {
@@ -145,7 +170,6 @@ class ViewerFragment : Fragment() {
     private fun isActionBarVisible(): Boolean = toolbar.isVisible
 
     private fun setupDrawer() {
-        //(activity as AppCompatActivity).setSupportActionBar(bottomToolbar)
         drawerToggle = object : ActionBarDrawerToggle(requireActivity(), drawerLayout, bottomToolbar, 0, 0) {
 
             override fun onDrawerOpened(drawerView: View) {

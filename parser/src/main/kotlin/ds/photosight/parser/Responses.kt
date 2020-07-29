@@ -1,5 +1,7 @@
 package ds.photosight.parser
 
+import java.io.Serializable
+
 
 data class PhotoCategory(
     val index: Int,
@@ -16,7 +18,7 @@ data class PhotoInfo(
     val authorUrl: String?,
     var paginationKey: String?,
     var failed: Boolean = false
-) {
+) : Serializable {
     // workaround for old photos
     val altLarge: String get() = large.replace("_xlarge", "_large")
 }

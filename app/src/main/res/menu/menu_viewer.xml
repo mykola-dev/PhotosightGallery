@@ -26,12 +26,12 @@
         app:showAsAction="always"
         />
 
-    <item
+    <!--<item
         android:id="@+id/im_histogram"
         android:icon="@drawable/ic_action_histogram"
         android:title="@string/histogram"
         app:showAsAction="always"
-        />
+        />-->
 
     <item
         android:id="@+id/im_open_in_browser"

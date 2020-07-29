@@ -29,7 +29,7 @@ internal fun Activity.showAbout() {
         .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.cancel() }
         .create()
         .apply {
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             show()
 
             // clickable links

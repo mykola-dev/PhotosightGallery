@@ -4,7 +4,7 @@
     <color name="accent">#db5e4b</color>
     <color name="background">@color/grey_dark</color>
     <color name="drawer_background">#b000</color>
-    <color name="translucent">#4000</color>
+    <color name="translucent">#6000</color>
 
     <color name="black">#000</color>
     <color name="grey_dark">#333</color>

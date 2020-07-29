@@ -100,6 +100,9 @@ deviantstudio.software@gmail.com
 	<string name="filter_by">Filter By</string>
 	<string name="all_authors">All Authors</string>
 	<string name="rating_authors">Rating Authors</string>
+    <string name="author">Author</string>
+	<string name="source">Source</string>
+	<string name="title">Title</string>
 
 
 </resources>

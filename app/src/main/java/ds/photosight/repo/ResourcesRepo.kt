@@ -1,7 +1,7 @@
 package ds.photosight.repo
 
-import android.annotation.StringRes
 import android.content.res.Resources
+import androidx.annotation.StringRes
 import javax.inject.Inject
 import javax.inject.Singleton
 

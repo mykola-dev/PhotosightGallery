@@ -24,7 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-// for tests only
+// for debug only
 fun postDelayed(millis: Long, block: () -> Unit) = GlobalScope.launch(Dispatchers.Main) {
     delay(millis)
     block()
