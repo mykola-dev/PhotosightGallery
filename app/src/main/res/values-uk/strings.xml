@@ -44,24 +44,37 @@
     <string name="ratings">Рейтинги</string>
     <string name="share_subj">Чудова світлина!</string>
     <string name="share_text">Надіслано за допомогою Photosight Gallery</string>
-    <string name="share">Поділитися</string>
     <string name="share_link">Поділитися посиланням</string>
     <string name="share_img">Надіслати світлину</string>
-    <string name="saved_to_">Збережено в</string>
-    <string name="failed">Невдача</string>
     <string name="open_in_web_browser">Відкрити в браузері</string>
     <string name="save_to_sd">Зберегти</string>
-    <string name="settings">Налаштування</string>
     <string name="photo_author">&lt;АВТОР&gt;</string>
     <string name="likes">Уподобання</string>
     <string name="dislikes">Невподоби</string>
-    <string name="processing">Обробка…</string>
-    <string name="histogram">Гістограмма</string>
     <string name="retry">Повторити</string>
     <string name="views">Перегляди</string>
-    <string name="abouttext">"Photosight Gallery - це неофіційний застосунок для швидкого та зручного доступу до великого архіву високохудожніх світлин професійних фотографів (переважно москалів) photosight.ru \nПобажання та звіти про помилки приймаються на deviantstudio.software@gmail.com\n %1$s"</string>
+    <string name="abouttext">"Photosight Gallery - це неофіційний застосунок для швидкого та зручного доступу до великого архіву високохудожніх світлин професійних фотографів (переважно москалів) photosight.ru
+Побажання та звіти про помилки приймаються на deviantstudio.software@gmail.com
+%1$s
+
+%2$s"</string>
     <string name="about_">Про застосунок…</string>
     <string name="page_">Сторінка %s</string>
     <string name="loading_failed">Помилка завантаження</string>
     <string name="all_photos">Всі світлини</string>
+    <string name="info">Інфо</string>
+    <string name="sort_by">Сортувати за</string>
+    <string name="by_date">Дата</string>
+    <string name="by_rating">Рейтинг</string>
+    <string name="by_artistry">Артистичність</string>
+    <string name="by_originality">Оригінальність</string>
+    <string name="by_technique">Технічність</string>
+    <string name="by_comments">Коментарі</string>
+    <string name="filter_by">Фільтрувати за</string>
+    <string name="all_authors">Всі автори</string>
+    <string name="rating_authors">Рейтингові автори</string>
+    <string name="author">Автор</string>
+    <string name="source">Джерело</string>
+    <string name="title">Назва</string>
+    <string name="saved_successfully">Збережено вдало</string>
 </resources>

@@ -189,7 +189,7 @@ class ViewerFragment : Fragment() {
     private fun isActionBarVisible(): Boolean = toolbar.isVisible
 
     private fun setupDrawer() {
-        drawerToggle = object : ActionBarDrawerToggle(requireActivity(), drawerLayout, bottomToolbar, 0, 0) {
+        drawerToggle = object : ActionBarDrawerToggle(requireActivity(), drawerLayout, bottomToolbar, R.string.drawer_open, R.string.drawer_close) {
 
             override fun onDrawerOpened(drawerView: View) {
                 super.onDrawerOpened(drawerView)
@@ -203,8 +203,6 @@ class ViewerFragment : Fragment() {
                 viewModel.onDrawerClosed()
             }
         }
-        //drawerToggle.isDrawerIndicatorEnabled = false
-        //bottomToolbar.navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_action_menu)
         drawerLayout.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
@@ -260,8 +258,6 @@ class ViewerFragment : Fragment() {
             setPathMotion(MaterialArcMotion())
             scrimColor = Color.TRANSPARENT
             duration = 200
-            //fadeProgressThresholds = MaterialContainerTransform.ProgressThresholds(0f, 1f)
-            //scaleProgressThresholds = MaterialContainerTransform.ProgressThresholds(0f, 1f)
             setAllContainerColors(ContextCompat.getColor(requireContext(), R.color.accent))
             isElevationShadowEnabled = false
         }.addListener(object : TransitionListenerAdapter() {

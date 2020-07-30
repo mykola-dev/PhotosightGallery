@@ -39,24 +39,18 @@ deviantstudio.software@gmail.com
 
 %1$s
 
-"</string>
+%2$s"</string>
 	
 	<string name="categories">Категории</string>
 	<string name="share_subj">Отличная фотография!</string>
 	<string name="share_text">Отправлено с помощью Photosight Gallery</string>
-	<string name="share">Поделиться</string>
 	<string name="share_link">Поделиться ссылкой</string>
 	<string name="share_img">Отправить фото</string>
-	<string name="saved_to_">"Сохранено в "</string>
-	<string name="failed">Неудача</string>
 	<string name="open_in_web_browser">Открыть в браузере</string>
 	<string name="save_to_sd">Сохранить</string>
-	<string name="settings">Настройки</string>
 	<string name="photo_author">"&lt;АВТОР&gt;"</string>
 	<string name="likes">Нравится</string>
     <string name="dislikes">Не нравится</string>
-    <string name="processing">Обработка…</string>
-    <string name="histogram">Гистограмма</string>
 	<string name="rating_day">Фото дня</string>
 	<string name="rating_week">Фото недели</string>
 	<string name="rating_month">Фото месяца</string>
@@ -73,6 +67,21 @@ deviantstudio.software@gmail.com
     <string name="page_">Страница %s</string>
 	<string name="loading_failed">Ошибка загрузки</string>
 	<string name="all_photos">Все фото</string>
+    <string name="info">Инфо</string>
+	<string name="sort_by">Сортировать по</string>
+	<string name="by_date">Дата</string>
+	<string name="by_rating">Рейтинг</string>
+	<string name="by_artistry">Артистичность</string>
+	<string name="by_originality">Оригинальность</string>
+	<string name="by_technique">Техничность</string>
+	<string name="by_comments">Комментарии</string>
+	<string name="filter_by">Фильтровать по</string>
+	<string name="all_authors">Все авторы</string>
+	<string name="rating_authors">Рейтинговые авторы</string>
+	<string name="author">Автор</string>
+	<string name="source">Источник</string>
+	<string name="title">Название</string>
+	<string name="saved_successfully">Сохранено успешно</string>
 
 
 </resources>

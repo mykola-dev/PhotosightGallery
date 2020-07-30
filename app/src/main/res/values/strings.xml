@@ -59,28 +59,22 @@ Please e-mail bugreports:
 deviantstudio.software@gmail.com
 
 %1$s
-"</string>
+
+%2$s"</string>
 	<string name="app_name" translatable="false">Photosight Gallery</string>
 	<string name="categories">Categories</string>
 	<string name="ratings">Ratings</string>
 	<string name="share_subj">Check this out!</string>
 	<string name="share_text">Sent via Photosight Gallery</string>
-	<string name="share">Share</string>
 	<string name="share_link">Share URL</string>
 	<string name="share_img">Share Image</string>
-	<string name="saved_to_">"Saved to "</string>
-	<string name="failed">Failed</string>
-
 	<string name="open_in_web_browser">Open in Browser</string>
 	<string name="save_to_sd">Download</string>
-	<string name="settings">Settings</string>
 	<string name="drawer_open" translatable="false">Open Comments</string>
     <string name="drawer_close" translatable="false">Close Comments</string>
     <string name="photo_author">"&lt;AUTHOR&gt;"</string>
     <string name="likes">Likes</string>
     <string name="dislikes">Dislikes</string>
-    <string name="processing">Processing…</string>
-    <string name="histogram">Histogram</string>
 	<string name="copyright" translatable="false">© 1997-2020 Deviant Studio</string>
 	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
 	<string name="retry">Retry</string>
@@ -103,12 +97,7 @@ deviantstudio.software@gmail.com
     <string name="author">Author</string>
 	<string name="source">Source</string>
 	<string name="title">Title</string>
-    <string name="permission_denied_message">Can\'t save a photo without granting permission</string>
-    <string name="permission_rationale">Write external storage permission is permanently denied. To save photos you have to allow the Storage permission in the system settings.</string>
-	<string name="permission_rationale_title">Permission Required</string>
-	<string name="proceed">Proceed</string>
-	<string name="cancel">Cancel</string>
-    <string name="saved_successfully">Saved Successfully</string>
+	<string name="saved_successfully">Saved Successfully</string>
 
 
 </resources>

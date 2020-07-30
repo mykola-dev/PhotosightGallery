@@ -19,7 +19,7 @@ internal fun Activity.showAbout() {
         "100500"
     }
 
-    val message = getString(R.string.abouttext, getString(R.string.changelog))
+    val message = getString(R.string.abouttext, getString(R.string.changelog),getString(R.string.copyright))
     val spannable = SpannableString(message)
     Linkify.addLinks(spannable, Linkify.EMAIL_ADDRESSES)
 
