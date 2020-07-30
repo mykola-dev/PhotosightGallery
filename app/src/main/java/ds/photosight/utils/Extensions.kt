@@ -30,15 +30,15 @@ fun postDelayed(millis: Long, block: () -> Unit) = GlobalScope.launch(Dispatcher
     block()
 }
 
-fun Context.toast(text: String, duration: Int = Toast.LENGTH_SHORT) {
+fun Context.toast(text: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, text, duration).show()
 }
 
-inline fun View.snack(@StringRes messageRes: Int, length: Int = Snackbar.LENGTH_SHORT, f: Snackbar.() -> Unit = {}) {
+inline fun View.snack(@StringRes messageRes: Int, length: Int = Snackbar.LENGTH_LONG, f: Snackbar.() -> Unit = {}) {
     snack(resources.getString(messageRes), length, f)
 }
 
-inline fun View.snack(message: String, length: Int = Snackbar.LENGTH_SHORT, f: Snackbar.() -> Unit = {}) {
+inline fun View.snack(message: String, length: Int = Snackbar.LENGTH_LONG, f: Snackbar.() -> Unit = {}) {
     val snack = Snackbar.make(this, message, length)
     snack.f()
     snack.show()

@@ -146,6 +146,7 @@ class GalleryFragment : Fragment() {
             ratingsAdapter.updateData(it.ratings)
             toolbar.title = it.getSelected().title
             toolbar.subtitle = null
+            appBar.setExpanded(true, false) // fixes toolbar glitches
 
             requireActivity().invalidateOptionsMenu()
 
@@ -224,7 +225,7 @@ class GalleryFragment : Fragment() {
             }
         })
 
-        (bottomSheetBehavior as HideableBottomSheet).stateCallback = { state ->
+        bottomSheetBehavior.stateCallback = { state ->
             // snack bar placeholder setup
             val lp = snackbarLayout.layoutParams as CoordinatorLayout.LayoutParams
             if (state == HideableBottomSheet.State.VISIBLE) {

@@ -2,6 +2,7 @@ package ds.photosight.ui.view
 
 import android.content.res.Configuration
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,10 +29,7 @@ import com.google.android.material.transition.MaterialArcMotion
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
-import ds.photosight.core.openInBrowser
-import ds.photosight.core.savePhoto
-import ds.photosight.core.shareImage
-import ds.photosight.core.shareUrl
+import ds.photosight.core.*
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.ui.adapter.CommentsAdapter
 import ds.photosight.ui.adapter.PhotoStatsAdapter
@@ -41,6 +39,7 @@ import ds.photosight.ui.viewmodel.MainViewModel
 import ds.photosight.ui.viewmodel.ViewerViewModel
 import ds.photosight.utils.position
 import ds.photosight.utils.recyclerView
+import ds.photosight.utils.snack
 import kotlinx.android.synthetic.main.fragment_viewer.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -59,6 +58,20 @@ class ViewerFragment : Fragment() {
     lateinit var log: Timber.Tree
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
+
+    @Suppress("BlockingMethodInNonBlockingContext")
+    val saveFileRequest = registerForActivityResult(SaveImage()) { uri: Uri? ->
+        if (uri != null) {
+            log.v("on result received $uri")
+            lifecycleScope.launch {
+                val file = requireContext().loadGlideFile(getPhotoItem().large)
+                requireContext().contentResolver.openOutputStream(uri)?.use {
+                    it.write(file.inputStream().readBytes())
+                }
+                showSnack(getString(R.string.saved_successfully))
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +105,6 @@ class ViewerFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             when {
                 drawerLayout.isDrawerOpen(GravityCompat.START) -> drawerLayout.close()
-                //toolbar.isVisible -> toggleUiElements(false)
                 else -> findNavController().popBackStack()
             }
         }
@@ -125,7 +137,14 @@ class ViewerFragment : Fragment() {
     }
 
     private fun savePhoto() = lifecycleScope.launch {
-        requireContext().savePhoto(getPhotoItem().large)
+        val item = getPhotoItem()
+        saveFileRequest.launch("${item.title}.jpg")
+    }
+
+    private fun showSnack(message: String) {
+        root.snack(message) {
+            anchorView = fab
+        }
     }
 
     private fun setupInsets() {

@@ -34,6 +34,7 @@
         <item name="android:windowBackground">@color/black</item>
         <item name="colorSurface">@color/translucent</item>
         <item name="colorControlNormal">@color/white</item>
+        <item name="snackbarTextViewStyle">@style/SnackbarText</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
@@ -89,6 +90,10 @@
     </style>
 
     <style name="PhotoInfoText">
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="SnackbarText" parent="Widget.MaterialComponents.Snackbar.TextView">
         <item name="android:textColor">@color/primary</item>
     </style>
 

@@ -44,8 +44,3 @@ class ViewerViewModel @ViewModelInject constructor(
 
 }
 
-sealed class CommentsState(val error: Boolean, val loading: Boolean) {
-    object Loading : CommentsState(false, true)
-    object Error : CommentsState(true, false)
-    class Payload(val details: PhotoDetails) : CommentsState(false, false)
-}

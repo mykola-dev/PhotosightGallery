@@ -1,15 +1,13 @@
 package ds.photosight.core
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.annotation.CallSuper
 import androidx.core.content.FileProvider
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import ds.photosight.R
-import java.io.File
 
 
 fun Context.shareUrl(pageUrl: String) {
@@ -40,7 +38,16 @@ fun Context.openInBrowser(url: String) {
     startActivity(i)
 }
 
-suspend fun Context.savePhoto(imageUrl: String) {
-    val file = loadGlideFile(imageUrl)
-    // todo
+class SaveImage : ActivityResultContract<String, Uri?>() {
+    @CallSuper
+    override fun createIntent(context: Context, input: String): Intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+        .setType("image/jpeg")
+        .putExtra(Intent.EXTRA_TITLE, input)
+        .addCategory(Intent.CATEGORY_OPENABLE)
+
+    override fun getSynchronousResult(context: Context, input: String): SynchronousResult<Uri?>? = null
+
+    override fun parseResult(resultCode: Int, intent: Intent?): Uri? =
+        if (intent == null || resultCode != Activity.RESULT_OK) null
+        else intent.data
 }

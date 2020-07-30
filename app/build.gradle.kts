@@ -90,9 +90,13 @@ dependencies {
     val hiltJetpackVersion = "1.0.0-alpha02"
     val pagingVersion = "3.0.0-alpha03"
     val coroutinesVersion = "1.3.8"
+    val appCompatVersion = "1.1.0"
+    val fragmentVersion = "1.3.0-alpha07"
+    val viewPagerVersion = "1.1.0-alpha01"
+    val constraintLayoutVersion = "1.1.3"
+    val recyclerViewVersion = "1.2.0-alpha05"
     val hiltVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra
-    //val koinVersion = "2.1.6"
     //val composeVersion = "0.1.0-dev13"
 
     implementation("androidx.multidex:multidex:2.0.1")
@@ -102,15 +106,14 @@ dependencies {
 
     // androidx
     implementation("androidx.core:core-ktx:$androidX")
-    implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation("androidx.fragment:fragment-ktx:1.2.5")
+    implementation("androidx.appcompat:appcompat:$appCompatVersion")
+    implementation("androidx.constraintlayout:constraintlayout:$constraintLayoutVersion")
+    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
     implementation("androidx.paging:paging-runtime:$pagingVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-    implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-alpha05")
-
+    implementation("androidx.viewpager2:viewpager2:$viewPagerVersion")
+    implementation("androidx.recyclerview:recyclerview:$recyclerViewVersion")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")              // https://developer.android.com/jetpack/androidx
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
@@ -118,7 +121,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
-    implementation("androidx.preference:preference:1.1.1")
+    //implementation("androidx.preference:preference:1.1.1")
 
     // ui
     implementation("com.google.android.material:material:1.3.0-alpha02")
@@ -148,6 +151,7 @@ dependencies {
     implementation("com.github.hadilq.liveevent:liveevent:1.2.0")                               // https://github.com/hadilq/LiveEvent
     implementation("com.github.bumptech.glide:glide:4.11.0")                                    // https://github.com/bumptech/glide
     kapt("com.github.bumptech.glide:compiler:4.11.0")
+    //implementation("com.github.florent37:runtime-permission-kotlin:1.1.2")                      // https://github.com/florent37/RuntimePermission
 
     // tests
     testImplementation("junit:junit:4.13")

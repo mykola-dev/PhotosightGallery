@@ -24,6 +24,5 @@ abstract class BaseActivity : AppCompatActivity(), CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         log.v("${this::class.simpleName} onCreate")
-
     }
 }

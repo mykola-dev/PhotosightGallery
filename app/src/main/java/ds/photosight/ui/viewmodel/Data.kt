@@ -8,6 +8,7 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import ds.photosight.R
 import ds.photosight.parser.BestPhotosRequest
 import ds.photosight.parser.CategoriesPhotosRequest
+import ds.photosight.parser.PhotoDetails
 
 interface MenuItemState {
     val title: String
@@ -78,6 +79,12 @@ interface PhotosFilter {
         override var enabled: Boolean = false
     ) : PhotosFilter
 
+}
+
+sealed class CommentsState(val error: Boolean, val loading: Boolean) {
+    object Loading : CommentsState(false, true)
+    object Error : CommentsState(true, false)
+    class Payload(val details: PhotoDetails) : CommentsState(false, false)
 }
 
 fun MutableLiveData<MenuState>.reduce(item: MenuItemState) = with(value!!) {

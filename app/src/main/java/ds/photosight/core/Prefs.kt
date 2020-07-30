@@ -8,5 +8,5 @@ import javax.inject.Singleton
 
 @Singleton
 class Prefs @Inject constructor(@ApplicationContext context: Context) : KotprefModel(context) {
-    var sampleData by stringPref()
+    var appVersion by intPref()
 }

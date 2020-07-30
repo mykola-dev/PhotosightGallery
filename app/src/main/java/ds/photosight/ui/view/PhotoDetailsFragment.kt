@@ -10,7 +10,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ds.photosight.R
 import ds.photosight.core.loadGlideBitmap
 import kotlinx.android.synthetic.main.fragment_details.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
