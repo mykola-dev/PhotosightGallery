@@ -73,7 +73,7 @@
         <item name="android:fontFamily">@string/thin_font</item>
         <item name="android:layout_gravity">right</item>
         <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@color/ab_text</item>
+        <item name="android:textColor">@color/aot_label</item>
     </style>
 
     <style name="aot_values">
@@ -81,7 +81,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@string/light_font</item>
         <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColor">@color/aot_value</item>
     </style>
 
     <style name="PhotoInfoText">

@@ -13,7 +13,7 @@ class CommentsAdapter(comments: List<PhotoDetails.Comment>) : SimpleAdapter<Phot
         else item.author
         holder.content.text = item.text
         holder.date.text = DateUtils.getRelativeDateTimeString(context, item.timestamp, 0, DateUtils.DAY_IN_MILLIS, 0)
-        holder.rating.text = if (item.likes != 0) "+${item.likes}" else ""
+        holder.rating.text = if (item.likes > 0) "+${item.likes}" else ""
         Glide.with(holder.itemView)
             .load(item.avatar)
             .circleCrop()
