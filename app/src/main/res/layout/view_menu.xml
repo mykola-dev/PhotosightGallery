@@ -12,6 +12,7 @@
     android:orientation="vertical"
     android:theme="@style/AppTheme.BottomSheet"
     app:behavior_peekHeight="@dimen/peek_height"
+    app:gestureInsetBottomIgnored="true"
     app:layout_behavior=".ui.widget.HideableBottomSheet"
     app:shapeAppearance="@style/BottomTabsShapeAppearance"
     tools:showIn="@layout/fragment_gallery"
