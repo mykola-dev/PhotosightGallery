@@ -5,12 +5,7 @@ Photosight Gallery is an easy way to browse photos from www.photosight.ru on you
 
 <img src="media/photosight.gif" width=25%>
 
-![](/media/screenshot6.png)
-![](/media/screenshot1.png)
-![](/media/screenshot4.png)
-![](/media/screenshot5.png)
-![](/media/screenshot3.png)
-![](/media/screenshot2.png)
+<img src="media/screenshot6.png" width=25%> <img src="media/screenshot1.png" width=25%> <img src="media/screenshot4.png" width=25%> <img src="media/screenshot5.png" width=25%> <img src="media/screenshot3.png" width=25%> <img src="media/screenshot2.png" width=25%>
 
 ### Powered by:  
 Kotlin  
