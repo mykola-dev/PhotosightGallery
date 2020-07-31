@@ -1,5 +1,5 @@
 buildscript {
-    val kotlinVersion by extra("1.3.72")
+    val kotlinVersion by extra("1.4.0-rc")
     val navVersion by extra("2.3.0")
     val hiltVersion by extra ("2.28-alpha")
 

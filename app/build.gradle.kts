@@ -89,7 +89,7 @@ dependencies {
     val archVersion = "2.1.0"
     val hiltJetpackVersion = "1.0.0-alpha02"
     val pagingVersion = "3.0.0-alpha03"
-    val coroutinesVersion = "1.3.8"
+    val coroutinesVersion = "1.3.8-1.4.0-rc"
     val appCompatVersion = "1.1.0"
     val fragmentVersion = "1.3.0-alpha07"
     val viewPagerVersion = "1.1.0-alpha01"

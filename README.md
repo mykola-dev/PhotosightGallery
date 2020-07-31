@@ -12,4 +12,4 @@ AndroidX Architecture Components
 AndroidX Paging 3 Library  
 AndroidX Navigation  
 Shared element transitions  
-todo: Jetpack Compose
+todo: Jetpack Compose  
