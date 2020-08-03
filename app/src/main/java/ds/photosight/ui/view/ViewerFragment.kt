@@ -75,7 +75,9 @@ class ViewerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        transitionHelper.setupAnimation()
+        transitionHelper.setupAnimation {
+            mainViewModel.onTransitionEnd()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

@@ -2,38 +2,61 @@ package ds.photosight.ui.view
 
 import android.view.View
 import androidx.core.app.SharedElementCallback
+import androidx.core.view.ViewCompat
+import androidx.core.view.ViewPropertyAnimatorListenerAdapter
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Transition
 import androidx.transition.TransitionInflater
+import androidx.transition.TransitionListenerAdapter
+import androidx.transition.TransitionManager
 import ds.photosight.R
+import ds.photosight.ui.adapter.GalleryAdapter
+import ds.photosight.utils.postDelayed
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+
 
 class SharedElementsHelper(private val fragment: Fragment) {
 
     private var elementPosition: Int = -1
     private var isRunning = true
+    private var isScrollingToPosition = false
 
     fun postpone(position: Int) {
-        Timber.v("${fragment.javaClass.simpleName}:postpone animation for element $position")
+        //Timber.v("${fragment.javaClass.simpleName}:postpone animation for element $position")
         isRunning = true
-        fragment.postponeEnterTransition(500, TimeUnit.MILLISECONDS)
+        fragment.postponeEnterTransition(2000, TimeUnit.MILLISECONDS)
         elementPosition = position
     }
 
     fun animate(position: Int) {
-        Timber.d("${fragment.javaClass.simpleName}: animate $position")
-        if (elementPosition == position) {
+        fun doAnimate() {
             Timber.v("start new animation at position $position")
             fragment.startPostponedEnterTransition()
             isRunning = false
-            elementPosition = -1
+            isScrollingToPosition = false
+        }
+        if (elementPosition == position) {
+           /* if (isScrollingToPosition) {
+                isScrollingToPosition = false
+                postDelayed(1000) {  // todo
+                    doAnimate()
+                }
+            } else {*/
+                doAnimate()
+            //}
         }
     }
 
-    fun setupAnimation() = with(fragment) {
-        Timber.d("${fragment.javaClass.simpleName}:setup animations")
+    fun setupAnimation(onEnd: () -> Unit) = with(fragment) {
+        //Timber.d("${fragment.javaClass.simpleName}:setup animations")
         sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(R.transition.image_transition)
+            .addListener(object : TransitionListenerAdapter() {
+                override fun onTransitionEnd(transition: Transition) {
+                    onEnd()
+                }
+            })
     }
 
     fun isAnimating(position: Int): Boolean = elementPosition == position && isRunning
@@ -43,7 +66,7 @@ class SharedElementsHelper(private val fragment: Fragment) {
     }
 
     fun setupEnterCallback(view: View) {
-        Timber.v("${fragment.javaClass.simpleName}: setting new enter callback")
+        //Timber.v("${fragment.javaClass.simpleName}: setting new enter callback")
         if (isRunning) {
             Timber.e("can't set callback when animation is running")
             return
@@ -55,17 +78,36 @@ class SharedElementsHelper(private val fragment: Fragment) {
 
     fun setupExitCallback(view: View) {
         Timber.v("${fragment.javaClass.simpleName}: setting new exit callback")
-        fragment.setExitSharedElementCallback(TransitionCallback("exit", view) {
+        if (!isRunning) {
+            Timber.e("can't set callback when animation is stopped")
+            return
+        }
+        //if (!isScrollingToPosition) {
+            fragment.setExitSharedElementCallback(TransitionCallback("exit", view) {
+                fragment.setExitSharedElementCallback(null)
+            })
+        /*} else {
             fragment.setExitSharedElementCallback(null)
-        })
+        }*/
 
     }
 
     fun moveToCurrentItem(recyclerView: RecyclerView) {
         if (isRunning && elementPosition >= 0) {
-            Timber.v("${fragment.javaClass.simpleName}: scroll grid to updated position")
+            //Timber.v("${fragment.javaClass.simpleName}: scroll grid to updated position")
             val selectedViewHolder = recyclerView.findViewHolderForAdapterPosition(elementPosition)
-            if (selectedViewHolder == null) recyclerView.scrollToPosition(elementPosition)
+            if (selectedViewHolder == null) {
+                Timber.w("view not found for position $elementPosition. scrolling!")
+                recyclerView.scrollToPosition(elementPosition)
+                isScrollingToPosition = true
+            }
+        }
+    }
+
+    fun updatePosition(photosAdapter: RecyclerView.Adapter<*>) {
+        if (elementPosition != -1) {
+            photosAdapter.notifyItemChanged(elementPosition)
+            elementPosition = -1
         }
     }
 

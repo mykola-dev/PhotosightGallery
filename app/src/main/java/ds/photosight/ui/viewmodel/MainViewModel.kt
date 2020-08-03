@@ -3,9 +3,11 @@ package ds.photosight.ui.viewmodel
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.*
+import com.hadilq.liveevent.LiveEvent
 import ds.photosight.core.Prefs
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.repo.PhotosPagingSource
+import ds.photosight.utils.invoke
 import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(
@@ -16,6 +18,8 @@ class MainViewModel @ViewModelInject constructor(
     private lateinit var menu: LiveData<MenuState>
     private val _photosPagedLiveData = MediatorLiveData<PagingData<PhotoInfo>>()
     val photosPagedLiveData: LiveData<PagingData<PhotoInfo>> = _photosPagedLiveData
+
+    val transitionEndListener = LiveEvent<Unit>()
 
     fun setMenuStateLiveData(menuState: LiveData<MenuState>) {
         if (!::menu.isInitialized) {
@@ -40,5 +44,9 @@ class MainViewModel @ViewModelInject constructor(
                 .liveData
                 .cachedIn(viewModelScope)
         )
+    }
+
+    fun onTransitionEnd() {
+        transitionEndListener()
     }
 }

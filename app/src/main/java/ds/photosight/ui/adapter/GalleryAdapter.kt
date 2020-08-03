@@ -9,6 +9,8 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -23,8 +25,9 @@ import kotlinx.android.synthetic.main.item_gallery_photo.*
 import timber.log.Timber
 import java.io.FileNotFoundException
 
+
 class GalleryAdapter(
-    val transitionHelper: SharedElementsHelper,
+    private val transitionHelper: SharedElementsHelper,
     val onClick: (ClickedItem) -> Unit
 ) : PagingDataAdapter<PhotoInfo, PhotoViewHolder>(PhotoInfoDiffCallback) {
 
@@ -34,15 +37,20 @@ class GalleryAdapter(
         val isLoading: Boolean
     )
 
-    private var clickedItem: Int? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var layoutManager: StaggeredGridLayoutManager
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.setItemViewCacheSize(24)   // page size
 
+        layoutManager = (recyclerView.layoutManager as StaggeredGridLayoutManager)
+
         // fixes grid re-layout on each click
-        recyclerView.itemAnimator = null
+        (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        //recyclerView.itemAnimator = null
 
     }
 
@@ -52,10 +60,13 @@ class GalleryAdapter(
             val position = holder.absoluteAdapterPosition
             val item = getItem(position)!!
             if (!item.failed) {
-                clickedItem = position
                 onClick(ClickedItem(holder.photoImage, position, true))
             }
-            notifyItemChanged(position)
+            //notifyItemChanged(position)
+            holder.loadImage(item.large, true, item, position) {
+                onClick(ClickedItem(holder.photoImage, position, false))
+            }
+
         }
         return holder
     }
@@ -66,21 +77,30 @@ class GalleryAdapter(
         val photoView = holder.photoImage
         transitionHelper.bindView(photoView, item.id.toString())
 
-        val afterClick = clickedItem == position
-        val settlingBack = transitionHelper.isAnimating(position)
-
-        val url = if (afterClick || settlingBack) {
+        val url = if (transitionHelper.isAnimating(position)) {
             item.large
         } else {
             item.thumb
         }
-        Glide.with(photoView)
+
+        holder.loadImage(url, false, item, position) {
+            if (transitionHelper.isAnimating(position)) {
+                transitionHelper.setupExitCallback(photoView)
+                transitionHelper.animate(position)
+            }
+        }
+
+    }
+
+    private fun PhotoViewHolder.loadImage(url: String, afterClick: Boolean, item: PhotoInfo, position: Int, callback: () -> Unit) {
+        Glide
+            .with(this.itemView)
             .load(url)
             .run {
                 if (!afterClick) {
-                    placeholder(holder.placeholder).transition(properTransition)
+                    placeholder(placeholder).transition(properTransition)
                 } else {
-                    placeholder(photoView.drawable)
+                    placeholder(photoImage.drawable)
                 }
             }
             .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -99,21 +119,12 @@ class GalleryAdapter(
 
                 override fun onResourceReady(resource: Drawable, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     item.failed = false
-                    if (afterClick) {
-                        clickedItem = null
-                        onClick(ClickedItem(photoView, position, false))
-                    }
-                    if (settlingBack) {
-                        transitionHelper.setupExitCallback(photoView)
-                        transitionHelper.animate(position)
-
-                    }
+                    callback()
 
                     return false
                 }
             })
-            .into(photoView)
-
+            .into(photoImage)
     }
 
     fun getItemAt(position: Int): PhotoInfo = getItem(position) ?: error("wrong position")

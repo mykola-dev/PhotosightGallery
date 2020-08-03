@@ -21,6 +21,8 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.transition.Transition
+import androidx.transition.TransitionListenerAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
@@ -121,7 +123,10 @@ class GalleryFragment : Fragment() {
         photosRecyclerView.adapter = photosAdapter
         photosAdapter.addLoadStateListener { state ->
             log.v("loading state: $state")
-            viewModel.loadingState.value = state.refresh is LoadState.Loading || state.append is LoadState.Loading || state.prepend is LoadState.Loading
+            viewModel.loadingState.value = state.refresh is LoadState.Loading
+                || state.append is LoadState.Loading
+                || state.prepend is LoadState.Loading
+                || viewModel.menuStateLiveData.value==null
             if (state.refresh is LoadState.Error || state.append is LoadState.Error || state.prepend is LoadState.Error) {
                 viewModel.onLoadingError()
             }
@@ -140,6 +145,9 @@ class GalleryFragment : Fragment() {
         })
 
         mainViewModel.setMenuStateLiveData(viewModel.menuStateLiveData)
+        mainViewModel.transitionEndListener.observe(viewLifecycleOwner){
+            transitionHelper.updatePosition(photosAdapter)
+        }
 
         viewModel.menuStateLiveData.observe(viewLifecycleOwner) {
             log.v("menu state observed")
@@ -163,7 +171,9 @@ class GalleryFragment : Fragment() {
         mainViewModel.photosPagedLiveData.observe(viewLifecycleOwner) { photos ->
             log.v("photos list observed")
             photosAdapter.submitData(lifecycle, photos)
-            transitionHelper.moveToCurrentItem(photosRecyclerView)
+            Handler().post {
+                transitionHelper.moveToCurrentItem(photosRecyclerView)
+            }
 
         }
         viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
