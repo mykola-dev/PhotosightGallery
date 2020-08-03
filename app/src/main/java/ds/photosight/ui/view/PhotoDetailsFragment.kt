@@ -1,5 +1,6 @@
 package ds.photosight.ui.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,13 +23,14 @@ class PhotoDetailsFragment : BottomSheetDialogFragment() {
 
     override fun getTheme(): Int = R.style.AppTheme_BottomSheet
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val photo = args.photoInfo
         initHistogram(photo.thumb)
         titleLabel.text = photo.title
-        authorLabel.text = photo.authorName
+        authorLabel.text = photo.authorName + (photo.authorUrl?.let { " ($it)" } ?: "")
         sourceLabel.text = photo.pageUrl
     }
 

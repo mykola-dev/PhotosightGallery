@@ -2,7 +2,7 @@
 <resources>
     <color name="primary">#1b1b1b</color>
     <color name="accent">#db5e4b</color>
-    <color name="background">@color/grey_dark</color>
+    <color name="background">@color/primary</color>
     <color name="drawer_background">#b000</color>
     <color name="translucent">#6000</color>
 

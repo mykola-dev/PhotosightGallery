@@ -41,8 +41,10 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            //isMinifyEnabled = true
+            //proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+        create("fdroid") {
         }
     }
 
@@ -93,7 +95,7 @@ dependencies {
     val appCompatVersion = "1.1.0"
     val fragmentVersion = "1.3.0-alpha07"
     val viewPagerVersion = "1.1.0-alpha01"
-    val constraintLayoutVersion = "1.1.3"
+    val constraintLayoutVersion = "2.0.0-rc1"
     val recyclerViewVersion = "1.2.0-alpha05"
     val hiltVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra

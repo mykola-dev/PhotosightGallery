@@ -117,6 +117,7 @@ class GalleryFragment : Fragment() {
             }
         }
 
+        photosRecyclerView.addItemDecoration(SpaceItemDecorator(1))
         photosRecyclerView.adapter = photosAdapter
         photosAdapter.addLoadStateListener { state ->
             log.v("loading state: $state")

@@ -46,8 +46,9 @@
             <TextView
                 android:id="@+id/titleLabel"
                 style="@style/PhotoInfoText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Sample Photo"
@@ -59,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/source"
                 app:layout_constraintStart_toStartOf="@+id/titleTitleLabel"
-                app:layout_constraintTop_toBottomOf="@+id/authorTitleLabel"
+                app:layout_constraintTop_toBottomOf="@id/barrier2"
                 />
 
             <TextView
@@ -80,17 +81,19 @@
                 android:layout_height="wrap_content"
                 android:text="@string/author"
                 app:layout_constraintStart_toStartOf="@+id/titleTitleLabel"
-                app:layout_constraintTop_toBottomOf="@+id/titleTitleLabel"
+                app:layout_constraintTop_toBottomOf="@id/barrier1"
                 />
 
             <TextView
                 android:id="@+id/authorLabel"
                 style="@style/PhotoInfoText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/titleLabel"
-                app:layout_constraintTop_toBottomOf="@+id/titleLabel"
-                tools:text="John Smith"
+                app:layout_constraintTop_toBottomOf="@id/barrier1"
+                tools:text="John Smith (http://example.com/author/12345)"
+                android:autoLink="web"
                 />
 
             <ds.photosight.ui.widget.Histogram
@@ -98,11 +101,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="2:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sourceLabel"
+                app:layout_constraintTop_toBottomOf="@id/barrier3"
                 />
 
             <androidx.constraintlayout.widget.Guideline
@@ -111,6 +113,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.3"
+                />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="titleLabel,titleTitleLabel"
+                tools:layout_editor_absoluteX="134dp"
+                tools:layout_editor_absoluteY="220dp"
+                />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="authorLabel,authorTitleLabel"
+                tools:layout_editor_absoluteY="303dp"
+                />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="sourceTitleLabel,sourceLabel"
+                tools:layout_editor_absoluteY="303dp"
                 />
 
 

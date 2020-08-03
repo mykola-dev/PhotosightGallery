@@ -114,18 +114,18 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
 
     override fun invoke(): List<PhotoInfo> = getDocument()
         .parse("div.photo-item")
-        .map {
-            val id = it.attr("data-photoid").toInt()
-            val (thumb, title) = it
+        .map { el ->
+            val id = el.attr("data-photoid").toInt()
+            val (thumb, title) = el
                 .getElementsByTag("img")
                 .run { attr("src") to attr("alt").trim() }
             val large = thumb.thumbToLarge()
-            val pageUrl = it.getElementsByTag("a").attr("abs:data-href")
-            val (author, authorUrl) = it
+            val pageUrl = "https://photosight.ru/photos/$id"
+            val (author, authorUrl) = el
                 .getElementsByTag("p")
                 .first()
                 .let { e -> e.getElementsByTag("a").first() ?: e }
-                .let { e -> e.text() to e.attr("abs:href") }
+                .let { e -> e.text() to e.attr("abs:href").takeIf { it.isNotBlank() } }
 
             val paginationKey = (this as? Multipage)?.page?.key
 
