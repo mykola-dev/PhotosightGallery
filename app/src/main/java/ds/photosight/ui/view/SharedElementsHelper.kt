@@ -21,7 +21,7 @@ class SharedElementsHelper(private val fragment: Fragment) {
 
     private var elementPosition: Int = -1
     private var isRunning = true
-    var isScrollingToPosition = false
+    private var isScrollingToPosition = false
 
     fun postpone(position: Int) {
         //Timber.v("${fragment.javaClass.simpleName}:postpone animation for element $position")
