@@ -1,4 +1,4 @@
-package ds.photosight.ui.view
+package ds.photosight.ui
 
 import android.view.GestureDetector
 import android.view.MotionEvent

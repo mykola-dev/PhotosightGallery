@@ -1,17 +1,13 @@
-package ds.photosight.ui.view
+package ds.photosight.ui
 
 import android.view.View
 import androidx.core.app.SharedElementCallback
-import androidx.core.view.ViewCompat
-import androidx.core.view.ViewPropertyAnimatorListenerAdapter
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionListenerAdapter
-import androidx.transition.TransitionManager
 import ds.photosight.R
-import ds.photosight.ui.adapter.GalleryAdapter
 import ds.photosight.utils.postDelayed
 import timber.log.Timber
 import java.util.concurrent.TimeUnit

@@ -1,0 +1,2 @@
+v1.0
+- the app has been rewritten from scratch

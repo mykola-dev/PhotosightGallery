@@ -20,7 +20,7 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
-import ds.photosight.ui.view.SharedElementsHelper
+import ds.photosight.ui.SharedElementsHelper
 import kotlinx.android.synthetic.main.item_gallery_photo.*
 import timber.log.Timber
 import java.io.FileNotFoundException

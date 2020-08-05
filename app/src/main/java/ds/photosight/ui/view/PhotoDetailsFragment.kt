@@ -30,7 +30,7 @@ class PhotoDetailsFragment : BottomSheetDialogFragment() {
         val photo = args.photoInfo
         initHistogram(photo.thumb)
         titleLabel.text = photo.title
-        authorLabel.text = photo.authorName + (photo.authorUrl?.let { " ($it)" } ?: "")
+        authorLabel.text = photo.authorName + (photo.authorUrl?.let { " $it" } ?: "")
         sourceLabel.text = photo.pageUrl
     }
 

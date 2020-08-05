@@ -1,7 +1,6 @@
-import com.android.build.gradle.api.ApplicationVariant
 import java.util.*
 import java.io.*
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     id("com.android.application")
@@ -10,6 +9,7 @@ plugins {
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
+    id("com.github.breadmoirai.github-release") version "2.2.12"
 }
 
 android {
@@ -24,6 +24,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
+
+        setProperty("archivesBaseName", "../../../../../bin/photosight-v${versionName}")
     }
 
     signingConfigs {
@@ -63,17 +65,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    applicationVariants.all(object : Action<ApplicationVariant> {
-        override fun execute(variant: ApplicationVariant) {
-            variant
-                .outputs
-                .map { it as BaseVariantOutputImpl }
-                .forEach {
-                    it.outputFileName = "photosight${defaultConfig.versionName}-${variant.buildType.name}.apk"
-                }
-        }
-    })
-
 }
 
 // for hilt
@@ -83,6 +74,28 @@ kapt {
 
 androidExtensions {
     isExperimental = true
+}
+
+githubRelease {
+    val changelog = File(rootProject.projectDir, "changelog.txt").readText()
+    val (version, recentChanges) = Regex("""^(v1\.\d{1,3})[\n\r]+([\s\S]+?)(?:[\n\r]v1\.\d{1,3}|${'$'})""")
+        .find(changelog)!!
+        .destructured
+
+    token { gradleLocalProperties(rootDir).getProperty("github.token") }
+    owner("deviant-studio")
+    repo("PhotosightGallery")
+    tagName(version)
+    releaseName(version)
+    body(recentChanges)
+    draft(true)
+    prerelease(true)
+    val filter = FilenameFilter { dir, filename -> "$version-release" in filename }
+    val releaseFile = File(rootProject.projectDir, "bin").listFiles(filter)
+    println(releaseFile)
+    releaseAssets(releaseFile)
+    overwrite(true)
+    dryRun(false)
 }
 
 dependencies {
@@ -170,3 +183,10 @@ dependencies {
     kaptTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
 }
 
+tasks {
+    val publishRelease by registering {
+        group = "publishing"
+        dependsOn(getByName("assembleRelease"))
+        finalizedBy(githubRelease)
+    }
+}

@@ -1,4 +1,4 @@
-package ds.photosight.ui.view
+package ds.photosight.ui.widget
 
 import android.graphics.Rect
 import android.view.View

@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.transition.Transition
@@ -31,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ds.photosight.R
 import ds.photosight.core.*
 import ds.photosight.parser.PhotoInfo
+import ds.photosight.ui.SharedElementsHelper
 import ds.photosight.ui.adapter.CommentsAdapter
 import ds.photosight.ui.adapter.PhotoStatsAdapter
 import ds.photosight.ui.adapter.ViewerAdapter

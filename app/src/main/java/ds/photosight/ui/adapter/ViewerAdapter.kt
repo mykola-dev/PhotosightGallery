@@ -11,8 +11,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
-import ds.photosight.ui.view.PhotoGestureListener
-import ds.photosight.ui.view.SharedElementsHelper
+import ds.photosight.ui.PhotoGestureListener
+import ds.photosight.ui.SharedElementsHelper
 import kotlinx.android.synthetic.main.item_viewer_photo.*
 import timber.log.Timber
 import java.io.FileNotFoundException
