@@ -1,2 +1,5 @@
+v1.0.1
+-bug fixes
+
 v1.0
 - the app has been rewritten from scratch

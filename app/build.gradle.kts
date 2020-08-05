@@ -12,6 +12,11 @@ plugins {
     id("com.github.breadmoirai.github-release") version "2.2.12"
 }
 
+val changelog = File(rootProject.projectDir, "changelog.txt").readText()
+val (version, recentChanges) = Regex("""^(v1\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v1\..+|${'$'})""")
+    .find(changelog)!!
+    .destructured
+
 android {
     compileSdkVersion(29)
 
@@ -19,8 +24,8 @@ android {
         applicationId = "ds.photosight"
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode = 26
-        versionName = "1.0"
+        versionCode = 27
+        versionName = version
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
@@ -76,17 +81,13 @@ androidExtensions {
     isExperimental = true
 }
 
-githubRelease {
-    val changelog = File(rootProject.projectDir, "changelog.txt").readText()
-    val (version, recentChanges) = Regex("""^(v1\.\d{1,3})[\n\r]+([\s\S]+?)(?:[\n\r]v1\.\d{1,3}|${'$'})""")
-        .find(changelog)!!
-        .destructured
+// for github release
+project.version = version
 
+githubRelease {
     token { gradleLocalProperties(rootDir).getProperty("github.token") }
     owner("deviant-studio")
     repo("PhotosightGallery")
-    tagName(version)
-    releaseName(version)
     body(recentChanges)
     draft(true)
     prerelease(true)
@@ -95,7 +96,7 @@ githubRelease {
     println(releaseFile)
     releaseAssets(releaseFile)
     overwrite(true)
-    dryRun(false)
+    dryRun(true)
 }
 
 dependencies {
