@@ -51,6 +51,7 @@ class GalleryAdapter(
         // fixes grid re-layout on each click
         (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         //recyclerView.itemAnimator = null
+        //layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
 
     }
 
@@ -73,9 +74,14 @@ class GalleryAdapter(
 
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
+        Timber.d("onBindViewHolder: $position")
         val item = getItem(position)!!
         val photoView = holder.photoImage
         transitionHelper.bindView(photoView, item.id.toString())
+        /*if (transitionHelper.denyUpdate(position)) {
+            Timber.w("skipped item $position update")
+            return
+        }*/
 
         val url = if (transitionHelper.isAnimating(position)) {
             item.large

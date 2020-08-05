@@ -146,6 +146,7 @@ class GalleryFragment : Fragment() {
 
         mainViewModel.setMenuStateLiveData(viewModel.menuStateLiveData)
         mainViewModel.transitionEndListener.observe(viewLifecycleOwner){
+            log.v("transition finish!")
             transitionHelper.updatePosition(photosAdapter)
         }
 

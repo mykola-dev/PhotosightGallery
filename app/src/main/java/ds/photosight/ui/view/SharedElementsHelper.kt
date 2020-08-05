@@ -21,7 +21,7 @@ class SharedElementsHelper(private val fragment: Fragment) {
 
     private var elementPosition: Int = -1
     private var isRunning = true
-    private var isScrollingToPosition = false
+    var isScrollingToPosition = false
 
     fun postpone(position: Int) {
         //Timber.v("${fragment.javaClass.simpleName}:postpone animation for element $position")
@@ -35,17 +35,15 @@ class SharedElementsHelper(private val fragment: Fragment) {
             Timber.v("start new animation at position $position")
             fragment.startPostponedEnterTransition()
             isRunning = false
-            isScrollingToPosition = false
         }
         if (elementPosition == position) {
-           /* if (isScrollingToPosition) {
-                isScrollingToPosition = false
-                postDelayed(1000) {  // todo
+            if (isScrollingToPosition) {
+                postDelayed(500) {  // todo wait until grid is settled down
                     doAnimate()
                 }
-            } else {*/
+            } else {
                 doAnimate()
-            //}
+            }
         }
     }
 
@@ -83,9 +81,9 @@ class SharedElementsHelper(private val fragment: Fragment) {
             return
         }
         //if (!isScrollingToPosition) {
-            fragment.setExitSharedElementCallback(TransitionCallback("exit", view) {
-                fragment.setExitSharedElementCallback(null)
-            })
+        fragment.setExitSharedElementCallback(TransitionCallback("exit", view) {
+            fragment.setExitSharedElementCallback(null)
+        })
         /*} else {
             fragment.setExitSharedElementCallback(null)
         }*/
@@ -106,10 +104,15 @@ class SharedElementsHelper(private val fragment: Fragment) {
 
     fun updatePosition(photosAdapter: RecyclerView.Adapter<*>) {
         if (elementPosition != -1) {
+            if (isScrollingToPosition) {
+                isScrollingToPosition = false
+            }
             photosAdapter.notifyItemChanged(elementPosition)
             elementPosition = -1
         }
     }
+
+    //fun denyUpdate(position: Int): Boolean = isScrollingToPosition && elementPosition != position
 
     class TransitionCallback(val name: String, val view: View, val onFinish: () -> Unit) : SharedElementCallback() {
         override fun onMapSharedElements(names: MutableList<String>, sharedElements: MutableMap<String, View>) {
