@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
+const val PAGE_SIZE = 24
+
 class PhotosPagingSource(
     private val menuState: MenuState
 ) : PagingSource<Int, PhotoInfo>() {
@@ -30,7 +32,10 @@ class PhotosPagingSource(
         val prevKey = if (request is Multipage && key > 1) key - 1
         else null
 
-        val nextKey = if ((key == 1 || page.isNotEmpty()) && request is Multipage) key + 1
+        val nextKey = if (
+            (key == 1 || page.size == PAGE_SIZE)
+            && request is Multipage
+        ) key + 1
         else null
 
         Timber.d("prevKey=$prevKey nextKey=$nextKey")

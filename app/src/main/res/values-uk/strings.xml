@@ -39,6 +39,7 @@
     <string name="rating_favorites">Обрані</string>
     <string name="rating_applicants">Світлини претендентів</string>
     <string name="rating_outrun">Претенденти на світлину дня</string>
+    <string name="new_photos">Нові світлини</string>
 
     <string name="categories">Категорії</string>
     <string name="ratings">Рейтинги</string>
@@ -64,7 +65,6 @@ Change Log:
     <string name="about_">Про застосунок…</string>
     <string name="page_">Сторінка %s</string>
     <string name="loading_failed">Помилка завантаження</string>
-    <string name="all_photos">Всі світлини</string>
     <string name="info">Інфо</string>
     <string name="sort_by">Сортувати за</string>
     <string name="by_date">Дата</string>

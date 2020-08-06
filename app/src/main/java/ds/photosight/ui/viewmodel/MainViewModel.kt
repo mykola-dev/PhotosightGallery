@@ -6,6 +6,7 @@ import androidx.paging.*
 import com.hadilq.liveevent.LiveEvent
 import ds.photosight.core.Prefs
 import ds.photosight.parser.PhotoInfo
+import ds.photosight.repo.PAGE_SIZE
 import ds.photosight.repo.PhotosPagingSource
 import ds.photosight.utils.invoke
 import timber.log.Timber
@@ -35,7 +36,7 @@ class MainViewModel @ViewModelInject constructor(
         emit(PagingData.empty())    // cleanup list first
         emitSource(
             Pager(
-                config = PagingConfig(pageSize = 24, prefetchDistance = 12, enablePlaceholders = false),
+                config = PagingConfig(pageSize = PAGE_SIZE, prefetchDistance = PAGE_SIZE / 2, enablePlaceholders = false),
                 pagingSourceFactory = {
                     log.d("instantiating photos paging source")
                     PhotosPagingSource(menuState)

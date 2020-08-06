@@ -40,6 +40,7 @@
 	<string name="rating_favorites">Favorites</string>
 	<string name="rating_applicants">Applicants</string>
 	<string name="rating_outrun">Outrun</string>
+	<string name="new_photos">New Photos</string>
 
     <string name="thin_font" translatable="false">sans-serif-light</string>
     <string name="light_font" translatable="false">sans-serif</string>
@@ -76,7 +77,6 @@ Change Log:
 	<string name="about_">About…</string>
     <string name="loading_failed">Loading Failed</string>
     <string name="page_">Page %s</string>
-	<string name="all_photos">All Photos</string>
     <string name="info">Info</string>
     <string name="sort_by">Sort By</string>
 	<string name="by_date">Date</string>

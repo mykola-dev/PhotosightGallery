@@ -62,13 +62,13 @@ Change Log:
 	<string name="rating_favorites">Избранные</string>
 	<string name="rating_applicants">Фото претендентов</string>
 	<string name="rating_outrun">Претенденты на фото дня</string>
+	<string name="new_photos">Новые фото</string>
 	<string name="views">Просмотры</string>
 	<string name="ratings">Рейтинги</string>
 	<string name="retry">Повторить</string>
 	<string name="about_">О программе…</string>
     <string name="page_">Страница %s</string>
 	<string name="loading_failed">Ошибка загрузки</string>
-	<string name="all_photos">Все фото</string>
     <string name="info">Инфо</string>
 	<string name="sort_by">Сортировать по</string>
 	<string name="by_date">Дата</string>

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.annotation.IntDef
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
-import com.google.android.material.bottomappbar.BottomAppBar
 import ds.photosight.R
 import ds.photosight.parser.BestPhotosRequest
 import ds.photosight.parser.CategoriesPhotosRequest
@@ -36,7 +35,7 @@ sealed class RatingMenuItemState(@StringRes val titleId: Int) : MenuItemState {
     data class Favs(override val context: Context) : RatingMenuItemState(R.string.rating_favorites)
     data class Applicants(override val context: Context) : RatingMenuItemState(R.string.rating_applicants)
     data class Outrun(override val context: Context) : RatingMenuItemState(R.string.rating_outrun)
-    data class All(override val context: Context) : RatingMenuItemState(R.string.all_photos)
+    data class All(override val context: Context) : RatingMenuItemState(R.string.new_photos)
 
 }
 

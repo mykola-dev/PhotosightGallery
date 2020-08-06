@@ -20,6 +20,7 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
+import ds.photosight.repo.PAGE_SIZE
 import ds.photosight.ui.SharedElementsHelper
 import kotlinx.android.synthetic.main.item_gallery_photo.*
 import timber.log.Timber
@@ -44,7 +45,7 @@ class GalleryAdapter(
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
         recyclerView.setHasFixedSize(true)
-        recyclerView.setItemViewCacheSize(24)   // page size
+        recyclerView.setItemViewCacheSize(PAGE_SIZE)
 
         layoutManager = (recyclerView.layoutManager as StaggeredGridLayoutManager)
 
@@ -78,10 +79,6 @@ class GalleryAdapter(
         val item = getItem(position)!!
         val photoView = holder.photoImage
         transitionHelper.bindView(photoView, item.id.toString())
-        /*if (transitionHelper.denyUpdate(position)) {
-            Timber.w("skipped item $position update")
-            return
-        }*/
 
         val url = if (transitionHelper.isAnimating(position)) {
             item.large
