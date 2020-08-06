@@ -8,6 +8,7 @@ import android.text.util.Linkify
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import ds.photosight.BuildConfig
 import ds.photosight.R
 
 
@@ -19,7 +20,7 @@ internal fun Activity.showAbout() {
         "100500"
     }
 
-    val message = getString(R.string.abouttext, getString(R.string.changelog),getString(R.string.copyright))
+    val message = getString(R.string.abouttext, getString(R.string.app_changelog), getString(R.string.copyright))
     val spannable = SpannableString(message)
     Linkify.addLinks(spannable, Linkify.EMAIL_ADDRESSES)
 
@@ -29,7 +30,7 @@ internal fun Activity.showAbout() {
         .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.cancel() }
         .create()
         .apply {
-            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             show()
 
             // clickable links

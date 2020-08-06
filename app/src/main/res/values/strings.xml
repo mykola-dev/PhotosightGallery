@@ -44,19 +44,13 @@
     <string name="thin_font" translatable="false">sans-serif-light</string>
     <string name="light_font" translatable="false">sans-serif</string>
 
-	<string name="changelog" translatable="false">"
-Change Log:
-
-v1.0
-- the app has been rewritten from scratch
-
-"
-	</string>
 	<string name="abouttext">"Photosight.ru is a photographic community of talented photographers mostly from Europe. You can find there daily updated archive of creative artistic photos or share your own.
 Photosight Gallery is an easy way to browse photos from photosight.ru on your Android device.
 
 Please e-mail bugreports:
 deviantstudio.software@gmail.com
+
+Change Log:
 
 %1$s
 

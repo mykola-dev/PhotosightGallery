@@ -1,4 +1,3 @@
-import java.util.*
 import java.io.*
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
@@ -13,7 +12,7 @@ plugins {
 }
 
 val changelog = File(rootProject.projectDir, "changelog.txt").readText()
-val (version, recentChanges) = Regex("""^(v1\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v1\..+|${'$'})""")
+val (appVersion, recentChanges) = Regex("""^v(1\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v1\..+|${'$'})""")
     .find(changelog)!!
     .destructured
 
@@ -24,21 +23,19 @@ android {
         applicationId = "ds.photosight"
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode = 27
-        versionName = version
+        versionCode = 26
+        versionName = appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 
-        setProperty("archivesBaseName", "../../../../../bin/photosight-v${versionName}")
+        resValue("string", "app_changelog", "\"$changelog\"")
     }
 
     signingConfigs {
-        val propsFile = rootProject.file("keystore.properties")
-        val props = Properties()
-        props.load(FileInputStream(propsFile))
+        val props = gradleLocalProperties(rootDir)
         create("release") {
-            storeFile = file("../../" + props.getProperty("storeFile"))
+            storeFile = file("../../${props.getProperty("storeFile")}")
             keyAlias = props.getProperty("keyAlias")
             keyPassword = props.getProperty("keyPassword")
             storePassword = props.getProperty("storePassword")
@@ -46,6 +43,9 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+
+        }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             //isMinifyEnabled = true
@@ -81,22 +81,8 @@ androidExtensions {
     isExperimental = true
 }
 
-// for github release
-project.version = version
-
 githubRelease {
     token { gradleLocalProperties(rootDir).getProperty("github.token") }
-    owner("deviant-studio")
-    repo("PhotosightGallery")
-    body(recentChanges)
-    draft(true)
-    prerelease(true)
-    val filter = FilenameFilter { dir, filename -> "$version-release" in filename }
-    val releaseFile = File(rootProject.projectDir, "bin").listFiles(filter)
-    println(releaseFile)
-    releaseAssets(releaseFile)
-    overwrite(true)
-    dryRun(true)
 }
 
 dependencies {
@@ -115,7 +101,6 @@ dependencies {
     val navVersion: String by rootProject.extra
     //val composeVersion = "0.1.0-dev13"
 
-    implementation("androidx.multidex:multidex:2.0.1")
     implementation(project(":parser"))
 
     //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.6")
@@ -185,9 +170,36 @@ dependencies {
 }
 
 tasks {
-    val publishRelease by registering {
-        group = "publishing"
+    val copyRelease by registering(Copy::class) {
         dependsOn(getByName("assembleRelease"))
-        finalizedBy(githubRelease)
+        from("${project.buildDir}/outputs/apk/release") {
+            include("*.apk")
+            rename { "photosight-v${appVersion}-release.apk" }
+        }
+        into(File(rootProject.rootDir, "bin"))
     }
+
+    githubRelease.configure {
+        dependsOn(copyRelease)
+
+        owner("deviant-studio")
+        repo("PhotosightGallery")
+        tagName("v$appVersion")
+        releaseName("v$appVersion")
+        body(recentChanges)
+        draft(true)
+        prerelease(true)
+        overwrite(true)
+        dryRun(true)
+
+        // postpone asset preparation
+        doFirst {
+            val filter = FilenameFilter { dir, filename -> appVersion in filename }
+            val releaseFile = File(rootProject.rootDir, "bin").listFiles(filter)
+            setReleaseAssets(releaseFile)
+
+        }
+
+    }
+
 }

@@ -1,14 +1,11 @@
 package ds.photosight
 
-import android.content.res.Configuration
-import androidx.multidex.MultiDexApplication
+import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import ds.photosight.parser.DailyPhotosRequest
-import ds.photosight.parser.debugEnabled
 import timber.log.Timber
 
 @HiltAndroidApp
-class App : MultiDexApplication() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
