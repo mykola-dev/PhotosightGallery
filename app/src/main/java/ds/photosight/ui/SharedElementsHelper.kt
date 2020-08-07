@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit
 
 class SharedElementsHelper(private val fragment: Fragment) {
 
+    var isRunning = true
     private var elementPosition: Int = -1
-    private var isRunning = true
     private var isScrollingToPosition = false
 
     fun postpone(position: Int) {
@@ -28,7 +28,7 @@ class SharedElementsHelper(private val fragment: Fragment) {
 
     fun animate(position: Int) {
         fun doAnimate() {
-            Timber.v("start new animation at position $position")
+            //Timber.v("start new animation at position $position")
             fragment.startPostponedEnterTransition()
             isRunning = false
         }
@@ -43,7 +43,7 @@ class SharedElementsHelper(private val fragment: Fragment) {
         }
     }
 
-    fun setupAnimation(onEnd: () -> Unit) = with(fragment) {
+    fun setupEnterAnimation(onEnd: () -> Unit) = with(fragment) {
         //Timber.d("${fragment.javaClass.simpleName}:setup animations")
         sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(R.transition.image_transition)
             .addListener(object : TransitionListenerAdapter() {
@@ -51,6 +51,10 @@ class SharedElementsHelper(private val fragment: Fragment) {
                     onEnd()
                 }
             })
+    }
+
+    fun setupExitAnimation() = with(fragment) {
+        exitTransition = TransitionInflater.from(context).inflateTransition(R.transition.gallery_exit_transition)
     }
 
     fun isAnimating(position: Int): Boolean = elementPosition == position && isRunning
@@ -103,7 +107,8 @@ class SharedElementsHelper(private val fragment: Fragment) {
             if (isScrollingToPosition) {
                 isScrollingToPosition = false
             }
-            photosAdapter.notifyItemChanged(elementPosition)
+            //photosAdapter.notifyItemChanged(elementPosition)
+            //photosAdapter.notifyDataSetChanged()
             elementPosition = -1
         }
     }

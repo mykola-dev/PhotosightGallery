@@ -23,7 +23,7 @@ android {
         applicationId = "ds.photosight"
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode = 26
+        versionCode = 27
         versionName = appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

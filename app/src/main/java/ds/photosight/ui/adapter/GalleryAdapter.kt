@@ -22,6 +22,7 @@ import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.repo.PAGE_SIZE
 import ds.photosight.ui.SharedElementsHelper
+import ds.photosight.utils.postDelayed
 import kotlinx.android.synthetic.main.item_gallery_photo.*
 import timber.log.Timber
 import java.io.FileNotFoundException
@@ -49,7 +50,6 @@ class GalleryAdapter(
 
         layoutManager = (recyclerView.layoutManager as StaggeredGridLayoutManager)
 
-        // fixes grid re-layout on each click
         (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         //recyclerView.itemAnimator = null
         //layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE

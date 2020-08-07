@@ -75,7 +75,8 @@ class ViewerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        transitionHelper.setupAnimation {
+        transitionHelper.postpone(viewModel.position)
+        transitionHelper.setupEnterAnimation {
             mainViewModel.onTransitionEnd()
         }
     }
@@ -88,7 +89,6 @@ class ViewerFragment : Fragment() {
         requireActivity().window.navigationBarColor = Color.TRANSPARENT
         requireActivity().window.statusBarColor = Color.TRANSPARENT
         log.v("viewer created")
-        transitionHelper.postpone(viewModel.position)
 
         setupDrawer()
 

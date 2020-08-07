@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.transition.TransitionInflater
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -58,6 +59,7 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        transitionHelper.setupExitAnimation()
         requireActivity().window.navigationBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
         requireActivity().window.statusBarColor = ContextCompat.getColor(requireContext(), R.color.translucent)
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet) as HideableBottomSheet
@@ -67,7 +69,6 @@ class GalleryFragment : Fragment() {
             ?.savedStateHandle
             ?.position
             ?.let { position ->
-                log.v("observed new position: $position")
                 transitionHelper.postpone(position)
             }
 
@@ -83,7 +84,6 @@ class GalleryFragment : Fragment() {
 
     private fun observeData() {
         val onMenuSelected = { item: MenuItemState ->
-
             viewModel.onMenuSelected(item)
         }
         val categoriesAdapter = MenuAdapter(onMenuSelected)
@@ -121,7 +121,7 @@ class GalleryFragment : Fragment() {
             viewModel.loadingState.value = state.refresh is LoadState.Loading
                 || state.append is LoadState.Loading
                 || state.prepend is LoadState.Loading
-                || viewModel.menuStateLiveData.value==null
+                || viewModel.menuStateLiveData.value == null
             if (state.refresh is LoadState.Error || state.append is LoadState.Error || state.prepend is LoadState.Error) {
                 viewModel.onLoadingError()
             }
@@ -140,7 +140,7 @@ class GalleryFragment : Fragment() {
         })
 
         mainViewModel.setMenuStateLiveData(viewModel.menuStateLiveData)
-        mainViewModel.transitionEndListener.observe(viewLifecycleOwner){
+        mainViewModel.transitionEndListener.observe(viewLifecycleOwner) {
             log.v("transition finish!")
             transitionHelper.updatePosition(photosAdapter)
         }
@@ -151,7 +151,8 @@ class GalleryFragment : Fragment() {
             ratingsAdapter.updateData(it.ratings)
             toolbar.title = it.getSelected().title
             toolbar.subtitle = null
-            appBar.setExpanded(true, false) // fixes toolbar glitches
+
+            if (!transitionHelper.isRunning) appBar.setExpanded(true, false)
 
             requireActivity().invalidateOptionsMenu()
 
@@ -188,7 +189,6 @@ class GalleryFragment : Fragment() {
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
         setHasOptionsMenu(true)
 
-        // fixes returning image transition glitch
         appBar.setExpanded(true, false)
 
         val topPadding = toolbar.paddingTop

@@ -15,11 +15,11 @@
         <action
             android:id="@+id/open_viewer"
             app:destination="@id/viewerFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
+            >
+           <!-- app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
             app:popEnterAnim="@anim/fragment_fade_enter"
-            app:popExitAnim="@anim/fragment_fade_exit"
-            >
+            app:popExitAnim="@anim/fragment_fade_exit"-->
 
         </action>
     </fragment>
