@@ -10,6 +10,7 @@ Photosight Gallery is an easy way to browse photos from www.photosight.ru on you
 ### Powered by:  
 Kotlin  
 Coroutines  
+Jsoup  
 AndroidX Architecture Components  
 AndroidX Paging 3 Library  
 AndroidX Navigation  
