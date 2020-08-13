@@ -48,8 +48,8 @@ android {
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            //isMinifyEnabled = true
-            //proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
         create("fdroid") {
         }
@@ -187,10 +187,10 @@ tasks {
         tagName("v$appVersion")
         releaseName("v$appVersion")
         body(recentChanges)
-        draft(true)
-        prerelease(true)
+        draft(false)
+        prerelease(false)
         overwrite(true)
-        dryRun(true)
+        dryRun(false)
 
         // postpone asset preparation
         doFirst {
