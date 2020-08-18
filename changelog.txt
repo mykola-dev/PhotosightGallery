@@ -1,3 +1,6 @@
+v1.0.2
+- daily photos loading fix
+
 v1.0.1
 - minor fixes
 

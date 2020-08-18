@@ -33,7 +33,7 @@ class PhotosPagingSource(
         else null
 
         val nextKey = if (
-            (key == 1 || page.size == PAGE_SIZE)
+            (key == 1 || page.size == PAGE_SIZE || request is DailyPhotosRequest)
             && request is Multipage
         ) key + 1
         else null

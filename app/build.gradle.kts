@@ -23,7 +23,7 @@ android {
         applicationId = "ds.photosight"
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode = 27
+        versionCode = 28
         versionName = appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -92,7 +92,7 @@ dependencies {
     val hiltJetpackVersion = "1.0.0-alpha02"
     val pagingVersion = "3.0.0-alpha03"
     val coroutinesVersion = "1.3.8-1.4.0-rc"
-    val appCompatVersion = "1.1.0"
+    val appCompatVersion = "1.2.0"
     val fragmentVersion = "1.3.0-alpha07"
     val viewPagerVersion = "1.1.0-alpha01"
     val constraintLayoutVersion = "2.0.0-rc1"
