@@ -62,6 +62,7 @@ android {
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
             "-XXLanguage:+InlineClasses"
         )
+        //useIR = true
     }
 
     compileOptions {
@@ -86,16 +87,15 @@ githubRelease {
 }
 
 dependencies {
-    val androidX = "1.3.0"
+    val androidX = "1.3.1"
     val lifecycleVersion = "2.2.0"
-    val archVersion = "2.1.0"
     val hiltJetpackVersion = "1.0.0-alpha02"
-    val pagingVersion = "3.0.0-alpha03"
-    val coroutinesVersion = "1.3.8-1.4.0-rc"
+    val pagingVersion = "3.0.0-alpha06"
+    val coroutinesVersion = "1.3.9"
     val appCompatVersion = "1.2.0"
-    val fragmentVersion = "1.3.0-alpha07"
+    val fragmentVersion = "1.3.0-alpha08"
     val viewPagerVersion = "1.1.0-alpha01"
-    val constraintLayoutVersion = "2.0.0-rc1"
+    val constraintLayoutVersion = "2.0.0"
     val recyclerViewVersion = "1.2.0-alpha05"
     val hiltVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra
@@ -119,7 +119,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")              // https://developer.android.com/jetpack/androidx
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
+    //implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
     //implementation("androidx.preference:preference:1.1.1")
@@ -159,10 +159,10 @@ dependencies {
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutinesVersion")
-    testImplementation("androidx.arch.core:core-testing:$archVersion")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
     testImplementation(kotlin("test-junit"))
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.2")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
     androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
     testImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")

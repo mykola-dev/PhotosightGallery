@@ -21,10 +21,7 @@ class PhotosPagingSource(
 
         val request = buildRequest(key)
         val page = withContext(Dispatchers.Default) {
-            request().ifEmpty {
-                // https://issuetracker.google.com/issues/161925081
-                listOf(PhotoInfo(0, "", "", "", "", "", "", null))
-            }
+            request()
         }
 
         Timber.d("loaded page $key, ${page.size} items")
