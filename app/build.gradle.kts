@@ -23,7 +23,7 @@ android {
         applicationId = "ds.photosight"
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode = 28
+        versionCode = 29
         versionName = appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -90,8 +90,8 @@ dependencies {
     val androidX = "1.3.1"
     val lifecycleVersion = "2.2.0"
     val hiltJetpackVersion = "1.0.0-alpha02"
-    val pagingVersion = "3.0.0-alpha06"
-    val coroutinesVersion = "1.3.9"
+    val pagingVersion = "3.0.0-alpha07"
+    val coroutinesVersion = "1.4.1"
     val appCompatVersion = "1.2.0"
     val fragmentVersion = "1.3.0-alpha08"
     val viewPagerVersion = "1.1.0-alpha01"
@@ -125,7 +125,7 @@ dependencies {
     //implementation("androidx.preference:preference:1.1.1")
 
     // ui
-    implementation("com.google.android.material:material:1.3.0-alpha02")
+    implementation("com.google.android.material:material:1.3.0-alpha03")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
     //implementation("androidx.ui:ui-tooling:$composeVersion")
     //implementation("androidx.ui:ui-layout:$composeVersion")
