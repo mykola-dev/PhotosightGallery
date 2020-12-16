@@ -51,7 +51,6 @@ class ViewerFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: ViewerViewModel by viewModels()
 
-    //private val args by navArgs<ViewerFragmentArgs>()
     private val transitionHelper = SharedElementsHelper(this)
 
     @Inject

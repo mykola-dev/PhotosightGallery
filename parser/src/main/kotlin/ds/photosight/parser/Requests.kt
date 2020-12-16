@@ -67,16 +67,16 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
         val doc = getDocument()
         val comments = doc
             .commentsSection()
-            .map {
-                val text = it.select("div.right-part > p").text()
-                val dateRaw = it.select("span.date").text()
-                val (avatar, author) = it
+            .map { comment ->
+                val text = comment.select("div.right-part > p").text()
+                val dateRaw = comment.select("span.date").text()
+                val (avatar, author) = comment
                     .getElementsByClass("avatar")
                     .first()
                     .getElementsByTag("img")
                     .run { attr("src") to attr("alt") }
-                val likes = it.select("span.count").text().toInt()
-                val isAuthor = it.hasClass("author")
+                val likes = comment.select("span.count").text().ifEmpty { "0" }.toInt()
+                val isAuthor = comment.hasClass("author")
                 val timestamp = dateFormat.parse(dateRaw).time
                 PhotoDetails.Comment(text, dateRaw, timestamp, author, avatar, likes, isAuthor)
             }

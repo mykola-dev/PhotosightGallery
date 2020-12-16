@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.progressindicator.ProgressIndicator
+import com.google.android.material.progressindicator.BaseProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -55,7 +54,7 @@ fun Snackbar.action(action: String, @ColorRes colorRes: Int? = null, listener: (
     }
 }
 
-fun ProgressIndicator.toggle(show: Boolean) {
+fun BaseProgressIndicator<*>.toggle(show: Boolean) {
     if (show) show()
     else hide()
 }
@@ -68,6 +67,7 @@ fun BottomAppBar.toggle(show: Boolean) {
     if (show) performShow()
     else performHide()
 }
+
 fun FloatingActionButton.toggle(show: Boolean) {
     if (show) show()
     else hide()
@@ -78,8 +78,4 @@ val ViewPager2.recyclerView: RecyclerView
 
 val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
-var SavedStateHandle.position: Int?
-    get() = get("position")
-    set(value) {
-        set("position", value)
-    }
+var SavedStateHandle.position: Int? by savedState()

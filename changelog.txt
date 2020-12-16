@@ -1,3 +1,7 @@
+v1.0.4
+- fixed empty comments section
+- fixed colors on dark theme
+
 v1.0.3
 - fixed empty page issue
 

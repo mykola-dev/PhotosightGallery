@@ -15,6 +15,7 @@ val changelog = File(rootProject.projectDir, "changelog.txt").readText()
 val (appVersion, recentChanges) = Regex("""^v(1\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v1\..+|${'$'})""")
     .find(changelog)!!
     .destructured
+val appVersionCode = changelog.lines().size + 20
 
 android {
     compileSdkVersion(29)
@@ -23,7 +24,7 @@ android {
         applicationId = "ds.photosight"
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode = 29
+        versionCode = appVersionCode
         versionName = appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -87,23 +88,20 @@ githubRelease {
 }
 
 dependencies {
-    val androidX = "1.3.1"
+    val androidX = "1.3.2"
     val lifecycleVersion = "2.2.0"
     val hiltJetpackVersion = "1.0.0-alpha02"
-    val pagingVersion = "3.0.0-alpha07"
-    val coroutinesVersion = "1.4.1"
+    val pagingVersion = "3.0.0-alpha10"
+    val coroutinesVersion = "1.4.2"
     val appCompatVersion = "1.2.0"
-    val fragmentVersion = "1.3.0-alpha08"
+    val fragmentVersion = "1.3.0-beta02"
     val viewPagerVersion = "1.1.0-alpha01"
-    val constraintLayoutVersion = "2.0.0"
-    val recyclerViewVersion = "1.2.0-alpha05"
+    val constraintLayoutVersion = "2.0.4"
+    val recyclerViewVersion = "1.2.0-beta01"
     val hiltVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra
-    //val composeVersion = "0.1.0-dev13"
 
     implementation(project(":parser"))
-
-    //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.6")
 
     // androidx
     implementation("androidx.core:core-ktx:$androidX")
@@ -119,17 +117,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")              // https://developer.android.com/jetpack/androidx
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion")
-    //implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-service:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
-    //implementation("androidx.preference:preference:1.1.1")
 
     // ui
-    implementation("com.google.android.material:material:1.3.0-alpha03")
+    implementation("com.google.android.material:material:1.3.0-alpha04")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
-    //implementation("androidx.ui:ui-tooling:$composeVersion")
-    //implementation("androidx.ui:ui-layout:$composeVersion")
-    //implementation("androidx.ui:ui-material:$composeVersion")
 
     // kotlin
     implementation(kotlin("stdlib-jdk8"))
@@ -142,7 +135,6 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion")
     kapt("androidx.hilt:hilt-compiler:$hiltJetpackVersion")
-
 
     // prefs
     implementation("com.chibatching.kotpref:kotpref:2.11.0")                                    // https://github.com/chibatching/Kotpref

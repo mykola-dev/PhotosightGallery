@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/grey_light</item>
@@ -10,7 +10,7 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="elevationOverlayEnabled">false</item>
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
-
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:textColorLink">?colorSecondary</item>
 
@@ -25,7 +25,7 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">?android:colorBackground</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="shapeAppearanceLargeComponent">@style/BottomTabsShapeAppearance</item>
         <!--<item name="android:navigationBarDividerColor">?android:colorBackground</item>-->
     </style>
@@ -63,7 +63,7 @@
         <item name="cornerSize">8dp</item>
     </style>
 
-    <style name="IndeterminateLinearProgressIndicatorStyle" parent="Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate">
+    <style name="IndeterminateLinearProgressIndicatorStyle" parent="Widget.MaterialComponents.LinearProgressIndicator">
         <item name="indicatorColor">?colorSecondary</item>
     </style>
 
