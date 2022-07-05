@@ -1,9 +1,9 @@
 package ds.photosight.ui.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.lifecycle.liveData
 import com.hadilq.liveevent.LiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ds.photosight.core.Prefs
 import ds.photosight.repo.PhotosightRepo
 import ds.photosight.model.toMenuItemState
@@ -14,8 +14,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retry
 import timber.log.Timber
+import javax.inject.Inject
 
-class GalleryViewModel @ViewModelInject constructor(
+@HiltViewModel
+class GalleryViewModel @Inject constructor(
     override val prefs: Prefs,
     override val log: Timber.Tree,
     private val photosightRepo: PhotosightRepo,
@@ -27,7 +29,8 @@ class GalleryViewModel @ViewModelInject constructor(
     private val categoriesLiveData: LiveData<List<PhotoCategory>> = liveData {
         flow { emit(photosightRepo.getCategories()) }
             .retry {
-                log.w("retry!")
+                it.printStackTrace()
+                log.e("retry!")
                 delay(2000)
                 true
             }

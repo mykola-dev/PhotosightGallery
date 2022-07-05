@@ -4,6 +4,10 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 interface Request<T> {
@@ -16,7 +20,7 @@ abstract class JsoupRequest<T> : Request<T> {
     private val nudeModeCookie: Pair<String, String> = "show_nude" to "1"
     private val adultModeCookie: Pair<String, String> = "adult_mode" to "1"
     private val categoryDescriptionCookie: Pair<String, String> = "show_category_description" to "0"
-    protected val baseUrl = "https://photosight.ru"
+    protected val baseUrl = "https://sight.photo"
 
     protected fun Document.parse(selector: String): Elements {
         val elements = select(selector)
@@ -60,8 +64,8 @@ class CategoriesRequest : JsoupRequest<List<PhotoCategory>>() {
 }
 
 class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
-    private val originalDateFormat = "dd MMMM yyyy, kk:mm:ss"
-    private val dateFormat = SimpleDateFormat(originalDateFormat, Locale("ru"))
+
+    private val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm:ss")
 
     override fun invoke(): PhotoDetails {
         val doc = getDocument()
@@ -77,7 +81,7 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
                     .run { attr("src") to attr("alt") }
                 val likes = comment.select("span.count").text().ifEmpty { "0" }.toInt()
                 val isAuthor = comment.hasClass("author")
-                val timestamp = dateFormat.parse(dateRaw).time
+                val timestamp = LocalDateTime.parse(dateRaw, dateFormat).atZone(ZoneId.systemDefault()).toInstant()
                 PhotoDetails.Comment(text, dateRaw, timestamp, author, avatar, likes, isAuthor)
             }
             .onEach { println(it) }
@@ -115,12 +119,21 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
     override fun invoke(): List<PhotoInfo> = getDocument()
         .parse("div.photo-item")
         .map { el ->
-            val id = el.attr("data-photoid").toInt()
+            val id = el
+                .getElementsByTag("a")
+                .first()
+                .attr("data-href")
+                .let { Regex("/photos/(\\d+).*").matchEntire(it) }
+                ?.groupValues
+                ?.get(1)
+                ?.toInt()
+                ?: error("can't parse id")
+            println("id=$id")
             val (thumb, title) = el
                 .getElementsByTag("img")
                 .run { attr("src") to attr("alt").trim() }
             val large = thumb.thumbToLarge()
-            val pageUrl = "https://photosight.ru/photos/$id"
+            val pageUrl = "$baseUrl/photos/$id"
             val (author, authorUrl) = el
                 .getElementsByTag("p")
                 .first()

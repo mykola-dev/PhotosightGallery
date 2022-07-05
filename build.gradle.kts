@@ -1,14 +1,14 @@
 buildscript {
-    val kotlinVersion by extra("1.4.21")
-    val navVersion by extra("2.3.0")
-    val hiltVersion by extra("2.28-alpha")
+    val kotlinVersion by extra("1.7.0")
+    val navVersion by extra("2.5.0")
+    val hiltVersion by extra("2.42")
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.0")
+        classpath("com.android.tools.build:gradle:7.2.1")
         classpath(kotlin("gradle-plugin", version = kotlinVersion))
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
@@ -18,7 +18,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven("https://jitpack.io")
     }
 }

@@ -1,22 +1,25 @@
 package ds.photosight.ui.viewmodel
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ds.photosight.core.Prefs
 import ds.photosight.parser.PhotoDetails
 import ds.photosight.repo.PhotosightRepo
 import ds.photosight.utils.position
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class ViewerViewModel @ViewModelInject constructor(
+@HiltViewModel
+class ViewerViewModel @Inject constructor(
     override val prefs: Prefs,
     override val log: Timber.Tree,
     private val photosightRepo: PhotosightRepo,
-    @Assisted val savedStateHandle: SavedStateHandle
+    val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel() {
 
     val position: Int get() = savedStateHandle.position!!

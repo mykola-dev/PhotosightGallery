@@ -1,15 +1,16 @@
 package ds.photosight.parser
 
-val pattern2020 = Regex("""https://cdny\.de/\w+/\w+(/.+?).jpg""")
+val pattern2022 = Regex("""https://cdny\.de/p/(t).+?\d+.jpg""")
 
-fun String.thumbToLarge(): String = if (pattern2020.matches(this)) {
-    pattern2020.replace(this, "https://cdn.photosight.ru/img\$1_xlarge.jpg")
-} else {
-    this
-        .replace("prv-", "img-")
-        .replace("pv_", "")
-        .replace("_icon.", "_xlarge.")
-        .replace("_thumb.", "_xlarge.")
-}
+fun String.thumbToLarge(): String =
+    pattern2022.matchEntire(this)
+        ?.let {
+            val range = it.groups[1]!!.range
+            this.replaceRange(range, "x")
+        }
+        ?: error("wrong url pattern")
 
-var debugEnabled = false
+var debugEnabled = true
+
+// https://cdny.de/p/t/0/38a/7249283.jpg
+// https://cdny.de/p/x/0/38a/7249283.jpg

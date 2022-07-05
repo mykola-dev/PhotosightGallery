@@ -18,12 +18,12 @@ val (appVersion, recentChanges) = Regex("""^v(1\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[
 val appVersionCode = changelog.lines().size + 20
 
 android {
-    compileSdkVersion(29)
+    compileSdk = 32
 
     defaultConfig {
         applicationId = "ds.photosight"
-        minSdkVersion(21)
-        targetSdkVersion(29)
+        minSdk = 21
+        targetSdk = 32
         versionCode = appVersionCode
         versionName = appVersion
 
@@ -52,8 +52,6 @@ android {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
-        create("fdroid") {
-        }
     }
 
     kotlinOptions {
@@ -71,12 +69,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    namespace = "ds.photosight"
 
 }
 
 // for hilt
 kapt {
     correctErrorTypes = true
+}
+
+hilt {
+    enableAggregatingTask = true
 }
 
 androidExtensions {
@@ -88,16 +91,15 @@ githubRelease {
 }
 
 dependencies {
-    val androidX = "1.3.2"
-    val lifecycleVersion = "2.2.0"
-    val hiltJetpackVersion = "1.0.0-alpha02"
-    val pagingVersion = "3.0.0-alpha10"
-    val coroutinesVersion = "1.4.2"
-    val appCompatVersion = "1.2.0"
-    val fragmentVersion = "1.3.0-beta02"
-    val viewPagerVersion = "1.1.0-alpha01"
-    val constraintLayoutVersion = "2.0.4"
-    val recyclerViewVersion = "1.2.0-beta01"
+    val androidX = "1.8.0"
+    val lifecycleVersion = "2.5.0"
+    val pagingVersion = "3.1.1"
+    val coroutinesVersion = "1.6.3"
+    val appCompatVersion = "1.4.2"
+    val fragmentVersion = "1.5.0"
+    val viewPagerVersion = "1.1.0-beta01"
+    val constraintLayoutVersion = "2.1.4"
+    val recyclerViewVersion = "1.2.1"
     val hiltVersion: String by rootProject.extra
     val navVersion: String by rootProject.extra
 
@@ -121,7 +123,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-process:$lifecycleVersion")
 
     // ui
-    implementation("com.google.android.material:material:1.3.0-alpha04")
+    implementation("com.google.android.material:material:1.6.1")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
 
     // kotlin
@@ -132,9 +134,7 @@ dependencies {
 
     // di
     implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion")
-    kapt("androidx.hilt:hilt-compiler:$hiltJetpackVersion")
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
     // prefs
     implementation("com.chibatching.kotpref:kotpref:2.11.0")                                    // https://github.com/chibatching/Kotpref
@@ -147,14 +147,14 @@ dependencies {
     //implementation("com.github.florent37:runtime-permission-kotlin:1.1.2")                      // https://github.com/florent37/RuntimePermission
 
     // tests
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-debug:$coroutinesVersion")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
     testImplementation(kotlin("test-junit"))
-    androidTestImplementation("androidx.test.ext:junit:1.1.2")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:$hiltVersion")
     testImplementation("com.google.dagger:hilt-android-testing:$hiltVersion")

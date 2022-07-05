@@ -1,6 +1,7 @@
 package ds.photosight.parser
 
 import java.io.Serializable
+import java.time.Instant
 
 
 data class PhotoCategory(
@@ -31,7 +32,7 @@ data class PhotoDetails(
     data class Comment(
         val text: String,
         val dateRaw: String,
-        val timestamp: Long,
+        val timestamp: Instant,
         val author: String,
         val avatar: String,
         val likes: Int,

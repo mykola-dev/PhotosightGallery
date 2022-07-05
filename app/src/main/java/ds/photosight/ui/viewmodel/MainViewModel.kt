@@ -1,17 +1,19 @@
 package ds.photosight.ui.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.hadilq.liveevent.LiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ds.photosight.core.Prefs
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.repo.PAGE_SIZE
 import ds.photosight.repo.PhotosPagingSource
 import ds.photosight.utils.invoke
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainViewModel @ViewModelInject constructor(
+@HiltViewModel
+class MainViewModel @Inject constructor(
     override val prefs: Prefs,
     override val log: Timber.Tree
 ) : BaseViewModel() {

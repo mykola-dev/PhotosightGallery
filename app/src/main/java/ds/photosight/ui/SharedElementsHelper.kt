@@ -45,7 +45,7 @@ class SharedElementsHelper(private val fragment: Fragment) {
 
     fun setupEnterAnimation(onEnd: () -> Unit) = with(fragment) {
         //Timber.d("${fragment.javaClass.simpleName}:setup animations")
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(R.transition.image_transition)
+        sharedElementEnterTransition = TransitionInflater.from(requireContext()).inflateTransition(R.transition.image_transition)
             .addListener(object : TransitionListenerAdapter() {
                 override fun onTransitionEnd(transition: Transition) {
                     onEnd()
@@ -54,7 +54,7 @@ class SharedElementsHelper(private val fragment: Fragment) {
     }
 
     fun setupExitAnimation() = with(fragment) {
-        exitTransition = TransitionInflater.from(context).inflateTransition(R.transition.gallery_exit_transition)
+        exitTransition = TransitionInflater.from(requireContext()).inflateTransition(R.transition.gallery_exit_transition)
     }
 
     fun isAnimating(position: Int): Boolean = elementPosition == position && isRunning

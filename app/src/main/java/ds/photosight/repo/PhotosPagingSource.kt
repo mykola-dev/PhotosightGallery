@@ -1,6 +1,7 @@
 package ds.photosight.repo
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import ds.photosight.parser.*
 import ds.photosight.ui.viewmodel.CategoryMenuItemState
 import ds.photosight.ui.viewmodel.MenuState
@@ -66,6 +67,10 @@ class PhotosPagingSource(
             is RatingMenuItemState.Outrun -> OutrunPhotosRequest()
             else -> error("illegal menu item")
         }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, PhotoInfo>): Int? {
+        throw UnsupportedOperationException("not implemented")
     }
 }
 
