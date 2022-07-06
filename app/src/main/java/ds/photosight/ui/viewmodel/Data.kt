@@ -29,12 +29,12 @@ sealed class RatingMenuItemState(@StringRes val titleId: Int) : MenuItemState {
     data class Day(override val context: Context) : RatingMenuItemState(R.string.rating_day)
     data class Week(override val context: Context) : RatingMenuItemState(R.string.rating_week)
     data class Month(override val context: Context) : RatingMenuItemState(R.string.rating_month)
-    data class Art(override val context: Context) : RatingMenuItemState(R.string.rating_artistic)
+    //data class Art(override val context: Context) : RatingMenuItemState(R.string.rating_artistic)
     data class Orig(override val context: Context) : RatingMenuItemState(R.string.rating_original)
     data class Tech(override val context: Context) : RatingMenuItemState(R.string.rating_technic)
     data class Favs(override val context: Context) : RatingMenuItemState(R.string.rating_favorites)
     data class Applicants(override val context: Context) : RatingMenuItemState(R.string.rating_applicants)
-    data class Outrun(override val context: Context) : RatingMenuItemState(R.string.rating_outrun)
+    //data class Outrun(override val context: Context) : RatingMenuItemState(R.string.rating_outrun)
     data class All(override val context: Context) : RatingMenuItemState(R.string.new_photos)
 
 }
@@ -62,19 +62,6 @@ interface PhotosFilter {
     data class Categories(
         val sortDumpCategory: CategoriesPhotosRequest.SortDumpCategory = CategoriesPhotosRequest.SortDumpCategory.ALL,
         val sortTypeCategory: CategoriesPhotosRequest.SortTypeCategory = CategoriesPhotosRequest.SortTypeCategory.DEFAULT,
-        override var enabled: Boolean = false
-    ) : PhotosFilter
-
-    @Deprecated("not used")
-    data class BestPhotos(
-        val sort: BestPhotosRequest.Sort = BestPhotosRequest.Sort.BEST,
-        val time: BestPhotosRequest.Time = BestPhotosRequest.Time.DAY,
-        override var enabled: Boolean
-    ) : PhotosFilter
-
-    @Deprecated("not used")
-    data class DailyPhotos(
-        val category: Int? = null,
         override var enabled: Boolean = false
     ) : PhotosFilter
 

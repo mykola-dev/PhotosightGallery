@@ -29,12 +29,8 @@ class PhotosightRepo @Inject constructor(@ApplicationContext private val context
         RatingMenuItemState::Day,
         RatingMenuItemState::Week,
         RatingMenuItemState::Month,
-        RatingMenuItemState::Art,
-        RatingMenuItemState::Orig,
-        RatingMenuItemState::Tech,
         RatingMenuItemState::Favs,
         RatingMenuItemState::Applicants,
-        RatingMenuItemState::Outrun
     )
         .map { it(context) }
 

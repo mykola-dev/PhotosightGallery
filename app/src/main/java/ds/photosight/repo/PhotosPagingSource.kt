@@ -59,12 +59,12 @@ class PhotosPagingSource(
             is RatingMenuItemState.Day -> DailyPhotosRequest(DatePage(page))
             is RatingMenuItemState.Week -> Top50PhotosRequest()
             is RatingMenuItemState.Month -> Top200PhotosRequest()
-            is RatingMenuItemState.Art -> TopArtPhotosRequest()
+            //is RatingMenuItemState.Art -> TopArtPhotosRequest()
             is RatingMenuItemState.Orig -> TopOrigPhotosRequest()
             is RatingMenuItemState.Tech -> TopTechPhotosRequest()
             is RatingMenuItemState.Favs -> TopFavoritesPhotosRequest()
             is RatingMenuItemState.Applicants -> TopApplicantsPhotosRequest()
-            is RatingMenuItemState.Outrun -> OutrunPhotosRequest()
+            //is RatingMenuItemState.Outrun -> OutrunPhotosRequest()
             else -> error("illegal menu item")
         }
     }
