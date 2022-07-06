@@ -73,7 +73,7 @@ class PhotosightParserTest {
 
     @Test
     fun `comments showcase`() {
-        PhotoDetailsRequest(5358008)()
+        PhotoDetailsRequest(7249211)()
             .also { println(it) }
     }
 

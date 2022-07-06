@@ -17,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.transition.TransitionInflater
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -82,6 +81,20 @@ class GalleryFragment : Fragment() {
 
     }
 
+    private fun navigateTo(clickedItem: GalleryAdapter.ClickedItem) {
+        val extras = FragmentNavigatorExtras(
+            clickedItem.view to clickedItem.view.transitionName
+        )
+        with(findNavController()) {
+            log.v("current destination: ${currentDestination?.id}")
+            if (R.id.galleryFragment == currentDestination?.id) {
+                navigate(GalleryFragmentDirections.openViewer(clickedItem.position), extras)
+            } else {
+                log.w("wrong destination")
+            }
+        }
+    }
+
     private fun observeData() {
         val onMenuSelected = { item: MenuItemState ->
             viewModel.onMenuSelected(item)
@@ -100,17 +113,7 @@ class GalleryFragment : Fragment() {
             if (clickedItem.isLoading) {
                 viewModel.loadingState.value = true
             } else {
-                val extras = FragmentNavigatorExtras(
-                    clickedItem.view to clickedItem.view.transitionName
-                )
-                with(findNavController()) {
-                    log.v("current destination: ${currentDestination?.id}")
-                    if (R.id.galleryFragment == currentDestination?.id) {
-                        navigate(GalleryFragmentDirections.openViewer(clickedItem.position), extras)
-                    } else {
-                        log.w("wrong destination")
-                    }
-                }
+                navigateTo(clickedItem)
             }
         }
 

@@ -37,6 +37,7 @@ class ViewerViewModel @Inject constructor(
             val details = photoDetailsMap.getOrPut(photoId) { photosightRepo.getPhotoDetails(photoId) }
             _commentsState.value = CommentsState.Payload(details)
         } catch (e: Exception) {
+            e.printStackTrace()
             _commentsState.value = CommentsState.Error
         }
     }

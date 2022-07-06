@@ -65,7 +65,7 @@ class CategoriesRequest : JsoupRequest<List<PhotoCategory>>() {
 
 class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
 
-    private val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm:ss")
+    private val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm:ss", Locale.US)
 
     override fun invoke(): PhotoDetails {
         val doc = getDocument()

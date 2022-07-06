@@ -10,10 +10,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
+import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -41,6 +38,8 @@ import ds.photosight.utils.position
 import ds.photosight.utils.recyclerView
 import ds.photosight.utils.snack
 import kotlinx.android.synthetic.main.fragment_viewer.*
+import kotlinx.android.synthetic.main.fragment_viewer.toolbar
+import kotlinx.android.synthetic.main.view_menu.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -149,8 +148,11 @@ class ViewerFragment : Fragment() {
     }
 
     private fun setupInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(shareMenuView) { v, insets ->
-            v.setPadding(0, 0, 0, 0)    // buggy NavigationView fix
+        ViewCompat.setOnApplyWindowInsetsListener(drawerLayout) { view, insets ->
+            val sbInset = insets.systemWindowInsetTop
+            val nbInset = insets.systemWindowInsetBottom
+            appBar.updatePadding(top = sbInset)
+            bottomToolbar.updatePadding(bottom = nbInset)
             insets
         }
     }

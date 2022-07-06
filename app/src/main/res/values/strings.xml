@@ -45,8 +45,8 @@
     <string name="thin_font" translatable="false">sans-serif-light</string>
     <string name="light_font" translatable="false">sans-serif</string>
 
-	<string name="abouttext">"Photosight.ru is a photographic community of talented photographers mostly from Europe. You can find there daily updated archive of creative artistic photos or share your own.
-Photosight Gallery is an easy way to browse photos from photosight.ru on your Android device.
+	<string name="abouttext">"sight.photo is a photographic community of talented photographers mostly from Europe. You can find there daily updated archive of creative artistic photos or share your own.
+Photosight Gallery is an easy way to browse photos from https://sight.photo on your Android device.
 
 Please e-mail bugreports:
 deviantstudio.software@gmail.com
@@ -70,7 +70,7 @@ Change Log:
     <string name="photo_author">"&lt;AUTHOR&gt;"</string>
     <string name="likes">Likes</string>
     <string name="dislikes">Dislikes</string>
-	<string name="copyright" translatable="false">© 1997-2020 Deviant Studio</string>
+	<string name="copyright" translatable="false">© 1997-2022 Deviant Studio</string>
 	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
 	<string name="retry">Retry</string>
     <string name="views">Views</string>
