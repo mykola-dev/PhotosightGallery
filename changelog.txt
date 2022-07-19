@@ -1,3 +1,6 @@
+v2.0
+- rewritten with jetpack compose
+
 v1.0.5
 - fixed data parsing
 

@@ -8,11 +8,11 @@ plugins {
     kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
-    id("com.github.breadmoirai.github-release") version "2.2.12"
+    id("com.github.breadmoirai.github-release") version "2.4.1"
 }
 
 val changelog = File(rootProject.projectDir, "changelog.txt").readText()
-val (appVersion, recentChanges) = Regex("""^v(1\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v1\..+|${'$'})""")
+val (appVersion, recentChanges) = Regex("""^v(\d\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v\d\..+|${'$'})""")
     .find(changelog)!!
     .destructured
 val appVersionCode = changelog.lines().size + 20
@@ -71,6 +71,10 @@ android {
     }
     namespace = "ds.photosight"
 
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
 }
 
 // for hilt
@@ -147,7 +151,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.11.0")                                    // https://github.com/bumptech/glide
     kapt("com.github.bumptech.glide:compiler:4.11.0")
     //implementation("com.github.florent37:runtime-permission-kotlin:1.1.2")                      // https://github.com/florent37/RuntimePermission
-
     // tests
     testImplementation("junit:junit:4.13.2")
     testImplementation("io.mockk:mockk:1.10.0")
@@ -176,15 +179,15 @@ tasks {
     githubRelease.configure {
         dependsOn(copyRelease)
 
-        owner("deviant-studio")
-        repo("PhotosightGallery")
-        tagName("v$appVersion")
-        releaseName("v$appVersion")
-        body(recentChanges)
-        draft(false)
-        prerelease(false)
-        overwrite(true)
-        dryRun(false)
+        owner.set("deviant-studio")
+        repo.set("PhotosightGallery")
+        tagName.set("v$appVersion")
+        releaseName.set("v$appVersion")
+        body.set(recentChanges)
+        draft.set(false)
+        prerelease.set(false)
+        overwrite.set(true)
+        dryRun.set(false)
 
         // postpone asset preparation
         doFirst {

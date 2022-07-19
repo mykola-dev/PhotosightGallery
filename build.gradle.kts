@@ -2,6 +2,7 @@ buildscript {
     val kotlinVersion by extra("1.7.0")
     val navVersion by extra("2.5.0")
     val hiltVersion by extra("2.42")
+    val compose_version by extra("1.3.0-alpha01")
 
     repositories {
         google()
