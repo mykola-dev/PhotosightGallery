@@ -3,9 +3,10 @@ package ds.photosight.compose.ui.theme
 import androidx.compose.ui.graphics.Color
 
 object Palette {
-    val primary = Color(0xff1b1b1b)
-    val accent = Color(0xffdb5e4b)
-    val background = primary
+    val primary = Color(0xffdddddd)
+    val secondary = Color(0xffdb5e4b)
+    val surface = Color(0xff1b1b1b)
+    val background = surface
     val drawerBackground = Color(0xb0000000)
     val translucent = Color(0x60000000)
     val black = Color(0xff000000)

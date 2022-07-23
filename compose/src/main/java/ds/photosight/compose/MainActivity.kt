@@ -15,14 +15,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // This app draws behind the system bars, so we want to handle fitting system windows
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        setContent {
-            /*val systemUiController = rememberSystemUiController()
-            systemUiController.setSystemBarsColor(
-                color = Palette.translucent,
-                darkIcons = false
-            )*/
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        setContent {
             PhotosightTheme {
                 GalleryScreen()
             }

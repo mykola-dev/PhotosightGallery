@@ -8,6 +8,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
     id("com.github.breadmoirai.github-release") version "2.4.1"
+    id("com.google.devtools.ksp") version "1.7.0-1.0.6"
 }
 
 val changelog = File(rootProject.projectDir, "changelog.txt").readText()
@@ -83,6 +84,15 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    // ksp bug
+    applicationVariants.all {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
+        }
+    }
 }
 
 // for hilt
@@ -100,25 +110,33 @@ githubRelease {
 
 dependencies {
     val hiltVersion: String by rootProject.extra
-    val navVersion: String by rootProject.extra
-    val compose_version:String by rootProject.extra
+    //val navVersion: String by rootProject.extra
+    val composeVersion = "1.3.0-alpha01"
     val accompanist = "0.24.13-rc"
+    val composeDestinations = "1.6.13-beta"
 
     implementation(project(":parser"))
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
     // compose
-    implementation("androidx.compose.ui:ui:$compose_version")
+    implementation("androidx.compose.ui:ui:$composeVersion")
     //implementation("androidx.compose.material3:material3:1.0.0-alpha14")
-    implementation("androidx.compose.material:material:$compose_version")
-    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
+    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.activity:activity-compose:1.5.0")
     implementation("androidx.paging:paging-compose:1.0.0-alpha15")
     implementation("androidx.navigation:navigation-compose:2.5.0")
 
+    // accompanist https://github.com/google/accompanist
     //implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanist")
+    implementation("com.google.accompanist:accompanist-swiperefresh:$accompanist")
+    implementation("com.google.accompanist:accompanist-pager:$accompanist")
+
+    // navigation
+    implementation("io.github.raamcosta.compose-destinations:animations-core:$composeDestinations")
+    ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinations")
 
     // androidx
     implementation("androidx.core:core-ktx:1.8.0")
@@ -128,6 +146,7 @@ dependencies {
 
     // di
     implementation("com.google.dagger:hilt-android:$hiltVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
     // widgets
@@ -151,9 +170,9 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${rootProject.extra["compose_version"]}")
-    debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:${rootProject.extra["compose_version"]}")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
 }
 
 tasks {

@@ -1,4 +1,4 @@
-package ds.photosight.di
+package ds.photosight.compose.di
 
 import android.content.Context
 import android.content.res.Resources

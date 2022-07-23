@@ -1,8 +1,10 @@
 package ds.photosight.compose.ui.theme
 
+import androidx.compose.material.LocalElevationOverlay
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
 fun PhotosightTheme(
@@ -10,14 +12,17 @@ fun PhotosightTheme(
 ) {
     val colors = darkColors(
         primary = Palette.primary,
-        secondary = Palette.accent,
+        secondary = Palette.secondary,
         background = Palette.background,
-        surface = Palette.primary,
+        surface = Palette.surface,
+
     )
 
-    MaterialTheme(
-        //typography = Typography,
-        content = content,
-        colors = colors
-    )
+    CompositionLocalProvider(LocalElevationOverlay provides null) {
+        MaterialTheme(
+            content = content,
+            colors = colors
+        )
+    }
+
 }

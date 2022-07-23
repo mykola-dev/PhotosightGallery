@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import java.io.*
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
