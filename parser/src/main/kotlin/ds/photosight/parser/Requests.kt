@@ -35,6 +35,8 @@ abstract class JsoupRequest<T> : Request<T> {
         Jsoup
             .connect(url)
             .cookies(cookies + nudeModeCookie + adultModeCookie + categoryDescriptionCookie)
+            .timeout(2000)
+            //.userAgent("Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.129 Mobile Safari/537.36")
             .get()
 
     override val cookies: Map<String, String> = emptyMap()
@@ -76,7 +78,7 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
                 val dateRaw = comment.select("span.date").text()
                 val (avatar, author) = comment
                     .getElementsByClass("avatar")
-                    .first()
+                    .first()!!
                     .getElementsByTag("img")
                     .run { attr("src") to attr("alt") }
                 val likes = comment.select("span.count").text().ifEmpty { "0" }.toInt()
@@ -121,7 +123,7 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
         .map { el ->
             val id = el
                 .getElementsByTag("a")
-                .first()
+                .first()!!
                 .attr("data-href")
                 .let { Regex("/photos/(\\d+).*").matchEntire(it) }
                 ?.groupValues
@@ -136,7 +138,7 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
             val pageUrl = "$baseUrl/photos/$id"
             val (author, authorUrl) = el
                 .getElementsByTag("p")
-                .first()
+                .first()!!
                 .let { e -> e.getElementsByTag("a").first() ?: e }
                 .let { e -> e.text() to e.attr("abs:href").takeIf { it.isNotBlank() } }
 

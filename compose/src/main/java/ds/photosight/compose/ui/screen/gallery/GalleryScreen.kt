@@ -2,20 +2,14 @@
 
 package ds.photosight.compose.ui.screen.gallery
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -24,8 +18,9 @@ import com.nesyou.staggeredgrid.StaggeredCells
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import ds.photosight.compose.ui.dialog.AboutDialog
+import ds.photosight.compose.ui.model.MenuItemState
+import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
-import ds.photosight.compose.ui.theme.PhotosightTheme
 import kotlin.math.roundToInt
 
 @RootNavGraph(start = true)
@@ -34,100 +29,103 @@ import kotlin.math.roundToInt
 fun GalleryScreen() {
     val viewModel: GalleryViewModel = hiltViewModel()
 
-    GalleryContent(
-        viewModel.appName,
-        null,
-        viewModel.showAboutDialog,
+    val menuState by viewModel.menuStateFlow.collectAsState()
+/*    val bottomSheetValue = remember {
+        derivedStateOf { if (menuState.value.categories.isEmpty()) BottomSheetValue.Collapsed }
+    }*/
 
-        )
+    GalleryContent(
+        toolbarTitle = "",//viewModel.appName,
+        toolbarSubtitle = null,
+        showAboutDialog = viewModel.showAboutDialog,
+        menuState = menuState,
+        onMenuItemSelected = { viewModel.onMenuSelected(it) },
+    )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GalleryContent(
     toolbarTitle: String,
     toolbarSubtitle: String? = null,
     showAboutDialog: MutableState<Boolean>,
-) {
+    menuState: MenuState,
+    onMenuItemSelected: (MenuItemState) -> Unit,
 
+    ) {
     val nestedScrollConnection = rememberToolbarNestedScrollConnection()
+    val shitPeekHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
+    val scaffoldState = rememberBottomSheetScaffoldState()
 
-    Box(
-        Modifier
-            .fillMaxSize()
-            .nestedScroll(nestedScrollConnection)
+    BottomSheetScaffold(
+        sheetContent = {
+            BottomMenu(
+                scaffoldState.bottomSheetState,
+                menuState,
+                onMenuItemSelected
+            )
+        },
+        scaffoldState = scaffoldState,
+        sheetBackgroundColor = MaterialTheme.colors.primary,
+        sheetShape = MaterialTheme.shapes.large,
+        sheetContentColor = MaterialTheme.colors.surface,
+        sheetPeekHeight = shitPeekHeight
     ) {
 
-
-        val urls = remember {
-            listOf(
-                "https://cdny.de/p/x/b/798/7251492.jpg"
-            )
-        }
-
-        LazyStaggeredGrid(
-            contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight),
-            cells = StaggeredCells.Adaptive(minSize = 180.dp)
+        Box(
+            Modifier
+                .fillMaxSize()
+                .nestedScroll(nestedScrollConnection)
         ) {
-            items(60) {
-                val random: Double = 100 + Math.random() * (500 - 100)
 
-                AsyncImage(
-                    model = getPreviewCoilModel(urls.random()),
-                    contentDescription = null,
-
-                    /*painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .height(random.dp)
-                        .padding(10.dp),
-                    contentScale = ContentScale.Crop*/
+            val urls = remember {
+                listOf(
+                    "https://cdny.de/p/x/b/798/7251492.jpg"
                 )
             }
-        }
 
-        MainToolbar(
-            toolbarTitle,
-            Modifier.offset { IntOffset(x = 0, y = nestedScrollConnection.toolbarOffsetHeightPx.value.roundToInt()) },
-            toolbarSubtitle,
-            { showAboutDialog.value = true }
-        )
+            LazyStaggeredGrid(
+                contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight),
+                cells = StaggeredCells.Adaptive(minSize = 180.dp)
+            ) {
+                items(60) {
+                    val random: Double = 100 + Math.random() * (500 - 100)
+                    val url=""//urls.random()
+                    AsyncImage(
+                        model = getPreviewCoilModel(url),
+                        contentDescription = null,
 
-        LinearProgressIndicator(color = MaterialTheme.colors.secondary, modifier = Modifier.fillMaxWidth())
-
-        if (showAboutDialog.value) {
-            AboutDialog {
-                showAboutDialog.value = false
-            }
-        }
-
-    }
-}
-
-@Composable
-private fun MainToolbar(
-    title: String,
-    modifier: Modifier = Modifier,
-    subtitle: String? = null,
-    onShowAboutDialog: () -> Unit
-) {
-    TopAppBar(
-        contentPadding = WindowInsets.statusBars.asPaddingValues(),
-        modifier = modifier
-    ) {
-        Row {
-            Column(Modifier.padding(horizontal = 16.dp).weight(1f)) {
-                Text(title)
-                if (subtitle != null) {
-                    Text(subtitle, fontSize = 12.sp)
+                        /*painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .height(random.dp)
+                            .padding(10.dp),
+                        contentScale = ContentScale.Crop*/
+                    )
                 }
             }
-            IconButton(onClick = onShowAboutDialog) {
-                Icon(Icons.Filled.Info, null)
+
+            MainToolbar(
+                toolbarTitle,
+                toolbarSubtitle,
+                Modifier.offset { IntOffset(x = 0, y = nestedScrollConnection.toolbarOffsetHeightPx.value.roundToInt()) },
+                { showAboutDialog.value = true }
+            )
+
+            LinearProgressIndicator(color = MaterialTheme.colors.secondary, modifier = Modifier.fillMaxWidth())
+
+            if (showAboutDialog.value) {
+                AboutDialog {
+                    showAboutDialog.value = false
+                }
             }
+
         }
     }
+
+
 }
+
 
 @Composable
 private fun getPreviewCoilModel(url: String) = ImageRequest.Builder(LocalContext.current)
@@ -135,10 +133,11 @@ private fun getPreviewCoilModel(url: String) = ImageRequest.Builder(LocalContext
     .crossfade(true)
     .build()
 
+/*
 @Preview(showSystemUi = true)
 @Composable
 fun GalleryPreview() {
     PhotosightTheme {
         GalleryContent("Hello", "World", mutableStateOf(false))
     }
-}
+}*/

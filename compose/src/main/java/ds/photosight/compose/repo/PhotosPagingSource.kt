@@ -1,12 +1,11 @@
-package ds.photosight.repo
+package ds.photosight.compose.repo
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import ds.photosight.compose.ui.model.CategoryMenuItemState
+import ds.photosight.compose.ui.model.MenuState
+import ds.photosight.compose.ui.model.RatingMenuItemState
 import ds.photosight.parser.*
-import ds.photosight.ui.viewmodel.CategoryMenuItemState
-import ds.photosight.ui.viewmodel.MenuState
-import ds.photosight.ui.viewmodel.PhotosFilter
-import ds.photosight.ui.viewmodel.RatingMenuItemState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -45,7 +44,7 @@ class PhotosPagingSource(
     }
 
     private fun buildRequest(page: Int): PhotosRequest {
-        return when (val selected = menuState.getSelected()) {
+        return when (val selected = menuState.selectedItem ?: error("no menu item selected")) {
             is CategoryMenuItemState -> {
                 val filter = menuState.categoriesFilter
                 CategoriesPhotosRequest(
@@ -55,15 +54,16 @@ class PhotosPagingSource(
                     filter.sortTypeCategory
                 )
             }
-            is RatingMenuItemState.All -> NewPhotosRequest(SimplePage(page))
-            is RatingMenuItemState.Day -> DailyPhotosRequest(DatePage(page))
-            is RatingMenuItemState.Week -> Top50PhotosRequest()
-            is RatingMenuItemState.Month -> Top200PhotosRequest()
-            is RatingMenuItemState.Orig -> TopOrigPhotosRequest()
-            is RatingMenuItemState.Tech -> TopTechPhotosRequest()
-            is RatingMenuItemState.Favs -> TopFavoritesPhotosRequest()
-            is RatingMenuItemState.Applicants -> TopApplicantsPhotosRequest()
-            else -> error("illegal menu item")
+            is RatingMenuItemState -> {
+                when (selected.type) {
+                    RatingMenuItemState.Type.ALL -> NewPhotosRequest(SimplePage(page))
+                    RatingMenuItemState.Type.DAY -> DailyPhotosRequest(DatePage(page))
+                    RatingMenuItemState.Type.WEEK -> Top50PhotosRequest()
+                    RatingMenuItemState.Type.MONTH -> Top200PhotosRequest()
+                    RatingMenuItemState.Type.FAVS -> TopFavoritesPhotosRequest()
+                    RatingMenuItemState.Type.APPLICANTS -> TopApplicantsPhotosRequest()
+                }
+            }
         }
     }
 
