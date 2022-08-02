@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
-
 package ds.photosight.compose.ui.screen.gallery
 
 import androidx.compose.animation.animateColor
@@ -29,6 +27,7 @@ import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.model.MenuTabs
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
+import ds.photosight.compose.util.log
 import kotlinx.coroutines.launch
 
 @Composable
@@ -37,6 +36,13 @@ fun BottomMenu(
     menuState: MenuState,
     onMenuItemSelected: (MenuItemState) -> Unit,
 ) {
+
+    LaunchedEffect(menuState) {
+        log.w("bss effect: ${menuState.bottomSheetState}")
+        if (shitState.currentValue != menuState.bottomSheetState && shitState.isExpanded) {
+            shitState.collapse()
+        }
+    }
 
     val sbHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val nbHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()

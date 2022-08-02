@@ -53,7 +53,7 @@ android {
         }
         release {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
@@ -66,11 +66,14 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs = listOf(
-            //"-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi",
-            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-XXLanguage:+InlineClasses"
-        )
+         freeCompilerArgs = listOf(
+             //"-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi",
+             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+             "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi",
+             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+             "-XXLanguage:+InlineClasses"
+         )
     }
 
     buildFeatures {
@@ -126,9 +129,9 @@ dependencies {
     //implementation("androidx.compose.material3:material3:1.0.0-alpha14")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.5.0")
+    implementation("androidx.activity:activity-compose:1.5.1")
     implementation("androidx.paging:paging-compose:1.0.0-alpha15")
-    implementation("androidx.navigation:navigation-compose:2.5.0")
+    implementation("androidx.navigation:navigation-compose:2.5.1")
 
     // accompanist https://github.com/google/accompanist
     //implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")
@@ -142,9 +145,9 @@ dependencies {
 
     // androidx
     implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")              // https://developer.android.com/jetpack/androidx
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")              // https://developer.android.com/jetpack/androidx
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
 
     // di
     implementation("com.google.dagger:hilt-android:$hiltVersion")

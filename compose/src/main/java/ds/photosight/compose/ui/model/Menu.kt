@@ -1,6 +1,9 @@
 package ds.photosight.compose.ui.model
 
 import androidx.annotation.StringRes
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.runtime.Immutable
 import ds.photosight.compose.R
 
 enum class MenuTabs(@StringRes val resId: Int) {
@@ -8,11 +11,13 @@ enum class MenuTabs(@StringRes val resId: Int) {
     CATEGORIES(R.string.categories)
 }
 
+@Immutable
 data class MenuState(
     val categories: List<CategoryMenuItemState> = emptyList(),
     val ratings: List<RatingMenuItemState> = emptyList(),
     val categoriesFilter: PhotosFilter.Categories = PhotosFilter.Categories(),
-    val selectedItem: MenuItemState? = ratings.firstOrNull()    // default is 'new photos'
+    val selectedItem: MenuItemState? = ratings.firstOrNull(),    // default is 'new photos'
+    val bottomSheetState: BottomSheetValue = BottomSheetValue.Collapsed
 )
 
 sealed interface MenuItemState {

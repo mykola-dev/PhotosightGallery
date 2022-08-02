@@ -1,4 +1,4 @@
-package ds.photosight.compose.repo
+package ds.photosight.compose.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

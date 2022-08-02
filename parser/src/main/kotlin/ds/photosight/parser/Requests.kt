@@ -35,7 +35,7 @@ abstract class JsoupRequest<T> : Request<T> {
         Jsoup
             .connect(url)
             .cookies(cookies + nudeModeCookie + adultModeCookie + categoryDescriptionCookie)
-            .timeout(2000)
+            .timeout(5000)
             //.userAgent("Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.129 Mobile Safari/537.36")
             .get()
 
