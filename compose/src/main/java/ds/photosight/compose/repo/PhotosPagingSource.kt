@@ -1,7 +1,10 @@
-package ds.photosight.compose.data
+package ds.photosight.compose.repo
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import ds.photosight.compose.ui.model.CategoryMenuItemState
 import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.model.RatingMenuItemState
@@ -12,19 +15,21 @@ import timber.log.Timber
 
 const val PAGE_SIZE = 24
 
-class PhotosPagingSource(
-    private val menuState: MenuState
+@AssistedFactory
+interface PhotosPagingSourceFactory {
+    operator fun invoke(menuState: MenuState): PhotosPagingSource
+}
+
+class PhotosPagingSource @AssistedInject constructor(
+    @Assisted private val menuState: MenuState,
+    private val photosightRepo: PhotosightRepo,
 ) : PagingSource<Int, PhotoInfo>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoInfo> = try {
         val key = params.key ?: 1
 
         val request = buildRequest(key)
-        val page = withContext(Dispatchers.Default) {
-            request()
-        }
-
-        Timber.d("loaded page $key, ${page.size} items")
+        val page = photosightRepo.apiRequest(request)
 
         val prevKey = if (request is Multipage && key > 1) key - 1
         else null
@@ -34,8 +39,6 @@ class PhotosPagingSource(
             && request is Multipage
         ) key + 1
         else null
-
-        Timber.d("prevKey=$prevKey nextKey=$nextKey")
 
         LoadResult.Page(page, prevKey, nextKey)
     } catch (e: Exception) {

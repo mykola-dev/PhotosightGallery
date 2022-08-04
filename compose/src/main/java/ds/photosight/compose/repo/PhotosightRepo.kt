@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class PhotosightRepo @Inject constructor(@ApplicationContext private val context: Context) {
 
-    private suspend fun <T> apiRequest(request: Request<T>): T = withContext(Dispatchers.Default) {
+    suspend fun <T> apiRequest(request: Request<T>): T = withContext(Dispatchers.Default) {
         println("==> executing request ${request.url}")
         val result = request()
         println("<== end")

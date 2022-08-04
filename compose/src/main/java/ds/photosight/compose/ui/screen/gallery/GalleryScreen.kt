@@ -2,8 +2,6 @@
 
 package ds.photosight.compose.ui.screen.gallery
 
-import android.graphics.drawable.AnimationDrawable
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -11,17 +9,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells
 import com.ramcosta.composedestinations.annotation.Destination
@@ -31,11 +25,12 @@ import ds.photosight.compose.ui.ToolbarNestedScrollConnection
 import ds.photosight.compose.ui.dialog.AboutDialog
 import ds.photosight.compose.ui.model.MenuItemState
 import ds.photosight.compose.ui.model.MenuState
-import ds.photosight.compose.ui.model.ScrollDirection
 import ds.photosight.compose.ui.pagedItems
 import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
 import ds.photosight.compose.ui.screen.navigation.MainViewModel
 import ds.photosight.compose.util.log
+import ds.photosight.compose.util.logCompositions
+import ds.photosight.compose.util.rememberDerived
 import ds.photosight.parser.PhotoInfo
 import kotlin.math.roundToInt
 
@@ -43,7 +38,7 @@ import kotlin.math.roundToInt
 @Destination
 @Composable
 fun GalleryScreen(mainViewModel: MainViewModel) {
-    val viewModel: GalleryViewModel = hiltViewModel()
+    val viewModel: GalleryViewModel = viewModel()
     mainViewModel.setMenuStateFlow(viewModel.menuStateFlow)
 
     val menuState by viewModel.menuStateFlow.collectAsState()
@@ -58,14 +53,15 @@ fun GalleryScreen(mainViewModel: MainViewModel) {
         }
     }
 
-    val title by derivedStateOf {
-        menuState.selectedItem?.title ?: viewModel.appName
-    }
+    val title = viewModel.title.collectAsState("")
+
     val resources = LocalContext.current.resources
-    val subtitle by derivedStateOf {
-        viewModel.firstVisibleItem.value?.paginationKey?.let { key ->
-            if ("/" in key) key
-            else resources.getString(R.string.page_, key)
+    val subtitle by remember(viewModel.firstVisibleItem) {
+        derivedStateOf {
+            viewModel.firstVisibleItem.value?.paginationKey?.let { key ->
+                if ("/" in key) key
+                else resources.getString(R.string.page_, key)
+            }
         }
     }
 
@@ -87,7 +83,7 @@ fun GalleryScreen(mainViewModel: MainViewModel) {
 @Composable
 fun GalleryContent(
     photos: LazyPagingItems<PhotoInfo>,
-    toolbarTitle: String,
+    toolbarTitle: State<String>,
     toolbarSubtitle: String? = null,
     showAboutDialog: MutableState<Boolean>,
     menuState: MenuState,
@@ -147,7 +143,6 @@ fun GalleryContent(
                 onPhotoClicked,
                 onFirstVisibleItem
             )
-
             MainToolbar(
                 toolbarTitle,
                 toolbarSubtitle,
@@ -179,12 +174,22 @@ private fun LazyGrid(
     onFirstVisibleItem: (PhotoInfo) -> Unit,
     //onDirection:(ScrollDirection)->Unit,
 ) {
-
+    logCompositions(msg = "lazy grid")
     val state: LazyListState = rememberLazyListState()
 
-    //state.
+   /* val scrollingDown = remember { mutableStateOf(false) }
 
-    val firstItem by derivedStateOf {
+
+    val scrollingDown = produceState(initialValue = false) {
+        var previousIndex = state.firstVisibleItemScrollOffset
+        snapshotFlow { state.firstVisibleItemScrollOffset }
+            .collect { index ->
+                value = index < previousIndex
+                previousIndex = index
+            }
+    }*/
+
+    val firstItem by rememberDerived(state) {
         state.firstVisibleItemIndex.let {
             if (photos.itemCount > it) photos[it] else null
         }
@@ -199,33 +204,13 @@ private fun LazyGrid(
         contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight),
         cells = StaggeredCells.Fixed(2)
     ) {
+
         pagedItems(photos) { item ->
-            val url = item!!.thumb
-            AsyncImage(
-                model = getPreviewCoilModel(url),
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(1.dp)
-                    .defaultMinSize(100.dp)
-                    .clickable { onPhotoClicked(item) }
-            )
+            Thumb(item, onPhotoClicked)
         }
     }
 }
 
-
-@Composable
-private fun getPreviewCoilModel(url: String) = ImageRequest.Builder(LocalContext.current)
-    .data(url)
-    .error(R.drawable.ic_photo_error)
-    .placeholder((ContextCompat.getDrawable(LocalContext.current, R.drawable.photo_placeholder) as AnimationDrawable).apply {
-        setExitFadeDuration(1000)
-        start()
-    })
-    .crossfade(true)
-    .build()
 
 /*
 @Preview(showSystemUi = true)

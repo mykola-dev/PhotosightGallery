@@ -86,7 +86,6 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
                 val timestamp = LocalDateTime.parse(dateRaw, dateFormat).atZone(ZoneId.systemDefault()).toInstant()
                 PhotoDetails.Comment(text, dateRaw, timestamp, author, avatar, likes, isAuthor)
             }
-            .onEach { println(it) }
 
         val awards = doc
             .awardsSection()
@@ -130,7 +129,6 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
                 ?.get(1)
                 ?.toInt()
                 ?: error("can't parse id")
-            println("id=$id")
             val (thumb, title) = el
                 .getElementsByTag("img")
                 .run { attr("src") to attr("alt").trim() }

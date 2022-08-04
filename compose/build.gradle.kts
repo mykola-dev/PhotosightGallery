@@ -66,14 +66,25 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-         freeCompilerArgs = listOf(
-             //"-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi",
-             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
-             "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi",
-             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
-             "-XXLanguage:+InlineClasses"
-         )
+        freeCompilerArgs += listOf(
+            //"-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi",
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-XXLanguage:+InlineClasses"
+        )
+
+        // compose metrics
+        if (project.findProperty("myapp.enableComposeCompilerReports") == "true") {
+            val path = project.buildDir.absolutePath + "/compose_metrics"
+            freeCompilerArgs += listOf(
+                "-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$path"
+            )
+            freeCompilerArgs += listOf(
+                "-P", "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$path"
+            )
+        }
     }
 
     buildFeatures {
@@ -116,13 +127,15 @@ githubRelease {
 dependencies {
     val hiltVersion: String by rootProject.extra
     //val navVersion: String by rootProject.extra
-    val composeVersion = "1.3.0-alpha01"
+    val composeVersion = "1.2.0"
     val accompanist = "0.24.13-rc"
     val composeDestinations = "1.6.13-beta"
 
     implementation(project(":parser"))
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    implementation("androidx.profileinstaller:profileinstaller:1.2.0")
+
 
     // compose
     implementation("androidx.compose.ui:ui:$composeVersion")

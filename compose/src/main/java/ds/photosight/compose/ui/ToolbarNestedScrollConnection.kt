@@ -20,10 +20,10 @@ import timber.log.Timber
 fun rememberToolbarNestedScrollConnection(): ToolbarNestedScrollConnection {
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
-    val toolbarHeight = 56.dp + statusBarHeight
     val density = LocalDensity.current
 
-    return remember(toolbarHeight) {
+    return remember {
+        val toolbarHeight = 56.dp + statusBarHeight
         Timber.v("connection created")
         ToolbarNestedScrollConnection(toolbarHeight, density)
     }

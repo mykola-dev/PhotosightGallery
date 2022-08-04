@@ -7,11 +7,11 @@ import com.nesyou.staggeredgrid.StaggeredGridScope
 
 fun <T : Any> StaggeredGridScope.pagedItems(
     items: LazyPagingItems<T>,
-    itemContent: @Composable StaggeredGridScope.(value: T?) -> Unit
+    itemContent: @Composable StaggeredGridScope.(value: T) -> Unit
 ) {
     items(
         count = items.itemCount,
     ) { index ->
-        itemContent(items[index])
+        itemContent(items[index]!!)
     }
 }

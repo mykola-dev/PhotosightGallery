@@ -44,18 +44,6 @@ fun BottomMenu(
         }
     }
 
-    val sbHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    val nbHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-
-    val collapsedFraction = if (shitState.progress.to == BottomSheetValue.Collapsed) {
-        1 - shitState.progress.fraction
-    } else {
-        shitState.progress.fraction
-    }
-
-    val pagerPadding = remember(collapsedFraction) { nbHeight * (1 - collapsedFraction) }
-    val tabsPadding = remember(collapsedFraction) { sbHeight * collapsedFraction }
-
     Column {
         val tabData: List<MenuTabs> = remember {
             listOf(
@@ -65,7 +53,17 @@ fun BottomMenu(
         }
         val pagerState = rememberPagerState(initialPage = 0)
         val tabIndex = pagerState.currentPage
-        val coroutineScope = rememberCoroutineScope()
+
+        val collapsedFraction by derivedStateOf {
+            if (shitState.progress.to == BottomSheetValue.Collapsed) {
+                1 - shitState.progress.fraction
+            } else {
+                shitState.progress.fraction
+            }
+        }
+        val sbHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+        val nbHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        val tabsPadding = remember(collapsedFraction) { sbHeight * collapsedFraction }
 
         TabRow(
             selectedTabIndex = tabIndex,
@@ -73,31 +71,25 @@ fun BottomMenu(
             contentColor = MaterialTheme.colors.surface,
             modifier = Modifier.padding(top = tabsPadding)
         ) {
+            val coroutineScope = rememberCoroutineScope()
             tabData.forEach { item ->
-                Tab(
-                    modifier = Modifier,
-                    selected = tabIndex == item.ordinal,
-                    onClick = {
-                        coroutineScope.launch {
-                            if (shitState.isCollapsed) {
-                                pagerState.scrollToPage(item.ordinal)
-                                shitState.expand()
-                            } else {
-                                pagerState.animateScrollToPage(item.ordinal)
-                            }
+                Tab(modifier = Modifier, selected = tabIndex == item.ordinal, onClick = {
+                    coroutineScope.launch {
+                        if (shitState.isCollapsed) {
+                            pagerState.scrollToPage(item.ordinal)
+                            shitState.expand()
+                        } else {
+                            pagerState.animateScrollToPage(item.ordinal)
                         }
-                    },
-                    text = { Text(text = stringResource(id = item.resId).uppercase()) })
+                    }
+                }, text = { Text(text = stringResource(id = item.resId).uppercase()) })
             }
         }
-
+        val pagerPadding = remember(collapsedFraction) { nbHeight * (1 - collapsedFraction) }
         Spacer(modifier = Modifier.height(pagerPadding))
 
         HorizontalPager(
-            count = MenuTabs.values().size,
-            state = pagerState,
-            modifier = Modifier.fillMaxHeight(),
-            verticalAlignment = Alignment.Top
+            count = MenuTabs.values().size, state = pagerState, modifier = Modifier.fillMaxHeight(), verticalAlignment = Alignment.Top
         ) { index ->
             LazyColumn(content = {
                 val currTab = MenuTabs.values()[pagerState.currentPage]
@@ -124,8 +116,7 @@ fun MenuItem(model: MenuItemState, isSelected: Boolean, onMenuItemSelected: (Men
 
     val style = MaterialTheme.typography.subtitle1
 
-    Text(
-        text = model.title,
+    Text(text = model.title,
         color = textColor,
         style = style,
         textAlign = TextAlign.Center,
@@ -133,8 +124,7 @@ fun MenuItem(model: MenuItemState, isSelected: Boolean, onMenuItemSelected: (Men
             .background(bgColor)
             .clickable { onMenuItemSelected(model) }
             .padding(16.dp)
-            .fillMaxSize()
-    )
+            .fillMaxSize())
 }
 
 @Preview()
@@ -152,10 +142,6 @@ fun MenuItemPreview() {
 @Composable
 fun BottomMenuPreview() {
     PhotosightTheme {
-        BottomMenu(
-            BottomSheetState(BottomSheetValue.Expanded),
-            MenuState(),
-            {}
-        )
+        BottomMenu(BottomSheetState(BottomSheetValue.Expanded), MenuState(), {})
     }
 }

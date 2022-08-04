@@ -3,8 +3,9 @@ package ds.photosight.compose.ui.screen.navigation
 import androidx.lifecycle.*
 import androidx.paging.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ds.photosight.compose.data.PAGE_SIZE
-import ds.photosight.compose.data.PhotosPagingSource
+import ds.photosight.compose.repo.PAGE_SIZE
+import ds.photosight.compose.repo.PhotosPagingSource
+import ds.photosight.compose.repo.PhotosPagingSourceFactory
 import ds.photosight.compose.ui.BaseViewModel
 import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.parser.PhotoInfo
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    log: Timber.Tree
+    log: Timber.Tree,
+    private val photosPagingSourceFactory: PhotosPagingSourceFactory,
 ) : BaseViewModel(log) {
 
     private lateinit var menu: Flow<MenuState>
@@ -37,12 +39,13 @@ class MainViewModel @Inject constructor(
 
     private fun providePhotosStream(menuState: MenuState): Flow<PagingData<PhotoInfo>> = flow {
         emit(PagingData.empty())    // cleanup list first
+        if (menuState.selectedItem == null) return@flow
         emitAll(
             Pager(
                 config = PagingConfig(pageSize = PAGE_SIZE, prefetchDistance = PAGE_SIZE / 2, enablePlaceholders = false),
                 pagingSourceFactory = {
                     log.d("instantiating photos paging source")
-                    PhotosPagingSource(menuState)
+                    photosPagingSourceFactory(menuState)
                 }
             )
                 .flow

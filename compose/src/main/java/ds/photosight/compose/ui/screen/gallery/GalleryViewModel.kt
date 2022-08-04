@@ -34,8 +34,6 @@ class GalleryViewModel @Inject constructor(
     log: Timber.Tree
 ) : BaseViewModel(log) {
 
-    val appName: String get() = appNameProvider()
-
     val showAboutDialog = mutableStateOf(checkVersionUseCase.shouldShowAboutDialog())
 
     val isLoading = mutableStateOf(true)
@@ -55,6 +53,10 @@ class GalleryViewModel @Inject constructor(
     private val mutableMenuStateFlow: MutableStateFlow<MenuState> = MutableStateFlow(MenuState())
 
     val menuStateFlow: StateFlow<MenuState> = mutableMenuStateFlow.asStateFlow()
+
+    val title: Flow<String> = menuStateFlow.map {
+        it.selectedItem?.title ?: appNameProvider()
+    }
 
     init {
         launch {
