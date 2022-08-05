@@ -2,8 +2,11 @@
 
 package ds.photosight.compose.ui.screen.gallery
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -11,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
@@ -23,36 +28,34 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.ToolbarNestedScrollConnection
 import ds.photosight.compose.ui.dialog.AboutDialog
+import ds.photosight.compose.ui.isolate
 import ds.photosight.compose.ui.model.MenuItemState
 import ds.photosight.compose.ui.model.MenuState
+import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.pagedItems
 import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
 import ds.photosight.compose.ui.screen.navigation.MainViewModel
+import ds.photosight.compose.ui.theme.PhotosightTheme
+import ds.photosight.compose.ui.widget.LazyStaggeredGrid2
+import ds.photosight.compose.ui.widget.StaggeredVerticalGrid
 import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
 import ds.photosight.compose.util.rememberDerived
-import ds.photosight.parser.PhotoInfo
+import kotlinx.coroutines.flow.flowOf
 import kotlin.math.roundToInt
 
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun GalleryScreen(mainViewModel: MainViewModel) {
-    val viewModel: GalleryViewModel = viewModel()
+    logCompositions(msg = "root")
+    val viewModel: GalleryViewModel = hiltViewModel()
     mainViewModel.setMenuStateFlow(viewModel.menuStateFlow)
 
     val menuState by viewModel.menuStateFlow.collectAsState()
     val snackbarEvent by viewModel.retryEvent.collectAsState(null)
 
     val photosStream = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
-
-    LaunchedEffect(photosStream.loadState) {
-        photosStream.loadState.let { state ->
-            viewModel.updateLoadingState(state)
-            viewModel.updateErrorState(state)
-        }
-    }
-
     val title = viewModel.title.collectAsState("")
 
     val resources = LocalContext.current.resources
@@ -62,6 +65,23 @@ fun GalleryScreen(mainViewModel: MainViewModel) {
                 if ("/" in key) key
                 else resources.getString(R.string.page_, key)
             }
+        }
+    }
+
+    //produceState(initialValue = , key1 = , key2 = , key3 = , producer = )()
+
+/*    val loadState = snapshotFlow { photosStream.loadState }
+        .onEach { }
+        .collectAsState(initial = null)*/
+
+    /*val state = produceState<CombinedLoadStates?>(null) {
+        value = photosStream.loadState
+    }*/
+
+    isolate({ photosStream.loadState }) { state ->
+        LaunchedEffect(state) {
+            viewModel.updateLoadingState(state)
+            viewModel.updateErrorState(state)
         }
     }
 
@@ -75,27 +95,39 @@ fun GalleryScreen(mainViewModel: MainViewModel) {
         onPhotoClicked = { viewModel.onPhotoClicked(it) },
         snackbarEvent = snackbarEvent,
         onRetry = { photosStream.retry() },
-        isLoading = viewModel.isLoading.value,
+        loadingSlot = { LoadingSlot(viewModel.isLoading.value) },
         onFirstVisibleItem = { viewModel.setFirstVisibleItem(it) }
     )
 }
 
+
+@Composable
+fun LoadingSlot(
+    isLoading: Boolean,
+) {
+    if (isLoading) {
+        logCompositions(msg = "loading")
+        LinearProgressIndicator(color = MaterialTheme.colors.secondary, modifier = Modifier.fillMaxWidth())
+    }
+}
+
 @Composable
 fun GalleryContent(
-    photos: LazyPagingItems<PhotoInfo>,
+    photos: LazyPagingItems<Photo>,
     toolbarTitle: State<String>,
     toolbarSubtitle: String? = null,
     showAboutDialog: MutableState<Boolean>,
     menuState: MenuState,
     onMenuItemSelected: (MenuItemState) -> Unit,
-    onPhotoClicked: (PhotoInfo) -> Unit,
+    onPhotoClicked: (Photo) -> Unit,
     snackbarEvent: RetryEvent?,
     onRetry: () -> Unit,
-    isLoading: Boolean,
-    onFirstVisibleItem: (PhotoInfo) -> Unit,
+    loadingSlot: @Composable () -> Unit,
+    onFirstVisibleItem: (Photo) -> Unit,
 ) {
+    logCompositions(msg = "gallery content")
+
     val nestedScrollConnection = rememberToolbarNestedScrollConnection()
-    val shitPeekHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
     val scaffoldState = rememberBottomSheetScaffoldState()
     val snackbarState = scaffoldState.snackbarHostState
 
@@ -115,12 +147,18 @@ fun GalleryContent(
         }
     }
 
+    var showMenu by remember {
+        mutableStateOf(true)
+    }
+    val shitPeekHeight = if (showMenu) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
+    else 0.dp
+
     BottomSheetScaffold(
         sheetContent = {
             BottomMenu(
                 scaffoldState.bottomSheetState,
                 menuState,
-                onMenuItemSelected
+                onMenuItemSelected,
             )
         },
         scaffoldState = scaffoldState,
@@ -128,8 +166,7 @@ fun GalleryContent(
         sheetShape = MaterialTheme.shapes.large,
         sheetContentColor = MaterialTheme.colors.surface,
         sheetPeekHeight = shitPeekHeight,
-
-        ) {
+    ) {
 
         Box(
             Modifier
@@ -141,7 +178,8 @@ fun GalleryContent(
                 nestedScrollConnection,
                 photos,
                 onPhotoClicked,
-                onFirstVisibleItem
+                onFirstVisibleItem,
+                { scrollingUp -> showMenu = scrollingUp }
             )
             MainToolbar(
                 toolbarTitle,
@@ -150,9 +188,7 @@ fun GalleryContent(
                 { showAboutDialog.value = true }
             )
 
-            if (isLoading) {
-                LinearProgressIndicator(color = MaterialTheme.colors.secondary, modifier = Modifier.fillMaxWidth())
-            }
+            loadingSlot()
 
             if (showAboutDialog.value) {
                 AboutDialog(onDismiss = {
@@ -162,32 +198,24 @@ fun GalleryContent(
 
         }
     }
-
-
 }
 
 @Composable
 private fun LazyGrid(
     nestedScrollConnection: ToolbarNestedScrollConnection,
-    photos: LazyPagingItems<PhotoInfo>,
-    onPhotoClicked: (PhotoInfo) -> Unit,
-    onFirstVisibleItem: (PhotoInfo) -> Unit,
-    //onDirection:(ScrollDirection)->Unit,
+    photos: LazyPagingItems<Photo>,
+    onPhotoClicked: (Photo) -> Unit,
+    onFirstVisibleItem: (Photo) -> Unit,
+    onScrollingUp: (Boolean) -> Unit,
 ) {
     logCompositions(msg = "lazy grid")
     val state: LazyListState = rememberLazyListState()
 
-   /* val scrollingDown = remember { mutableStateOf(false) }
-
-
-    val scrollingDown = produceState(initialValue = false) {
-        var previousIndex = state.firstVisibleItemScrollOffset
-        snapshotFlow { state.firstVisibleItemScrollOffset }
-            .collect { index ->
-                value = index < previousIndex
-                previousIndex = index
-            }
-    }*/
+    val scrollingUp by state.isScrollingUp()
+    LaunchedEffect(scrollingUp) {
+        log.v("scroll direction: $scrollingUp")
+        onScrollingUp(scrollingUp)
+    }
 
     val firstItem by rememberDerived(state) {
         state.firstVisibleItemIndex.let {
@@ -204,19 +232,59 @@ private fun LazyGrid(
         contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight),
         cells = StaggeredCells.Fixed(2)
     ) {
-
         pagedItems(photos) { item ->
             Thumb(item, onPhotoClicked)
+        }
+    }
+
+/*    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight),
+    ) {
+        pagedItems(photos, { it }) { item ->
+            logCompositions(msg = "paged items ${item.id}")
+            Thumb(item, onPhotoClicked)
+        }
+    }*/
+
+}
+
+@Composable
+private fun LazyListState.isScrollingUp(): State<Boolean> {
+    var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
+    return remember(this) {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
         }
     }
 }
 
 
-/*
+@SuppressLint("UnrememberedMutableState")
 @Preview(showSystemUi = true)
 @Composable
 fun GalleryPreview() {
     PhotosightTheme {
-        GalleryContent("Hello", "World", mutableStateOf(false))
+        GalleryContent(
+            flowOf(PagingData.empty<Photo>()).collectAsLazyPagingItems(),
+            mutableStateOf("World"),
+            "world",
+            mutableStateOf(false),
+            MenuState(),
+            {},
+            {},
+            null,
+            {},
+            { },
+            {}
+        )
     }
-}*/
+}

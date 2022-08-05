@@ -12,6 +12,7 @@ import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
 import ds.photosight.compose.ui.model.MenuItemState
 import ds.photosight.compose.ui.model.MenuState
+import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.model.PhotosFilter
 import ds.photosight.compose.usecase.CheckVersionUseCase
 import ds.photosight.compose.util.AppNameProvider
@@ -37,7 +38,7 @@ class GalleryViewModel @Inject constructor(
     val showAboutDialog = mutableStateOf(checkVersionUseCase.shouldShowAboutDialog())
 
     val isLoading = mutableStateOf(true)
-    val firstVisibleItem: MutableState<PhotoInfo?> = mutableStateOf(null)
+    val firstVisibleItem: MutableState<Photo?> = mutableStateOf(null)
 
     val retryEvent = SingleEvent<RetryEvent>()
 
@@ -89,7 +90,7 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun onPhotoClicked(photo: PhotoInfo) {
+    fun onPhotoClicked(photo: Photo) {
         log.v("todo")
     }
 
@@ -107,7 +108,7 @@ class GalleryViewModel @Inject constructor(
         isLoading.value = loading
     }
 
-    fun setFirstVisibleItem(photoInfo: PhotoInfo) {
+    fun setFirstVisibleItem(photoInfo: Photo) {
         firstVisibleItem.value = photoInfo
     }
 

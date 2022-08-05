@@ -16,6 +16,6 @@ inline fun logCompositions(msg: String) {
     if (BuildConfig.DEBUG) {
         val ref = remember { Ref(0) }
         SideEffect { ref.value++ }
-        Log.d("RECOMPOSED", "Compositions: $msg ${ref.value}")
+        Log.d("RECOMPOSED", "Compositions: $msg (${ref.value} times)")
     }
 }

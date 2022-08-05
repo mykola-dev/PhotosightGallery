@@ -54,6 +54,7 @@ android {
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
@@ -177,6 +178,7 @@ dependencies {
 
     // network
     implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation("com.github.skydoves:landscapist-glide:1.6.0")
 
     // prefs
     implementation("com.chibatching.kotpref:kotpref:2.11.0")                                    // https://github.com/chibatching/Kotpref

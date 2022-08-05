@@ -3,26 +3,27 @@ package ds.photosight.compose.ui.screen.navigation
 import androidx.lifecycle.*
 import androidx.paging.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ds.photosight.compose.data.asUiModel
 import ds.photosight.compose.repo.PAGE_SIZE
-import ds.photosight.compose.repo.PhotosPagingSource
 import ds.photosight.compose.repo.PhotosPagingSourceFactory
 import ds.photosight.compose.ui.BaseViewModel
 import ds.photosight.compose.ui.model.MenuState
-import ds.photosight.parser.PhotoInfo
+import ds.photosight.compose.ui.model.Photo
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
+//@Stable
 class MainViewModel @Inject constructor(
     log: Timber.Tree,
     private val photosPagingSourceFactory: PhotosPagingSourceFactory,
 ) : BaseViewModel(log) {
 
     private lateinit var menu: Flow<MenuState>
-    private val _photosPagedLiveData = MutableStateFlow<PagingData<PhotoInfo>>(PagingData.empty())
-    val photosPagedFlow: Flow<PagingData<PhotoInfo>> = _photosPagedLiveData
+    private val _photosPagedLiveData = MutableStateFlow<PagingData<Photo>>(PagingData.empty())
+    val photosPagedFlow: Flow<PagingData<Photo>> = _photosPagedLiveData
 
     fun setMenuStateFlow(menuState: Flow<MenuState>) {
         if (!::menu.isInitialized) {
@@ -37,7 +38,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun providePhotosStream(menuState: MenuState): Flow<PagingData<PhotoInfo>> = flow {
+    private fun providePhotosStream(menuState: MenuState): Flow<PagingData<Photo>> = flow {
         emit(PagingData.empty())    // cleanup list first
         if (menuState.selectedItem == null) return@flow
         emitAll(
@@ -49,6 +50,7 @@ class MainViewModel @Inject constructor(
                 }
             )
                 .flow
+                .map { it.map {  it.asUiModel() }}
                 .cachedIn(viewModelScope)
         )
     }

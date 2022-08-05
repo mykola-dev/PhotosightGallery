@@ -73,16 +73,19 @@ fun BottomMenu(
         ) {
             val coroutineScope = rememberCoroutineScope()
             tabData.forEach { item ->
-                Tab(modifier = Modifier, selected = tabIndex == item.ordinal, onClick = {
-                    coroutineScope.launch {
-                        if (shitState.isCollapsed) {
-                            pagerState.scrollToPage(item.ordinal)
-                            shitState.expand()
-                        } else {
-                            pagerState.animateScrollToPage(item.ordinal)
+                Tab(
+                    selected = tabIndex == item.ordinal,
+                    onClick = {
+                        coroutineScope.launch {
+                            if (shitState.isCollapsed) {
+                                pagerState.scrollToPage(item.ordinal)
+                                shitState.expand()
+                            } else {
+                                pagerState.animateScrollToPage(item.ordinal)
+                            }
                         }
-                    }
-                }, text = { Text(text = stringResource(id = item.resId).uppercase()) })
+                    },
+                    text = { Text(stringResource(item.resId).uppercase()) })
             }
         }
         val pagerPadding = remember(collapsedFraction) { nbHeight * (1 - collapsedFraction) }
