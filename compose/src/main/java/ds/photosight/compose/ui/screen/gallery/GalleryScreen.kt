@@ -55,7 +55,7 @@ fun GalleryScreen(mainViewModel: MainViewModel) {
     val menuState by viewModel.menuStateFlow.collectAsState()
     val snackbarEvent by viewModel.retryEvent.collectAsState(null)
 
-    val photosStream = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
+    val photosStream: LazyPagingItems<Photo> = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
     val title = viewModel.title.collectAsState("")
 
     val resources = LocalContext.current.resources

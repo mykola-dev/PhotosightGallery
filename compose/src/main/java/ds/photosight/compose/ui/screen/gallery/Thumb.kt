@@ -73,8 +73,8 @@ fun Thumb(
         //model = R.drawable.shrek,
         model = ImageRequest.Builder(LocalContext.current)
             .data(url)
-            .size(200) // Set the target size to load the image at.
-            .crossfade(500)
+            //.size(200) // Set the target size to load the image at.
+            .crossfade(200)
             .build(),
         loading = {
             val infiniteTransition = rememberInfiniteTransition()

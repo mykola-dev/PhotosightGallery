@@ -45,12 +45,12 @@ fun BottomMenu(
     }
 
     Column {
-        val tabData: List<MenuTabs> = remember {
+        /*val tabData: List<MenuTabs> = remember {
             listOf(
                 MenuTabs.RATINGS,
                 MenuTabs.CATEGORIES,
             )
-        }
+        }*/
         val pagerState = rememberPagerState(initialPage = 0)
         val tabIndex = pagerState.currentPage
 
@@ -72,7 +72,7 @@ fun BottomMenu(
             modifier = Modifier.padding(top = tabsPadding)
         ) {
             val coroutineScope = rememberCoroutineScope()
-            tabData.forEach { item ->
+            MenuTabs.values().forEach { item ->
                 Tab(
                     selected = tabIndex == item.ordinal,
                     onClick = {
@@ -92,10 +92,13 @@ fun BottomMenu(
         Spacer(modifier = Modifier.height(pagerPadding))
 
         HorizontalPager(
-            count = MenuTabs.values().size, state = pagerState, modifier = Modifier.fillMaxHeight(), verticalAlignment = Alignment.Top
+            count = MenuTabs.values().size,
+            state = pagerState,
+            //modifier = Modifier.fillMaxHeight(),
+            verticalAlignment = Alignment.Top,
         ) { index ->
             LazyColumn(content = {
-                val currTab = MenuTabs.values()[pagerState.currentPage]
+                val currTab = MenuTabs.values()[index]
                 val menuItems = when (currTab) {
                     MenuTabs.RATINGS -> menuState.ratings
                     MenuTabs.CATEGORIES -> menuState.categories
@@ -112,7 +115,7 @@ fun BottomMenu(
 fun MenuItem(model: MenuItemState, isSelected: Boolean, onMenuItemSelected: (MenuItemState) -> Unit) {
     val transition = updateTransition(isSelected, "selector")
 
-    val bgColor by transition.animateColor({ tween(if (this.targetState) 0 else 500) }, "bg color") { selected ->
+    val bgColor by transition.animateColor({ tween(if (targetState) 0 else 500) }, "bg color") { selected ->
         if (selected) Palette.surface else Color.Transparent
     }
     val textColor = if (isSelected) Palette.primary else Palette.surface
