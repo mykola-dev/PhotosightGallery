@@ -130,7 +130,7 @@ dependencies {
     //val navVersion: String by rootProject.extra
     val composeVersion = "1.2.0"
     val accompanist = "0.24.13-rc"
-    val composeDestinations = "1.6.13-beta"
+    val composeDestinations = "1.6.15-beta"
 
     implementation(project(":parser"))
 

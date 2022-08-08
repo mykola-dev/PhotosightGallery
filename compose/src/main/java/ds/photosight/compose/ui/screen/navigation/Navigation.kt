@@ -1,19 +1,26 @@
 package ds.photosight.compose.ui.screen.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.navigation.dependency
 import ds.photosight.compose.ui.DebugView
-import ds.photosight.compose.ui.screen.gallery.GalleryScreen
+import ds.photosight.compose.ui.NavGraphs
 import ds.photosight.compose.ui.theme.PhotosightTheme
 
 @Composable
 fun ComposeApp() {
 
-    val mainViewModel: MainViewModel = viewModel()
+    val mainViewModel: MainViewModel = hiltViewModel()
 
-    // todo navigation
     PhotosightTheme {
-        GalleryScreen(mainViewModel)
+        //GalleryScreen(mainViewModel)
         //DebugView()
+        DestinationsNavHost(
+            navGraph = NavGraphs.root,
+            dependenciesContainerBuilder = {
+                dependency(mainViewModel)
+            }
+        )
     }
 }

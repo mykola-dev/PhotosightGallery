@@ -5,13 +5,12 @@ import androidx.paging.PagingState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import ds.photosight.compose.data.asUiModel
 import ds.photosight.compose.ui.model.CategoryMenuItemState
 import ds.photosight.compose.ui.model.MenuState
+import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.model.RatingMenuItemState
 import ds.photosight.parser.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 const val PAGE_SIZE = 24
 
@@ -23,9 +22,9 @@ interface PhotosPagingSourceFactory {
 class PhotosPagingSource @AssistedInject constructor(
     @Assisted private val menuState: MenuState,
     private val photosightRepo: PhotosightRepo,
-) : PagingSource<Int, PhotoInfo>() {
+) : PagingSource<Int, Photo>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoInfo> = try {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> = try {
         val key = params.key ?: 1
 
         val request = buildRequest(key)
@@ -40,7 +39,8 @@ class PhotosPagingSource @AssistedInject constructor(
         ) key + 1
         else null
 
-        LoadResult.Page(page, prevKey, nextKey)
+        val data = page.mapIndexed { idx, item -> item.asUiModel(idx + (key - 1) * PAGE_SIZE) }
+        LoadResult.Page(data, prevKey, nextKey)
     } catch (e: Exception) {
         e.printStackTrace()
         LoadResult.Error(e)
@@ -70,7 +70,7 @@ class PhotosPagingSource @AssistedInject constructor(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, PhotoInfo>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
         throw UnsupportedOperationException("not implemented")
     }
 }

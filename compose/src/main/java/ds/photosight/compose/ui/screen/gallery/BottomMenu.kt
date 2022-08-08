@@ -45,12 +45,6 @@ fun BottomMenu(
     }
 
     Column {
-        /*val tabData: List<MenuTabs> = remember {
-            listOf(
-                MenuTabs.RATINGS,
-                MenuTabs.CATEGORIES,
-            )
-        }*/
         val pagerState = rememberPagerState(initialPage = 0)
         val tabIndex = pagerState.currentPage
 
@@ -74,7 +68,7 @@ fun BottomMenu(
             val coroutineScope = rememberCoroutineScope()
             MenuTabs.values().forEach { item ->
                 Tab(
-                    selected = tabIndex == item.ordinal,
+                    selected = false,   // this isn't relevant
                     onClick = {
                         coroutineScope.launch {
                             if (shitState.isCollapsed) {

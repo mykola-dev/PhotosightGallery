@@ -37,8 +37,16 @@ fun <T : Any> LazyGridScope.pagedItems(
  */
 @Composable
 fun <T> isolate(
-    executable: @Composable () -> T,
+    executable: (@Composable () -> T),
     content: @Composable (T) -> Unit
 ) {
     content(executable())
 }
+
+@Composable
+fun isolate(
+    content: @Composable () -> Unit
+) {
+    content()
+}
+

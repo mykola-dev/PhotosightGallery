@@ -105,7 +105,7 @@ fun Thumb(
             .fillMaxWidth()
             .padding(1.dp)
             .clickable { onPhotoClicked(item) }
-            .animateContentSize()
+            //.animateContentSize()
     )
 
     /* Image(

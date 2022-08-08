@@ -16,6 +16,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import ds.photosight.compose.ui.model.MenuTabs
 import ds.photosight.compose.util.log
+import ds.photosight.compose.util.logCompositions
 import ds.photosight.compose.util.rememberDerived
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -50,39 +51,48 @@ fun DebugView() {
 
      SideEffect {
      }*/
-
-    Column(Modifier.systemBarsPadding()) {
-
-        val tabIndex = 0
-        /*TabRow(selectedTabIndex = tabIndex) {
-            MenuTabs.values().forEach {
-                Tab(
-                    selected = false,
-                    onClick = { },
-                    text = { Text(text = it.name) }
-                )
-            }
-        }*/
-        val pagerState = rememberPagerState()
-        HorizontalPager(
-            count = MenuTabs.values().size,
-            state = pagerState
-        ) {
-
-            val color = if (it == 0) Color.Red
-            else Color.Blue
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(color)
-            )
+    var restarter by remember { mutableStateOf(0) }
+    LaunchedEffect(restarter) {
+        while (true) {
+            delay(1000)
+            restarter++
         }
+    }
+    val counter = produceState(0) {
+        log.v("producer restarted")
+        while (true) {
+            delay(2000)
+            value++
+            log.d("produced $value")
+        }
+    }
+
+    val derived = derivedStateOf {
+        log.d("inside derived")
+        Data("counter ${counter.value}")
+    }
+    logCompositions("root.  counter=${counter.hashCode()} derived=${derived.hashCode()}")
+
+    val new = restarter
+    log.v("restarter $new")
+    isolate {
+        logCompositions(msg = "isolate")
+        Widget(derived.value)
     }
 }
 
-@Composable
-fun Widget(text: String) {
-    log.v("recomposed")
+class Data(
+    var string: String
+)
 
-    Text(text = text)
+//@Stable
+data class Data2(
+    val string: String
+)
+
+@Composable
+fun Widget(data: Data) {
+    logCompositions("widget")
+
+    Text(text = data.string, color = Color.White)
 }

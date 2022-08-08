@@ -3,6 +3,8 @@
 package ds.photosight.compose.ui.screen.gallery
 
 import android.annotation.SuppressLint
+import android.os.Looper
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -25,9 +27,13 @@ import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.ToolbarNestedScrollConnection
+import ds.photosight.compose.ui.destinations.ViewerScreenDestination
 import ds.photosight.compose.ui.dialog.AboutDialog
+import ds.photosight.compose.ui.events.CollectEvents
+import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.isolate
 import ds.photosight.compose.ui.model.MenuItemState
 import ds.photosight.compose.ui.model.MenuState
@@ -47,36 +53,20 @@ import kotlin.math.roundToInt
 @RootNavGraph(start = true)
 @Destination
 @Composable
-fun GalleryScreen(mainViewModel: MainViewModel) {
+fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel) {
     logCompositions(msg = "root")
     val viewModel: GalleryViewModel = hiltViewModel()
     mainViewModel.setMenuStateFlow(viewModel.menuStateFlow)
 
+    val event: State<UiEvent?> = viewModel.events.collectAsState(null)
+
     val menuState by viewModel.menuStateFlow.collectAsState()
-    val snackbarEvent by viewModel.retryEvent.collectAsState(null)
+    val galleryState by viewModel.galleryState.collectAsState()
+    val selectedPhoto = mainViewModel.selectedPhoto
+    log.v("selected photo=$selectedPhoto")
 
     val photosStream: LazyPagingItems<Photo> = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
-    val title = viewModel.title.collectAsState("")
-
-    val resources = LocalContext.current.resources
-    val subtitle by remember(viewModel.firstVisibleItem) {
-        derivedStateOf {
-            viewModel.firstVisibleItem.value?.paginationKey?.let { key ->
-                if ("/" in key) key
-                else resources.getString(R.string.page_, key)
-            }
-        }
-    }
-
-    //produceState(initialValue = , key1 = , key2 = , key3 = , producer = )()
-
-/*    val loadState = snapshotFlow { photosStream.loadState }
-        .onEach { }
-        .collectAsState(initial = null)*/
-
-    /*val state = produceState<CombinedLoadStates?>(null) {
-        value = photosStream.loadState
-    }*/
+    //val title = viewModel.title.collectAsState("")
 
     isolate({ photosStream.loadState }) { state ->
         LaunchedEffect(state) {
@@ -87,24 +77,29 @@ fun GalleryScreen(mainViewModel: MainViewModel) {
 
     GalleryContent(
         photos = photosStream,
-        toolbarTitle = title,
-        toolbarSubtitle = subtitle,
-        showAboutDialog = viewModel.showAboutDialog,
         menuState = menuState,
+        galleryState = galleryState,
+        selectedPhoto = selectedPhoto,
         onMenuItemSelected = { viewModel.onMenuSelected(it) },
-        onPhotoClicked = { viewModel.onPhotoClicked(it) },
-        snackbarEvent = snackbarEvent,
-        onRetry = { photosStream.retry() },
-        loadingSlot = { LoadingSlot(viewModel.isLoading.value) },
-        onFirstVisibleItem = { viewModel.setFirstVisibleItem(it) }
+        onPhotoClicked = {
+            log.v("index=${it.index}")
+            mainViewModel.onPhotoSelected(it.index)
+            navigator.navigate(ViewerScreenDestination)
+        },
+        event = event,
+        onRetry = photosStream::retry,
+        loadingSlot = { LoadingSlot(galleryState.isLoading) },
+        onFirstVisibleItem = { state ->
+            state.value?.let { viewModel.setFirstVisibleItem(it) }
+        },
+        onShowAboutDialog = viewModel::onShowAboutDialog,
+        onDismissAboutDialog = viewModel::onDismissAboutDialog
     )
 }
 
 
 @Composable
-fun LoadingSlot(
-    isLoading: Boolean,
-) {
+fun LoadingSlot(isLoading: Boolean) {
     if (isLoading) {
         logCompositions(msg = "loading")
         LinearProgressIndicator(color = MaterialTheme.colors.secondary, modifier = Modifier.fillMaxWidth())
@@ -114,16 +109,17 @@ fun LoadingSlot(
 @Composable
 fun GalleryContent(
     photos: LazyPagingItems<Photo>,
-    toolbarTitle: State<String>,
-    toolbarSubtitle: String? = null,
-    showAboutDialog: MutableState<Boolean>,
+    galleryState: GalleryState,
     menuState: MenuState,
+    selectedPhoto: Int?,
+    event: State<UiEvent?>,
     onMenuItemSelected: (MenuItemState) -> Unit,
     onPhotoClicked: (Photo) -> Unit,
-    snackbarEvent: RetryEvent?,
     onRetry: () -> Unit,
     loadingSlot: @Composable () -> Unit,
-    onFirstVisibleItem: (Photo) -> Unit,
+    onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
+    onShowAboutDialog: () -> Unit,
+    onDismissAboutDialog: () -> Unit
 ) {
     logCompositions(msg = "gallery content")
 
@@ -133,24 +129,29 @@ fun GalleryContent(
 
     val message = stringResource(id = R.string.loading_failed)
     val retryText = stringResource(id = R.string.retry)
-    snackbarEvent?.let { event ->
-        LaunchedEffect(snackbarState, event) {
-            log.v("new event $event")
-            val result = scaffoldState.snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = retryText
-            )
-            when (result) {
-                SnackbarResult.Dismissed -> {}
-                SnackbarResult.ActionPerformed -> onRetry()
+
+    val context = LocalContext.current
+    LaunchedEffect(event.value) {
+        val e = event.value ?: return@LaunchedEffect
+        log.v("on new event: $event")
+        when (e) {
+            is UiEvent.Toast -> Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            is UiEvent.Retry -> {
+                val result = snackbarState.showSnackbar(
+                    message = message,
+                    actionLabel = retryText
+                )
+                when (result) {
+                    SnackbarResult.Dismissed -> {}
+                    SnackbarResult.ActionPerformed -> onRetry()
+                }
             }
         }
+
     }
 
-    var showMenu by remember {
-        mutableStateOf(true)
-    }
-    val shitPeekHeight = if (showMenu) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
+    var showMenu by remember { mutableStateOf(true) }
+    val shitPeekHeight = if (showMenu && menuState.selectedItem != null) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
     else 0.dp
 
     BottomSheetScaffold(
@@ -177,23 +178,22 @@ fun GalleryContent(
             LazyGrid(
                 nestedScrollConnection,
                 photos,
+                selectedPhoto,
                 onPhotoClicked,
                 onFirstVisibleItem,
                 { scrollingUp -> showMenu = scrollingUp }
             )
             MainToolbar(
-                toolbarTitle,
-                toolbarSubtitle,
+                galleryState.title,
+                galleryState.subtitle,
                 Modifier.offset { IntOffset(x = 0, y = nestedScrollConnection.toolbarOffsetHeightPx.value.roundToInt()) },
-                { showAboutDialog.value = true }
+                onShowAboutDialog
             )
 
             loadingSlot()
 
-            if (showAboutDialog.value) {
-                AboutDialog(onDismiss = {
-                    showAboutDialog.value = false
-                })
+            if (galleryState.showAboutDialog) {
+                AboutDialog(onDismiss = onDismissAboutDialog)
             }
 
         }
@@ -204,28 +204,29 @@ fun GalleryContent(
 private fun LazyGrid(
     nestedScrollConnection: ToolbarNestedScrollConnection,
     photos: LazyPagingItems<Photo>,
+    selectedPhoto: Int?,
     onPhotoClicked: (Photo) -> Unit,
-    onFirstVisibleItem: (Photo) -> Unit,
+    onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
     onScrollingUp: (Boolean) -> Unit,
 ) {
     logCompositions(msg = "lazy grid")
     val state: LazyListState = rememberLazyListState()
 
+    LaunchedEffect(selectedPhoto) {
+        selectedPhoto?.let { state.scrollToItem(it) }
+    }
     val scrollingUp by state.isScrollingUp()
     LaunchedEffect(scrollingUp) {
         log.v("scroll direction: $scrollingUp")
         onScrollingUp(scrollingUp)
     }
 
-    val firstItem by rememberDerived(state) {
+    val firstItem = rememberDerived(state) {
         state.firstVisibleItemIndex.let {
             if (photos.itemCount > it) photos[it] else null
         }
     }
-
-    LaunchedEffect(firstItem) {
-        firstItem?.let(onFirstVisibleItem)
-    }
+    onFirstVisibleItem(firstItem)
 
     LazyStaggeredGrid(
         state = state,
@@ -268,7 +269,7 @@ private fun LazyListState.isScrollingUp(): State<Boolean> {
 }
 
 
-@SuppressLint("UnrememberedMutableState")
+/*@SuppressLint("UnrememberedMutableState")
 @Preview(showSystemUi = true)
 @Composable
 fun GalleryPreview() {
@@ -279,6 +280,7 @@ fun GalleryPreview() {
             "world",
             mutableStateOf(false),
             MenuState(),
+            0,
             {},
             {},
             null,
@@ -287,4 +289,4 @@ fun GalleryPreview() {
             {}
         )
     }
-}
+}*/

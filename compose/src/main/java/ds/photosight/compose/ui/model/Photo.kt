@@ -1,8 +1,7 @@
 package ds.photosight.compose.ui.model
 
-import ds.photosight.parser.PhotoInfo
-
 data class Photo(
+    val index: Int,
     val id: Int,
     val thumb: String,
     val large: String,

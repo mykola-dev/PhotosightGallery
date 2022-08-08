@@ -17,11 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.spec.DestinationStyle
 import ds.photosight.compose.BuildConfig
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.theme.PhotosightTheme
 import ds.photosight.compose.ui.widget.LinkifyText
 
+@Destination(style = DestinationStyle.Dialog::class)
 @Composable
 fun AboutDialog(onDismiss: () -> Unit) {
     val appVersion = BuildConfig.VERSION_NAME

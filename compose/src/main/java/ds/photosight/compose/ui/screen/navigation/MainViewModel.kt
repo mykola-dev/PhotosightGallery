@@ -26,6 +26,9 @@ class MainViewModel @Inject constructor(
     private val _photosPagedLiveData = MutableStateFlow<PagingData<Photo>>(PagingData.empty())
     val photosPagedFlow: StateFlow<PagingData<Photo>> get() = _photosPagedLiveData
 
+    var selectedPhoto: Int? = 0
+        private set
+
     fun setMenuStateFlow(menuState: Flow<MenuState>) {
         if (!::menu.isInitialized) {
             menu = menuState
@@ -50,9 +53,13 @@ class MainViewModel @Inject constructor(
                 }
             )
                 .flow
-                .map { it.map { it.asUiModel() } }
+                .map { it }
                 .cachedIn(viewModelScope)
         )
+    }
+
+    fun onPhotoSelected(index: Int) {
+        selectedPhoto = index
     }
 
 }

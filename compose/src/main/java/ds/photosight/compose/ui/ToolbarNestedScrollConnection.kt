@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ds.photosight.compose.util.log
 import timber.log.Timber
 
 @Composable
@@ -24,7 +25,7 @@ fun rememberToolbarNestedScrollConnection(): ToolbarNestedScrollConnection {
     val density = LocalDensity.current
 
     return remember(toolbarHeight) {
-        Timber.v("connection created")
+        log.v("connection created")
         ToolbarNestedScrollConnection(toolbarHeight, density)
     }
 }

@@ -2,7 +2,6 @@ package ds.photosight.compose.ui.screen.gallery
 
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
@@ -10,37 +9,37 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ds.photosight.compose.data.toMenuItemState
 import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
+import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.model.MenuItemState
 import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.model.PhotosFilter
 import ds.photosight.compose.usecase.CheckVersionUseCase
+import ds.photosight.compose.usecase.ToolbarDataUseCase
 import ds.photosight.compose.util.AppNameProvider
-import ds.photosight.compose.util.SingleEvent
 import ds.photosight.parser.PhotoCategory
-import ds.photosight.parser.PhotoInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class RetryEvent()
-
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
-    private val appNameProvider: AppNameProvider,
     private val photosightRepo: PhotosightRepo,
+    val toolbarDataUseCase: ToolbarDataUseCase,
     checkVersionUseCase: CheckVersionUseCase,
     log: Timber.Tree
 ) : BaseViewModel(log) {
 
-    val showAboutDialog = mutableStateOf(checkVersionUseCase.shouldShowAboutDialog())
-
-    val isLoading = mutableStateOf(true)
-    val firstVisibleItem: MutableState<Photo?> = mutableStateOf(null)
-
-    val retryEvent = SingleEvent<RetryEvent>()
+    private val _galleryState = MutableStateFlow(
+        GalleryState(
+            title = toolbarDataUseCase.getTitle(),
+            subtitle = toolbarDataUseCase.getSubtitle(),
+            showAboutDialog = checkVersionUseCase.shouldShowAboutDialog()
+        )
+    )
+    val galleryState: StateFlow<GalleryState> = _galleryState.asStateFlow()
 
     private val categoriesFlow: Flow<List<PhotoCategory>> = flow {
         emit(photosightRepo.getCategories())
@@ -51,13 +50,12 @@ class GalleryViewModel @Inject constructor(
         true
     }
 
-    private val mutableMenuStateFlow: MutableStateFlow<MenuState> = MutableStateFlow(MenuState())
+    private val _menuStateFlow: MutableStateFlow<MenuState> = MutableStateFlow(MenuState())
+    val menuStateFlow: StateFlow<MenuState> = _menuStateFlow.asStateFlow()
 
-    val menuStateFlow: StateFlow<MenuState> = mutableMenuStateFlow.asStateFlow()
-
-    val title: Flow<String> = menuStateFlow.map {
+/*    val title: Flow<String> = menuStateFlow.map {
         it.selectedItem?.title ?: appNameProvider()
-    }
+    }*/
 
     init {
         launch {
@@ -66,14 +64,22 @@ class GalleryViewModel @Inject constructor(
                     categories = categories.map { it.toMenuItemState() },
                     ratings = photosightRepo.getRatingsList(),
                 )
-                mutableMenuStateFlow.value = menuState
+                _menuStateFlow.value = menuState
             }
         }
+        launch {
+            menuStateFlow.collect { menu ->
+                _galleryState.update {
+                    it.copy(title = toolbarDataUseCase.getTitle(menu))
+                }
+            }
+        }
+
     }
 
 
     fun onMenuSelected(item: MenuItemState) {
-        mutableMenuStateFlow.update { state ->
+        _menuStateFlow.update { state ->
             state.copy(
                 selectedItem = item,
                 bottomSheetState = BottomSheetValue.Collapsed,
@@ -82,7 +88,7 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun onFilterChanged(filter: PhotosFilter) {
-        mutableMenuStateFlow.update { state ->
+        _menuStateFlow.update { state ->
             when (filter) {
                 is PhotosFilter.Categories -> state.copy(categoriesFilter = filter)
                 else -> error("not supported")
@@ -90,13 +96,9 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun onPhotoClicked(photo: Photo) {
-        log.v("todo")
-    }
-
     fun updateErrorState(state: CombinedLoadStates) {
         val hasError = state.refresh is LoadState.Error || state.append is LoadState.Error || state.prepend is LoadState.Error
-        if (hasError) retryEvent(RetryEvent())
+        if (hasError) event(UiEvent.Retry)
     }
 
     fun updateLoadingState(state: CombinedLoadStates) {
@@ -105,12 +107,22 @@ class GalleryViewModel @Inject constructor(
             || state.prepend is LoadState.Loading
             || menuStateFlow.value.selectedItem == null
 
-        isLoading.value = loading
+        _galleryState.update { it.copy(isLoading = loading) }
     }
 
     fun setFirstVisibleItem(photoInfo: Photo) {
-        firstVisibleItem.value = photoInfo
+        log.v("new first item")
+        _galleryState.update { it.copy(subtitle = toolbarDataUseCase.getSubtitle(photoInfo)) }
     }
+
+    fun onShowAboutDialog() {
+        _galleryState.update { it.copy(showAboutDialog = true) }
+    }
+
+    fun onDismissAboutDialog() {
+        _galleryState.update { it.copy(showAboutDialog = false) }
+    }
+
 
 }
 

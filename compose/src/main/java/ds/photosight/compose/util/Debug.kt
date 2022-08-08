@@ -14,8 +14,8 @@ class Ref(var value: Int)
 @Composable
 inline fun logCompositions(msg: String) {
     if (BuildConfig.DEBUG) {
-        val ref = remember { Ref(0) }
+        val ref = remember { Ref(1) }
         SideEffect { ref.value++ }
-        Log.d("RECOMPOSED", "Compositions: $msg (${ref.value} times)")
+        Log.d("RECOMPOSED", "==> $msg (${ref.value} times)")
     }
 }
