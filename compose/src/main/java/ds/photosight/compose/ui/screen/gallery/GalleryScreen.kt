@@ -2,27 +2,23 @@
 
 package ds.photosight.compose.ui.screen.gallery
 
-import android.annotation.SuppressLint
-import android.os.Looper
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells
 import com.ramcosta.composedestinations.annotation.Destination
@@ -32,22 +28,16 @@ import ds.photosight.compose.R
 import ds.photosight.compose.ui.ToolbarNestedScrollConnection
 import ds.photosight.compose.ui.destinations.ViewerScreenDestination
 import ds.photosight.compose.ui.dialog.AboutDialog
-import ds.photosight.compose.ui.events.CollectEvents
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.isolate
-import ds.photosight.compose.ui.model.MenuItemState
-import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.pagedItems
 import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
 import ds.photosight.compose.ui.screen.navigation.MainViewModel
-import ds.photosight.compose.ui.theme.PhotosightTheme
-import ds.photosight.compose.ui.widget.LazyStaggeredGrid2
-import ds.photosight.compose.ui.widget.StaggeredVerticalGrid
+import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
 import ds.photosight.compose.util.rememberDerived
-import kotlinx.coroutines.flow.flowOf
 import kotlin.math.roundToInt
 
 @RootNavGraph(start = true)
@@ -95,6 +85,11 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         onShowAboutDialog = viewModel::onShowAboutDialog,
         onDismissAboutDialog = viewModel::onDismissAboutDialog
     )
+
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setSystemBarsColor(color = Palette.translucent)
+    }
 }
 
 

@@ -3,8 +3,8 @@ package ds.photosight.compose.usecase
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ds.photosight.compose.R
-import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.model.Photo
+import ds.photosight.compose.ui.screen.gallery.MenuState
 import ds.photosight.compose.util.AppNameProvider
 import javax.inject.Inject
 

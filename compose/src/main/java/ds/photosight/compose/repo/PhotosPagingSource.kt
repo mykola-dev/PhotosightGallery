@@ -6,10 +6,10 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ds.photosight.compose.data.asUiModel
-import ds.photosight.compose.ui.model.CategoryMenuItemState
-import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.model.Photo
-import ds.photosight.compose.ui.model.RatingMenuItemState
+import ds.photosight.compose.ui.screen.gallery.CategoryMenuItemState
+import ds.photosight.compose.ui.screen.gallery.MenuState
+import ds.photosight.compose.ui.screen.gallery.RatingMenuItemState
 import ds.photosight.parser.*
 
 const val PAGE_SIZE = 24

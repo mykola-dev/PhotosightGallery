@@ -1,8 +1,6 @@
 package ds.photosight.compose.ui.screen.gallery
 
 import androidx.compose.material.BottomSheetValue
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,13 +8,10 @@ import ds.photosight.compose.data.toMenuItemState
 import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
 import ds.photosight.compose.ui.events.UiEvent
-import ds.photosight.compose.ui.model.MenuItemState
-import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.model.PhotosFilter
 import ds.photosight.compose.usecase.CheckVersionUseCase
 import ds.photosight.compose.usecase.ToolbarDataUseCase
-import ds.photosight.compose.util.AppNameProvider
 import ds.photosight.parser.PhotoCategory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -27,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
     private val photosightRepo: PhotosightRepo,
-    val toolbarDataUseCase: ToolbarDataUseCase,
+    private val toolbarDataUseCase: ToolbarDataUseCase,
     checkVersionUseCase: CheckVersionUseCase,
     log: Timber.Tree
 ) : BaseViewModel(log) {

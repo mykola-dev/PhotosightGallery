@@ -1,23 +1,25 @@
 package ds.photosight.compose.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
-import ds.photosight.compose.ui.model.MenuTabs
-import ds.photosight.compose.util.log
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.graphics.drawable.toDrawable
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
+import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
+import coil.memory.MemoryCache
+import coil.request.ImageRequest
 import ds.photosight.compose.util.logCompositions
-import ds.photosight.compose.util.rememberDerived
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 
@@ -33,52 +35,61 @@ object DebugVM {
 
 @Composable
 fun DebugView() {
-    /* val state by DebugVM.state.collectAsState(initial = null)
+    val ctx = LocalContext.current
+    LaunchedEffect(Unit) {
+        ctx.imageLoader.diskCache?.clear()
+        ctx.imageLoader.memoryCache?.clear()
+    }
+    val thumb = "https://cdn77-pic.xnxx-cdn.com/videos/thumbs169lll/d6/86/2f/d6862f3667e6eeeec1d468364b47ab59/d6862f3667e6eeeec1d468364b47ab59.17.jpg"
+    val url = "https://media.tits-guru.com/images/3fbca286-7f16-46cb-afab-8782a1384174.jpeg"
+    val placeholderKey = "key"
+    var showSecondImage by remember { mutableStateOf(false) }
+    Column {
+        SubcomposeAsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(thumb)
+                .placeholderMemoryCacheKey(placeholderKey)
+                .build(),
+            contentDescription = null,
+            modifier = Modifier.clickable {
+                Log.v("#", "click")
+                showSecondImage = !showSecondImage
+            }
+        )
 
-     val text by rememberDerived {
-         (state ?: 0) / 100
-     }
+        if (showSecondImage) {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(url)
+                    .placeholderMemoryCacheKey(placeholderKey)
+                    .build(),
+                contentDescription = null,
+            ) {
+                val cacheKey = this.painter.request.placeholderMemoryCacheKey!!
+                Log.v("key", cacheKey.key)
+                val placeholder = painter
+                    .imageLoader
+                    .memoryCache
+                    ?.get(MemoryCache.Key(placeholderKey))  // should be cached but it's null
+                    ?.bitmap
+                    ?.asImageBitmap()
+                Log.v("placeholder", "placeholder=$placeholder")
 
-
-     Box(
-         modifier = Modifier
-             .fillMaxSize()
-             .background(Color.Gray), contentAlignment = Alignment.Center
-     ) {
-         log.v("text=$text")
-         Widget(text = "$text")
-     }
-
-     SideEffect {
-     }*/
-    var restarter by remember { mutableStateOf(0) }
-    LaunchedEffect(restarter) {
-        while (true) {
-            delay(1000)
-            restarter++
+                when (painter.state) {
+                    is AsyncImagePainter.State.Loading -> {
+                        if (placeholder != null)
+                            Image(placeholder, null)   // should show placeholder for a while but it's empty
+                        CircularProgressIndicator()
+                    }
+                    is AsyncImagePainter.State.Success -> {
+                        this.SubcomposeAsyncImageContent()
+                    }
+                    else -> {}
+                }
+            }
         }
     }
-    val counter = produceState(0) {
-        log.v("producer restarted")
-        while (true) {
-            delay(2000)
-            value++
-            log.d("produced $value")
-        }
-    }
 
-    val derived = derivedStateOf {
-        log.d("inside derived")
-        Data("counter ${counter.value}")
-    }
-    logCompositions("root.  counter=${counter.hashCode()} derived=${derived.hashCode()}")
-
-    val new = restarter
-    log.v("restarter $new")
-    isolate {
-        logCompositions(msg = "isolate")
-        Widget(derived.value)
-    }
 }
 
 class Data(

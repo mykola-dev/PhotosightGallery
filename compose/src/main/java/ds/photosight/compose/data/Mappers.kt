@@ -1,7 +1,7 @@
 package ds.photosight.compose.data
 
-import ds.photosight.compose.ui.model.CategoryMenuItemState
 import ds.photosight.compose.ui.model.Photo
+import ds.photosight.compose.ui.screen.gallery.CategoryMenuItemState
 import ds.photosight.parser.PhotoCategory
 import ds.photosight.parser.PhotoInfo
 

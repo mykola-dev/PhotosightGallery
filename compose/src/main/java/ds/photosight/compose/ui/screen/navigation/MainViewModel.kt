@@ -1,18 +1,19 @@
 package ds.photosight.compose.ui.screen.navigation
 
-import androidx.lifecycle.*
-import androidx.paging.*
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ds.photosight.compose.data.asUiModel
 import ds.photosight.compose.repo.PAGE_SIZE
 import ds.photosight.compose.repo.PhotosPagingSourceFactory
 import ds.photosight.compose.ui.BaseViewModel
-import ds.photosight.compose.ui.model.MenuState
 import ds.photosight.compose.ui.model.Photo
+import ds.photosight.compose.ui.screen.gallery.MenuState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import timber.log.Timber
 import javax.inject.Inject
 

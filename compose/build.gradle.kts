@@ -135,7 +135,7 @@ dependencies {
     implementation(project(":parser"))
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
-    implementation("androidx.profileinstaller:profileinstaller:1.2.0")
+    //implementation("androidx.profileinstaller:profileinstaller:1.2.0")
 
 
     // compose
@@ -148,7 +148,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.5.1")
 
     // accompanist https://github.com/google/accompanist
-    //implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanist")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanist")
     implementation("com.google.accompanist:accompanist-pager:$accompanist")
@@ -178,7 +178,6 @@ dependencies {
 
     // network
     implementation("io.coil-kt:coil-compose:2.1.0")
-    implementation("com.github.skydoves:landscapist-glide:1.6.0")
 
     // prefs
     implementation("com.chibatching.kotpref:kotpref:2.11.0")                                    // https://github.com/chibatching/Kotpref

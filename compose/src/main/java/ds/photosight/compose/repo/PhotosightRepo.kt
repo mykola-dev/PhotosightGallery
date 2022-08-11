@@ -2,7 +2,7 @@ package ds.photosight.compose.repo
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
-import ds.photosight.compose.ui.model.RatingMenuItemState
+import ds.photosight.compose.ui.screen.gallery.RatingMenuItemState
 import ds.photosight.parser.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

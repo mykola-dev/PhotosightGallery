@@ -10,6 +10,8 @@ data class Photo(
     val authorName: String,
     val authorUrl: String?,
     val paginationKey: String?,
-)
+) {
+    val cacheKey: String = id.toString()
+}
 
 

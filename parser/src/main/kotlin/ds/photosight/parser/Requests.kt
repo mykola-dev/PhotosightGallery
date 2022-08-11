@@ -1,12 +1,11 @@
 package ds.photosight.parser
 
+import ds.photosight.http_client.runHttpRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -17,8 +16,13 @@ interface Request<T> {
 }
 
 abstract class JsoupRequest<T> : Request<T> {
+    @Deprecated("not relevant")
     private val nudeModeCookie: Pair<String, String> = "show_nude" to "1"
+
+    @Deprecated("not relevant")
     private val adultModeCookie: Pair<String, String> = "adult_mode" to "1"
+
+    @Deprecated("not relevant")
     private val categoryDescriptionCookie: Pair<String, String> = "show_category_description" to "0"
     protected val baseUrl = "https://sight.photo"
 
@@ -31,13 +35,7 @@ abstract class JsoupRequest<T> : Request<T> {
         return elements
     }
 
-    protected fun getDocument(): Document =
-        Jsoup
-            .connect(url)
-            .cookies(cookies + nudeModeCookie + adultModeCookie + categoryDescriptionCookie)
-            .timeout(10000)
-            //.userAgent("Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.129 Mobile Safari/537.36")
-            .get()
+    protected fun getDocument(): Document = Jsoup.parse(runHttpRequest(url))
 
     override val cookies: Map<String, String> = emptyMap()
 }

@@ -14,7 +14,6 @@ fun ComposeApp() {
     val mainViewModel: MainViewModel = hiltViewModel()
 
     PhotosightTheme {
-        //GalleryScreen(mainViewModel)
         //DebugView()
         DestinationsNavHost(
             navGraph = NavGraphs.root,
