@@ -5,12 +5,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.gallery.MenuState
-import ds.photosight.compose.util.AppNameProvider
 import javax.inject.Inject
 
 class ToolbarDataUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val appNameProvider: AppNameProvider,
+    private val appNameProvider: AppNameUseCase,
 ) {
 
     fun getTitle(menuState: MenuState? = null): String = menuState?.selectedItem?.title ?: appNameProvider()

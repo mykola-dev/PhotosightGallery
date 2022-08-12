@@ -60,7 +60,7 @@ Change Log:
 	<string name="categories">Categories</string>
 	<string name="ratings">Ratings</string>
 	<string name="share_subj">Check this out!</string>
-	<string name="share_text">Sent via Photosight Gallery</string>
+	<string name="share_text">Sent with Photosight Gallery</string>
 	<string name="share_link">Share URL</string>
 	<string name="share_img">Share Image</string>
 	<string name="open_in_web_browser">Open in Browser</string>

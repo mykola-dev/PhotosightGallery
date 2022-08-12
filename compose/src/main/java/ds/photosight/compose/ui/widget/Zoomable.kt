@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.IntSize
 import ds.photosight.compose.util.log
 import kotlin.math.abs
 
-fun Modifier.zoomable(imageScale: Float): Modifier = composed {
+fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modifier = composed {
 
     var size by remember { mutableStateOf(IntSize.Zero) }
     var scale by remember { mutableStateOf(1f) }
@@ -26,7 +26,7 @@ fun Modifier.zoomable(imageScale: Float): Modifier = composed {
 
     val transformableState = rememberTransformableState { z, p, r ->
         log.v("zoom=$z pan=$p rotate=$r")
-        scale += z - 1f
+        scale *= z
         pan += p
         angle += r
     }
@@ -44,11 +44,14 @@ fun Modifier.zoomable(imageScale: Float): Modifier = composed {
     }
 
     val idle by derivedStateOf {
-        transformableState.isTransformInProgress.not() && angle != 0f
+        transformableState.isTransformInProgress.not() //&& angle != 0f
     }
 
     if (idle) {
         log.v("idle")
+        if (scale < 1.1) {
+            pan = Offset.Zero
+        }
         angle = 0f
         scale = scale.coerceAtLeast(1f)
     }
@@ -76,6 +79,9 @@ fun Modifier.zoomable(imageScale: Float): Modifier = composed {
                     log.v("double tap")
                     fitScreen()
                 },
+                onTap = {
+                    onClicked?.invoke()
+                }
             )
         }
 

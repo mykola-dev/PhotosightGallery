@@ -1,7 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
-import java.io.*
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.io.FilenameFilter
 
 plugins {
     id("com.android.application")
@@ -73,6 +73,7 @@ android {
             "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
             "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-opt-in=coil.annotation.ExperimentalCoilApi",
             "-XXLanguage:+InlineClasses"
         )
 
@@ -146,6 +147,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.5.1")
     implementation("androidx.paging:paging-compose:1.0.0-alpha15")
     implementation("androidx.navigation:navigation-compose:2.5.1")
+    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+
 
     // accompanist https://github.com/google/accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")

@@ -24,10 +24,10 @@ class MainViewModel @Inject constructor(
 ) : BaseViewModel(log) {
 
     private lateinit var menu: Flow<MenuState>
-    private val _photosPagedLiveData = MutableStateFlow<PagingData<Photo>>(PagingData.empty())
-    val photosPagedFlow: StateFlow<PagingData<Photo>> get() = _photosPagedLiveData
+    private val _photosPagedFlow = MutableStateFlow<PagingData<Photo>>(PagingData.empty())
+    val photosPagedFlow: StateFlow<PagingData<Photo>> get() = _photosPagedFlow
 
-    var selectedPhoto: Int? = 0
+    var selected: Int = 0
         private set
 
     fun setMenuStateFlow(menuState: Flow<MenuState>) {
@@ -36,7 +36,7 @@ class MainViewModel @Inject constructor(
             launch {
                 menuState
                     .flatMapLatest { providePhotosStream(it) }
-                    .collect { _photosPagedLiveData.value = it }
+                    .collect { _photosPagedFlow.value = it }
             }
         }
     }
@@ -60,7 +60,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onPhotoSelected(index: Int) {
-        selectedPhoto = index
+        selected = index
     }
 
 }

@@ -10,39 +10,6 @@ import androidx.core.content.FileProvider
 import ds.photosight.compose.R
 import java.io.File
 
-
-fun Context.shareUrl(pageUrl: String) {
-    val share = Intent(Intent.ACTION_SEND)
-    share.type = "text/plain"
-    share.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subj))
-    share.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + "\n" + pageUrl)
-    startActivity(Intent.createChooser(share, getString(R.string.share_link)))
-}
-
-suspend fun Context.shareImage(imageUrl: String) {
-    val file = loadImageFile(imageUrl)
-    val uri = FileProvider.getUriForFile(applicationContext, packageName, file)
-    val sendIntent: Intent = Intent().apply {
-        action = Intent.ACTION_SEND
-        type = "image/jpeg"
-        putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text))
-        putExtra(Intent.EXTRA_STREAM, uri)
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-    }
-
-    val shareIntent = Intent.createChooser(sendIntent, null)
-    startActivity(shareIntent)
-}
-
-fun loadImageFile(imageUrl: String): File {
-    TODO()
-}
-
-fun Context.openInBrowser(url: String) {
-    val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    startActivity(i)
-}
-
 class SaveImage : ActivityResultContract<String, Uri?>() {
     @CallSuper
     override fun createIntent(context: Context, input: String): Intent = Intent(Intent.ACTION_CREATE_DOCUMENT)

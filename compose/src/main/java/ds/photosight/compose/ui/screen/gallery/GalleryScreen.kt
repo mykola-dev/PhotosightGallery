@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -52,7 +51,7 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
 
     val menuState by viewModel.menuStateFlow.collectAsState()
     val galleryState by viewModel.galleryState.collectAsState()
-    val selectedPhoto = mainViewModel.selectedPhoto
+    val selectedPhoto = mainViewModel.selected
     log.v("selected photo=$selectedPhoto")
 
     val photosStream: LazyPagingItems<Photo> = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
