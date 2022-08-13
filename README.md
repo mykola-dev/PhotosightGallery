@@ -7,12 +7,16 @@ Photosight Gallery is an easy way to browse photos from https://sight.photo on y
 
 <img src="media/screenshot6.png" width=25%> <img src="media/screenshot1.png" width=25%> <img src="media/screenshot4.png" width=25%> <img src="media/screenshot5.png" width=25%> <img src="media/screenshot3.png" width=25%> <img src="media/screenshot2.png" width=25%>
 
-### Powered by:  
+### Powered by:
 Kotlin  
-Coroutines  
-Jsoup  
-AndroidX Architecture Components  
-AndroidX Paging 3 Library  
-AndroidX Navigation  
+Coroutines and Flows
+Jsoup
+AndroidX Architecture Components
+AndroidX Paging 3 Library
+AndroidX Navigation
 Shared element transitions  
-todo: Jetpack Compose  
+Jetpack Compose (see the compose branch)  
+
+### ToDo:
+Compose: shared element transitions
+Compose: better staggered grid

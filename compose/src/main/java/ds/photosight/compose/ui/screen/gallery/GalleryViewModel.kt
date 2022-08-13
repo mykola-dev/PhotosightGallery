@@ -4,7 +4,7 @@ import androidx.compose.material.BottomSheetValue
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ds.photosight.compose.data.toMenuItemState
+import ds.photosight.compose.data.asUiModel
 import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
 import ds.photosight.compose.ui.events.UiEvent
@@ -56,7 +56,7 @@ class GalleryViewModel @Inject constructor(
         launch {
             categoriesFlow.collect { categories ->
                 val menuState = MenuState(
-                    categories = categories.map { it.toMenuItemState() },
+                    categories = categories.map { it.asUiModel() },
                     ratings = photosightRepo.getRatingsList(),
                 )
                 _menuStateFlow.value = menuState
@@ -93,7 +93,7 @@ class GalleryViewModel @Inject constructor(
 
     fun updateErrorState(state: CombinedLoadStates) {
         val hasError = state.refresh is LoadState.Error || state.append is LoadState.Error || state.prepend is LoadState.Error
-        if (hasError) event(UiEvent.Retry)
+        if (hasError) event(UiEvent.Retry())
     }
 
     fun updateLoadingState(state: CombinedLoadStates) {

@@ -148,7 +148,7 @@ dependencies {
     implementation("androidx.paging:paging-compose:1.0.0-alpha15")
     implementation("androidx.navigation:navigation-compose:2.5.1")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     // accompanist https://github.com/google/accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")

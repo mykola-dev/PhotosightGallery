@@ -12,8 +12,9 @@ class DnsV4() : Dns {
 
 val httpClient = OkHttpClient.Builder().dns(DnsV4()).build()
 
-fun runHttpRequest(url: String): String {
+fun runHttpRequest(url: String, map: Map<String, String>): String {
     val request: Request = Request.Builder()
+        .addHeader("Cookie", map.toList().joinToString("; ", transform = { "${it.first}=${it.second}" }))
         .url(url)
         .build()
     return httpClient.newCall(request).execute().use { response -> response.body!!.string() }

@@ -6,9 +6,10 @@ import ds.photosight.compose.util.logCompositions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 
-sealed interface UiEvent {
+interface UiEvent {
     class Toast(val message: String) : UiEvent
-    object Retry : UiEvent
+    class Retry : UiEvent
+    class OpenDrawer : UiEvent
 }
 
 @Composable

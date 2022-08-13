@@ -31,7 +31,6 @@ data class PhotoDetails(
 ) {
     data class Comment(
         val text: String,
-        val dateRaw: String,
         val timestamp: Instant,
         val author: String,
         val avatar: String,

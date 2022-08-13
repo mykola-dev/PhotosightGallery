@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -16,11 +17,13 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ViewerBottomBar(
     isVisible: Boolean,
+    isExpanded: State<Boolean>,
     onDrawerClick: () -> Unit,
     onDownloadClick: () -> Unit,
     onBrowserClick: () -> Unit,
@@ -33,7 +36,7 @@ fun ViewerBottomBar(
     ) {
         BottomAppBar(
             elevation = 0.dp,
-            cutoutShape = CircleShape,
+            cutoutShape = if (!isExpanded.value) CircleShape else RoundedCornerShape(10),
             contentPadding = WindowInsets.navigationBars.asPaddingValues(),
         ) {
             IconButton(onDrawerClick) {

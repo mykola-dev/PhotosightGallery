@@ -12,7 +12,7 @@ import java.util.*
 interface Request<T> {
     operator fun invoke(): T
     val url: String
-    val cookies: Map<String, String>
+    val extraCookies: Map<String, String>
 }
 
 abstract class JsoupRequest<T> : Request<T> {
@@ -35,9 +35,9 @@ abstract class JsoupRequest<T> : Request<T> {
         return elements
     }
 
-    protected fun getDocument(): Document = Jsoup.parse(runHttpRequest(url))
+    protected fun getDocument(): Document = Jsoup.parse(runHttpRequest(url,extraCookies + nudeModeCookie + adultModeCookie + categoryDescriptionCookie))
 
-    override val cookies: Map<String, String> = emptyMap()
+    override val extraCookies: Map<String, String> = emptyMap()
 }
 
 class CategoriesRequest : JsoupRequest<List<PhotoCategory>>() {
@@ -82,7 +82,7 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
                 val likes = comment.select("span.count").text().ifEmpty { "0" }.toInt()
                 val isAuthor = comment.hasClass("author")
                 val timestamp = LocalDateTime.parse(dateRaw, dateFormat).atZone(ZoneId.systemDefault()).toInstant()
-                PhotoDetails.Comment(text, dateRaw, timestamp, author, avatar, likes, isAuthor)
+                PhotoDetails.Comment(text, timestamp, author, avatar, likes, isAuthor)
             }
 
         val awards = doc
@@ -177,7 +177,7 @@ class CategoriesPhotosRequest(
 
     override val url: String = "https://photosight.ru/photos/category/$category?pager=${page.key}"
 
-    override val cookies: Map<String, String> = mapOf(
+    override val extraCookies: Map<String, String> = mapOf(
         "sort_dump_category" to sortDumpCategory.toString(),
         "sort_type_category" to sortTypeCategory.toString()
     )

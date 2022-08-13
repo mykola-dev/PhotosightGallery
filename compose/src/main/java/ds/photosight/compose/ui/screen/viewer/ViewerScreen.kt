@@ -1,10 +1,13 @@
 package ds.photosight.compose.ui.screen.viewer
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DrawerValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -15,6 +18,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.navigation.MainViewModel
+import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.TranslucentTheme
 import ds.photosight.compose.util.logCompositions
 
@@ -74,12 +78,32 @@ fun ViewerContent(
 ) {
 
     val scaffoldState = rememberScaffoldState()
-    var isFabExtended = remember { mutableStateOf(false) }
+    val isFabExpanded = remember { mutableStateOf(false) }
+
+    with(scaffoldState.drawerState) {
+        LaunchedEffect(event) {
+            when (event) {
+                is UiEvent.OpenDrawer ->
+                    if (isClosed) {
+                        open()
+                    }
+                else -> {}
+            }
+        }
+        // this is for manual opening
+        LaunchedEffect(currentValue) {
+            if (currentValue == DrawerValue.Open) {
+                onDrawerClick()
+            }
+        }
+    }
+
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
             ViewerBottomBar(
                 isVisible = state.showUi,
+                isExpanded = isFabExpanded,
                 onDrawerClick = onDrawerClick,
                 onDownloadClick = onDownloadClick,
                 onBrowserClick = onBrowserClick,
@@ -87,11 +111,14 @@ fun ViewerContent(
             )
         },
         floatingActionButton = {
-            Fab(state.showUi, isFabExtended, onShareUrl = onShareUrl, onShareImage = onShareImage)
+            Fab(state.showUi, isFabExpanded, onShareUrl = onShareUrl, onShareImage = onShareImage)
         },
-        isFloatingActionButtonDocked = !isFabExtended.value,
-        drawerContent = { Drawer() },
+        isFloatingActionButtonDocked = true,
+        drawerContent = { Drawer(state.details) },
+        drawerElevation = 0.dp,
+        drawerScrimColor = Palette.translucent,
         drawerGesturesEnabled = true,
+        drawerShape = RoundedCornerShape(0)
     ) {
         val pagerState = rememberPagerState()
         LaunchedEffect(pagerState) {
@@ -113,7 +140,7 @@ fun ViewerContent(
             ZoomableImage(
                 photo = item,
                 onClicked = {
-                    if (isFabExtended.value) isFabExtended.value = false
+                    if (isFabExpanded.value) isFabExpanded.value = false
                     else onClicked()
                 })
         }

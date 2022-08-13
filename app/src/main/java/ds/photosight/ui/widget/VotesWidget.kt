@@ -28,7 +28,7 @@ class VotesWidget(context: Context, attrs: AttributeSet) : LinearLayout(context,
         val likes: Int = 0,
         val dislikes: Int = 0
     ) {
-        var rating: Float = 1 / (likes + dislikes).toFloat() * likes.toFloat()
+        val rating: Float = 1 / (likes + dislikes).toFloat() * likes.toFloat()
     }
 
     private var stats: Stats = Stats()

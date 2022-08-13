@@ -1,5 +1,6 @@
 package ds.photosight.compose.ui.screen.viewer
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateInt
@@ -15,17 +16,19 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ds.photosight.compose.R
+import ds.photosight.compose.ui.theme.PhotosightTheme
 
 @Composable
-fun Fab(isVisible: Boolean, isExpanded:MutableState<Boolean>, onShareUrl: () -> Unit, onShareImage: () -> Unit) {
-    //var isExpanded by remember { mutableStateOf(false) }
+fun Fab(isVisible: Boolean, isExpanded: MutableState<Boolean>, onShareUrl: () -> Unit, onShareImage: () -> Unit) {
 
     BackHandler(isExpanded.value) {
         isExpanded.value = false
@@ -41,9 +44,18 @@ fun Fab(isVisible: Boolean, isExpanded:MutableState<Boolean>, onShareUrl: () -> 
             color = MaterialTheme.colors.secondary,
             elevation = 16.dp,
             modifier = Modifier
-                //.offset { IntOffset(0, offsetAnimated) }
                 .clip(RoundedCornerShape(percent = cornerAnimated))
         ) {
+           /* val sizeTransform = SizeTransform { initialSize, targetSize ->
+                keyframes {
+                    if (initialSize.width < targetSize.width) {
+                        IntSize(initialSize.width, targetSize.height) at 100
+                    } else {
+                        IntSize(targetSize.width, initialSize.height) at 100
+                    }
+                    this.durationMillis = 300
+                }
+            }*/
             updater.AnimatedContent(
                 transitionSpec = { fadeIn() with fadeOut() using SizeTransform() }
             ) { expanded ->
@@ -56,15 +68,18 @@ fun Fab(isVisible: Boolean, isExpanded:MutableState<Boolean>, onShareUrl: () -> 
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            Icons.Default.Share, null, modifier = Modifier
-                            //.padding(8.dp)
-                        )
+                        Icon(Icons.Default.Share, null)
                     }
                 } else {
                     Column {
-                        MenuItem(Icons.Default.Link, stringResource(R.string.share_link), onShareUrl)
-                        MenuItem(Icons.Default.Image, stringResource(R.string.share_img), onShareImage)
+                        MenuItem(Icons.Default.Link, stringResource(R.string.share_link)) {
+                            onShareUrl()
+                            isExpanded.value = false
+                        }
+                        MenuItem(Icons.Default.Image, stringResource(R.string.share_img)) {
+                            onShareImage()
+                            isExpanded.value = false
+                        }
                     }
                 }
             }
@@ -86,15 +101,25 @@ private fun MenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
     }
 }
 
-/*
+@SuppressLint("UnrememberedMutableState")
 @Preview
 @Composable
 fun FabPreview() {
     PhotosightTheme {
-        Fab(
-            true,
-            onShareUrl = {},
-            onShareImage = {}
-        )
+        Scaffold(
+            floatingActionButton = {
+                Fab(
+                    true,
+                    onShareUrl = {},
+                    onShareImage = {},
+                    isExpanded = mutableStateOf(false)
+                )
+            },
+            bottomBar = { BottomAppBar {} },
+            isFloatingActionButtonDocked = true,
+        ) {
+            it
+        }
+
     }
-}*/
+}
