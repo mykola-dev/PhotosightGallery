@@ -1,10 +1,14 @@
 package ds.photosight.compose.ui.screen.viewer
 
+import android.net.Uri
 import androidx.compose.material.DrawerValue
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ds.photosight.compose.R
 import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
+import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.model.Photo
+import ds.photosight.compose.usecase.DownloadUseCase
 import ds.photosight.compose.usecase.OpenBrowserUseCase
 import ds.photosight.compose.usecase.ShareUseCase
 import ds.photosight.parser.PhotoDetails
@@ -19,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ViewerViewModel @Inject constructor(
     private val shareUseCase: ShareUseCase,
+    private val downloadUseCase: DownloadUseCase,
     private val openBrowserUseCase: OpenBrowserUseCase,
     private val repo: PhotosightRepo,
     log: Timber.Tree,
@@ -31,18 +36,6 @@ class ViewerViewModel @Inject constructor(
 
     private val detailsCache = mutableMapOf<Int, PhotoDetails>()
 
-    //private val detailsMutableSharedFlow = MutableSharedFlow<PhotoDetails>(Int.MAX_VALUE, Int.MAX_VALUE)
-    /*private val detailsFlow: SharedFlow<PhotoDetails> = flow {
-        val result = repo.getPhotoDetails(photo.id)
-        emit(result)
-        log.v("fetched")
-    }
-        .shareIn(viewModelScope, SharingStarted.Lazily, Int.MAX_VALUE)
-
-    init {
-        detailsFlow.replayCache
-    }
-*/
     private fun fetchDetails() = launch {
         log.v("fetching...")
         val detailsState = try {
@@ -95,10 +88,6 @@ class ViewerViewModel @Inject constructor(
         }
     }
 
-    fun onDownload() {
-
-    }
-
     fun onOpenBrowser() {
         openBrowserUseCase(photo.pageUrl)
     }
@@ -107,5 +96,11 @@ class ViewerViewModel @Inject constructor(
 
     }
 
+    fun saveFile(uri: Uri) = launch {
+        downloadUseCase(photo, uri)
+        event(UiEvent.Snack(R.string.saved_successfully))
+    }
+
+    fun providePhotoTitle(): String = photo.title + ".jpg"
 
 }

@@ -1,12 +1,14 @@
 package ds.photosight.compose.ui.screen.viewer
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
@@ -15,6 +17,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
+import ds.photosight.compose.core.SaveImage
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.navigation.MainViewModel
@@ -33,6 +36,12 @@ fun ViewerScreen(mainViewModel: MainViewModel) {
     val photos = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
     val currentPage = mainViewModel.selected
 
+    val downloadLauncher = rememberLauncherForActivityResult(SaveImage()) { uri ->
+        if (uri != null) {
+            viewModel.saveFile(uri)
+        }
+    }
+
     if (photos.itemCount > 0) { // some bug with paging lib
         TranslucentTheme {
             ViewerContent(
@@ -48,7 +57,7 @@ fun ViewerScreen(mainViewModel: MainViewModel) {
                 onShareUrl = viewModel::onUrlShare,
                 onShareImage = viewModel::onImageShare,
                 onDrawerToggle = viewModel::onDrawerStateChanged,
-                onDownloadClick = viewModel::onDownload,
+                onDownloadClick = { downloadLauncher.launch(viewModel.providePhotoTitle()) },
                 onBrowserClick = viewModel::onOpenBrowser,
                 onInfoClick = viewModel::onInfo
             )
@@ -78,9 +87,16 @@ fun ViewerContent(
     onInfoClick: () -> Unit
 ) {
 
+
     val scaffoldState = rememberScaffoldState()
     val isFabExpanded = remember { mutableStateOf(false) }
 
+    val ctx = LocalContext.current
+    LaunchedEffect(event) {
+        when (event) {
+            is UiEvent.Snack -> scaffoldState.snackbarHostState.showSnackbar(ctx.getString(event.stringId))
+        }
+    }
     with(scaffoldState.drawerState) {
         LaunchedEffect(currentValue) {
             onDrawerToggle(currentValue)
