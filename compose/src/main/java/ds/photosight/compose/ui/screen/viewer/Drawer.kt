@@ -34,6 +34,7 @@ import coil.request.ImageRequest
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
+import ds.photosight.compose.ui.widget.Ratings
 import ds.photosight.compose.util.isPreview
 import ds.photosight.compose.util.roundToPx
 import ds.photosight.parser.PhotoDetails
@@ -50,16 +51,21 @@ fun ColumnScope.Drawer(state: DetailsState) {
                 Image(Icons.Default.Close, null)
             }
             is DetailsState.Payload -> {
-                Ratings(state.details.stats, state.details.awards)
-                Comments(state.details.comments)
+                LazyColumn {
+                    item {
+                        Ratings(state.details.stats, state.details.awards)
+                    }
+                    item {
+                        Spacer(Modifier.height(8.dp))
+                    }
+                    items(state.details.comments) { comment ->
+                        Comment(comment)
+                        Spacer(Modifier.height(32.dp))
+                    }
+                }
             }
         }
     }
-}
-
-@Composable
-fun Ratings(stats: PhotoDetails.Stats, awards: List<PhotoDetails.Award>) {
-
 }
 
 @Composable
@@ -77,7 +83,7 @@ private val condensedTypeface = Typeface.create("sans-serif-condensed", Typeface
 @Composable
 fun Comment(comment: PhotoDetails.Comment) {
     val dateText = DateUtils.getRelativeDateTimeString(LocalContext.current, comment.timestamp.toEpochMilli(), 0, DateUtils.DAY_IN_MILLIS, 0).toString()
-    ConstraintLayout(Modifier.fillMaxWidth()) {
+    ConstraintLayout(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
         val (author, avatar, text, date, likes) = createRefs()
         Text(
             text = comment.author,

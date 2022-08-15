@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
-import ds.photosight.compose.util.log
 import kotlin.math.abs
 
 fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modifier = composed {
@@ -25,7 +24,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
     val panAnimated by animateOffsetAsState(pan)
 
     val transformableState = rememberTransformableState { z, p, r ->
-        log.v("zoom=$z pan=$p rotate=$r")
+        //log.v("zoom=$z pan=$p rotate=$r")
         scale *= z
         pan += p
         angle += r
@@ -38,7 +37,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
         } else {
             imageScale / screenScale // portrait
         }
-        log.v("fit: screenScale=$screenScale imageScale=$imageScale targetScale=$targetZoom scale=$scale")
+        //log.v("fit: screenScale=$screenScale imageScale=$imageScale targetScale=$targetZoom scale=$scale")
         scale = if (abs(targetZoom - scale) > 0.1) targetZoom else 1f
         pan = Offset.Zero
     }
@@ -48,7 +47,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
     }
 
     if (idle) {
-        log.v("idle")
+        //log.v("idle")
         if (scale < 1.1) {
             pan = Offset.Zero
         }
@@ -59,7 +58,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
     this
         .onGloballyPositioned {
             size = it.size
-            log.v("global size=${it.size}")
+            //log.v("global size=${it.size}")
         }
         .transformable(
             state = transformableState,
@@ -76,7 +75,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
         .pointerInput(Unit) {
             detectTapGestures(
                 onDoubleTap = {
-                    log.v("double tap")
+                    //log.v("double tap")
                     fitScreen()
                 },
                 onTap = {

@@ -38,7 +38,7 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
                 ?.asImageBitmap()
         }
         if (placeholder != null && showPlaceHolder) {
-            log.v("placeholder=$placeholder")
+            //log.v("placeholder=$placeholder")
             Image(placeholder, contentDescription = null, modifier = Modifier.fillMaxSize())
         }
 
@@ -53,17 +53,16 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
 
 
         AnimatedVisibility(state is AsyncImagePainter.State.Success, enter = fadeIn()) {
-            log.v("current state=${this.transition.currentState}")
+            //log.v("current state=${this.transition.currentState}")
             showPlaceHolder = this.transition.currentState != EnterExitState.Visible
 
             state as AsyncImagePainter.State.Success
             val scale = remember {
                 painter.intrinsicSize.run {
-                    log.v("w=$width h=$height")
                     width / height
                 }
             }
-            log.v("success. scale=$scale source=${state.result.dataSource} cached=${state.result.isPlaceholderCached}")
+            //log.v("success. scale=$scale source=${state.result.dataSource} cached=${state.result.isPlaceholderCached}")
             SubcomposeAsyncImageContent(
                 modifier = Modifier
                     .fillMaxSize()

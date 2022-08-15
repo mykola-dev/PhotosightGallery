@@ -5,7 +5,6 @@ import androidx.annotation.IntDef
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import ds.photosight.R
-import ds.photosight.parser.BestPhotosRequest
 import ds.photosight.parser.CategoriesPhotosRequest
 import ds.photosight.parser.PhotoDetails
 

@@ -21,6 +21,7 @@ import ds.photosight.compose.ui.screen.navigation.MainViewModel
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.TranslucentTheme
 import ds.photosight.compose.util.logCompositions
+import kotlinx.coroutines.launch
 
 @Destination
 @Composable
@@ -46,7 +47,7 @@ fun ViewerScreen(mainViewModel: MainViewModel) {
                 onClicked = viewModel::onClicked,
                 onShareUrl = viewModel::onUrlShare,
                 onShareImage = viewModel::onImageShare,
-                onDrawerClick = viewModel::onDrawerToggle,
+                onDrawerToggle = viewModel::onDrawerStateChanged,
                 onDownloadClick = viewModel::onDownload,
                 onBrowserClick = viewModel::onOpenBrowser,
                 onInfoClick = viewModel::onInfo
@@ -71,7 +72,7 @@ fun ViewerContent(
     onClicked: () -> Unit,
     onShareUrl: () -> Unit,
     onShareImage: () -> Unit,
-    onDrawerClick: () -> Unit,
+    onDrawerToggle: (value: DrawerValue) -> Unit,
     onDownloadClick: () -> Unit,
     onBrowserClick: () -> Unit,
     onInfoClick: () -> Unit
@@ -81,30 +82,23 @@ fun ViewerContent(
     val isFabExpanded = remember { mutableStateOf(false) }
 
     with(scaffoldState.drawerState) {
-        LaunchedEffect(event) {
-            when (event) {
-                is UiEvent.OpenDrawer ->
-                    if (isClosed) {
-                        open()
-                    }
-                else -> {}
-            }
-        }
-        // this is for manual opening
         LaunchedEffect(currentValue) {
-            if (currentValue == DrawerValue.Open) {
-                onDrawerClick()
-            }
+            onDrawerToggle(currentValue)
         }
     }
 
+    val scope = rememberCoroutineScope()
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
             ViewerBottomBar(
                 isVisible = state.showUi,
                 isExpanded = isFabExpanded,
-                onDrawerClick = onDrawerClick,
+                onDrawerClick = {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                },
                 onDownloadClick = onDownloadClick,
                 onBrowserClick = onBrowserClick,
                 onInfoClick = onInfoClick,
@@ -116,7 +110,7 @@ fun ViewerContent(
         isFloatingActionButtonDocked = true,
         drawerContent = { Drawer(state.details) },
         drawerElevation = 0.dp,
-        drawerScrimColor = Palette.translucent,
+        drawerScrimColor = Palette.drawerBackground,
         drawerGesturesEnabled = true,
         drawerShape = RoundedCornerShape(0)
     ) {

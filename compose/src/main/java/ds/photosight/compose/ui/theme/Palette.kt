@@ -9,7 +9,6 @@ object Palette {
     val background = surface
     val drawerBackground = Color(0xb0000000)
     val translucent = Color(0x60000000)
-    val black = Color(0xff000000)
     val greyDark = Color(0xff333333)
     val grey = Color(0xff666666)
     val commentTextSecondary = Color(0xff888888)

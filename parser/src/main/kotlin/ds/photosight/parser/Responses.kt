@@ -25,6 +25,7 @@ data class PhotoInfo(
 }
 
 data class PhotoDetails(
+    val id: Int,
     val comments: List<Comment>,
     val awards: List<Award>,
     val stats: Stats

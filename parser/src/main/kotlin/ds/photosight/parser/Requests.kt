@@ -35,7 +35,7 @@ abstract class JsoupRequest<T> : Request<T> {
         return elements
     }
 
-    protected fun getDocument(): Document = Jsoup.parse(runHttpRequest(url,extraCookies + nudeModeCookie + adultModeCookie + categoryDescriptionCookie))
+    protected fun getDocument(): Document = Jsoup.parse(runHttpRequest(url, extraCookies + nudeModeCookie + adultModeCookie + categoryDescriptionCookie))
 
     override val extraCookies: Map<String, String> = emptyMap()
 }
@@ -63,7 +63,7 @@ class CategoriesRequest : JsoupRequest<List<PhotoCategory>>() {
     override val url: String = baseUrl
 }
 
-class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
+class PhotoDetailsRequest(private val photoId: Int) : JsoupRequest<PhotoDetails>() {
 
     private val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm:ss", Locale.US)
 
@@ -102,7 +102,7 @@ class PhotoDetailsRequest(photoId: Int) : JsoupRequest<PhotoDetails>() {
                 PhotoDetails.Stats(art, original, tech, likes, dislikes, views)
             }
 
-        return PhotoDetails(comments, awards, stats)
+        return PhotoDetails(photoId, comments, awards, stats)
     }
 
     private fun Document.commentsSection() = parse("div.comments div.comment-content")
