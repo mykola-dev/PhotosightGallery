@@ -59,7 +59,7 @@ interface PhotosFilter {
     var enabled: Boolean
 
     data class Categories(
-        val sortDumpCategory: CategoriesPhotosRequest.SortDumpCategory = CategoriesPhotosRequest.SortDumpCategory.ALL,
+        val filterDumpCategory: CategoriesPhotosRequest.FilterDumpCategory = CategoriesPhotosRequest.FilterDumpCategory.ALL,
         val sortTypeCategory: CategoriesPhotosRequest.SortTypeCategory = CategoriesPhotosRequest.SortTypeCategory.DEFAULT,
         override var enabled: Boolean = false
     ) : PhotosFilter

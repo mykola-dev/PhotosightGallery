@@ -5,7 +5,6 @@ import androidx.paging.PagingState
 import ds.photosight.parser.*
 import ds.photosight.ui.viewmodel.CategoryMenuItemState
 import ds.photosight.ui.viewmodel.MenuState
-import ds.photosight.ui.viewmodel.PhotosFilter
 import ds.photosight.ui.viewmodel.RatingMenuItemState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -51,7 +50,7 @@ class PhotosPagingSource(
                 CategoriesPhotosRequest(
                     selected.category,
                     SimplePage(page),
-                    filter.sortDumpCategory,
+                    filter.filterDumpCategory,
                     filter.sortTypeCategory
                 )
             }

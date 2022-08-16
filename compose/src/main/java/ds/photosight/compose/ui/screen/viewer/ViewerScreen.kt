@@ -91,7 +91,7 @@ fun ViewerContent(
 
     val scaffoldState = rememberScaffoldState()
     val isFabExpanded = remember { mutableStateOf(false) }
-    val infoState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val infoState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
 
     val ctx = LocalContext.current
     LaunchedEffect(event) {

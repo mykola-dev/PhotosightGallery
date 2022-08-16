@@ -55,8 +55,6 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
     val photosStream: LazyPagingItems<Photo> = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
     val selectedPhotoIndex = photosStream.getIndexById(mainViewModel.selectedId)
 
-    //val title = viewModel.title.collectAsState("")
-
     isolate({ photosStream.loadState }) { state ->
         LaunchedEffect(state) {
             viewModel.updateLoadingState(state)
@@ -80,8 +78,15 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         onFirstVisibleItem = { state ->
             state.value?.let { viewModel.setFirstVisibleItem(it) }
         },
-        onShowAboutDialog = viewModel::onShowAboutDialog,
-        onDismissAboutDialog = viewModel::onDismissAboutDialog
+        toolbarState = ToolbarState(
+            galleryState.title,
+            galleryState.subtitle,
+            menuState.categoriesFilter,
+            viewModel::onShowAboutDialog,
+            viewModel::onFilterSelected,
+            viewModel::onSorterSelected
+        ),
+        onDismissAboutDialog = viewModel::onDismissAboutDialog,
     )
 
     val systemUiController = rememberSystemUiController()
@@ -89,8 +94,6 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         systemUiController.setSystemBarsColor(color = Palette.translucent)
     }
 }
-
-
 
 
 @Composable
@@ -113,8 +116,8 @@ fun GalleryContent(
     onRetry: () -> Unit,
     loadingSlot: @Composable () -> Unit,
     onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
-    onShowAboutDialog: () -> Unit,
-    onDismissAboutDialog: () -> Unit
+    toolbarState: ToolbarState,
+    onDismissAboutDialog: () -> Unit,
 ) {
     logCompositions(msg = "gallery content")
 
@@ -179,10 +182,8 @@ fun GalleryContent(
                 onScrollingUp = { scrollingUp -> showMenu = scrollingUp }
             )
             MainToolbar(
-                title = galleryState.title,
-                subtitle = galleryState.subtitle,
+                state = toolbarState,
                 modifier = Modifier.offset { IntOffset(x = 0, y = nestedScrollConnection.toolbarOffsetHeightPx.value.roundToInt()) },
-                onShowAboutDialog = onShowAboutDialog
             )
 
             loadingSlot()

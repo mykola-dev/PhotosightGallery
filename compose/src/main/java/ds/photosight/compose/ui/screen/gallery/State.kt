@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.runtime.Immutable
 import ds.photosight.compose.R
-import ds.photosight.compose.ui.model.PhotosFilter
+import ds.photosight.parser.CategoriesPhotosRequest
 
 data class GalleryState(
     val title: String,
@@ -13,15 +13,19 @@ data class GalleryState(
     val showAboutDialog: Boolean = false
 )
 
+data class PhotosFilter(
+    val filterDumpCategory: CategoriesPhotosRequest.FilterDumpCategory = CategoriesPhotosRequest.FilterDumpCategory.ALL,
+    val sortTypeCategory: CategoriesPhotosRequest.SortTypeCategory = CategoriesPhotosRequest.SortTypeCategory.DEFAULT,
+)
+
 @Immutable
 data class MenuState(
     val categories: List<CategoryMenuItemState> = emptyList(),
     val ratings: List<RatingMenuItemState> = emptyList(),
-    val categoriesFilter: PhotosFilter.Categories = PhotosFilter.Categories(),
     val selectedItem: MenuItemState? = ratings.firstOrNull(),    // default is 'new photos'
+    val categoriesFilter: PhotosFilter? = null,
     val bottomSheetState: BottomSheetValue = BottomSheetValue.Collapsed
 )
-
 
 enum class MenuTabs(@StringRes val resId: Int) {
     RATINGS(R.string.ratings),

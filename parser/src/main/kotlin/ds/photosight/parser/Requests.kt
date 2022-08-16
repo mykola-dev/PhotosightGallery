@@ -152,11 +152,11 @@ class DailyPhotosRequest(override val page: DatePage, category: Int? = null) : P
 class CategoriesPhotosRequest(
     category: Int,
     override val page: SimplePage,
-    sortDumpCategory: SortDumpCategory = SortDumpCategory.ALL,
+    filterDumpCategory: FilterDumpCategory = FilterDumpCategory.ALL,
     sortTypeCategory: SortTypeCategory = SortTypeCategory.DEFAULT
 ) : PhotosRequest(), Multipage {
 
-    enum class SortDumpCategory(private val value: String) {
+    enum class FilterDumpCategory(private val value: String) {
         ALL("all"),
         RATES("rates");
 
@@ -178,7 +178,7 @@ class CategoriesPhotosRequest(
     override val url: String = "https://photosight.ru/photos/category/$category?pager=${page.key}"
 
     override val extraCookies: Map<String, String> = mapOf(
-        "sort_dump_category" to sortDumpCategory.toString(),
+        "sort_dump_category" to filterDumpCategory.toString(),
         "sort_type_category" to sortTypeCategory.toString()
     )
 

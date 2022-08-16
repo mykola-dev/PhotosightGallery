@@ -11,7 +11,6 @@ import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.gallery.CategoryMenuItemState
 import ds.photosight.compose.ui.screen.gallery.MenuState
 import ds.photosight.compose.ui.screen.gallery.RatingMenuItemState
-import ds.photosight.compose.util.log
 import ds.photosight.parser.*
 
 const val PAGE_SIZE = 24
@@ -40,7 +39,7 @@ class PhotosPagingSource @AssistedInject constructor(
             && request is Multipage
         ) key + 1
         else null
-        log.v("loading page $key next=$nextKey")
+
         val data: List<Photo> = page.map { item -> item.asUiModel() }
         LoadResult.Page(data, prevKey, nextKey)
     } catch (e: Exception) {
@@ -51,11 +50,11 @@ class PhotosPagingSource @AssistedInject constructor(
     private fun buildRequest(page: Int): PhotosRequest {
         return when (val selected = menuState.selectedItem ?: error("no menu item selected")) {
             is CategoryMenuItemState -> {
-                val filter = menuState.categoriesFilter
+                val filter = menuState.categoriesFilter ?: error("filter is null")
                 CategoriesPhotosRequest(
                     selected.category,
                     SimplePage(page),
-                    filter.sortDumpCategory,
+                    filter.filterDumpCategory,
                     filter.sortTypeCategory
                 )
             }
@@ -77,4 +76,4 @@ class PhotosPagingSource @AssistedInject constructor(
     }
 }
 
-fun LazyPagingItems<Photo>.getIndexById(selectedId: Int): Int? = itemSnapshotList.indexOfFirst { it?.id == selectedId }.takeIf { it>=0 }
+fun LazyPagingItems<Photo>.getIndexById(selectedId: Int): Int? = itemSnapshotList.indexOfFirst { it?.id == selectedId }.takeIf { it >= 0 }

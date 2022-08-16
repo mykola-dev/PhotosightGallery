@@ -26,13 +26,13 @@ class PhotosightParserTest {
 
     @Test
     fun `category sorting`() {
-        CategoriesPhotosRequest(15, SimplePage(1), CategoriesPhotosRequest.SortDumpCategory.ALL, CategoriesPhotosRequest.SortTypeCategory.COMMENTS_COUNT)()
+        CategoriesPhotosRequest(15, SimplePage(1), CategoriesPhotosRequest.FilterDumpCategory.ALL, CategoriesPhotosRequest.SortTypeCategory.COMMENTS_COUNT)()
             .forEach { println(it) }
     }
 
     @Test
     fun `old photos`() {
-        CategoriesPhotosRequest(15, SimplePage(1), CategoriesPhotosRequest.SortDumpCategory.ALL, CategoriesPhotosRequest.SortTypeCategory.COUNT)()
+        CategoriesPhotosRequest(15, SimplePage(1), CategoriesPhotosRequest.FilterDumpCategory.ALL, CategoriesPhotosRequest.SortTypeCategory.COUNT)()
             .forEach { println(it) }
     }
 

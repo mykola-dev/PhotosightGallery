@@ -24,8 +24,8 @@ class CategoriesFilterMapper(override val filter: PhotosFilter.Categories?, over
         target.findItem(R.id.item_category_sort_comments) to CategoriesPhotosRequest.SortTypeCategory.COMMENTS_COUNT
     )
     private val filterMapping = listOf(
-        target.findItem(R.id.item_category_filter_all) to CategoriesPhotosRequest.SortDumpCategory.ALL,
-        target.findItem(R.id.item_category_filter_rating) to CategoriesPhotosRequest.SortDumpCategory.RATES
+        target.findItem(R.id.item_category_filter_all) to CategoriesPhotosRequest.FilterDumpCategory.ALL,
+        target.findItem(R.id.item_category_filter_rating) to CategoriesPhotosRequest.FilterDumpCategory.RATES
 
     )
 
@@ -33,7 +33,7 @@ class CategoriesFilterMapper(override val filter: PhotosFilter.Categories?, over
         target.setGroupVisible(R.id.group_categories, filter?.enabled ?: false)
         listOf(
             sortMapping.first { it.second == filter?.sortTypeCategory },
-            filterMapping.first { it.second == filter?.sortDumpCategory }
+            filterMapping.first { it.second == filter?.filterDumpCategory }
         ).forEach { it.first.isChecked = true }
 
         return target
@@ -41,12 +41,12 @@ class CategoriesFilterMapper(override val filter: PhotosFilter.Categories?, over
 
     override fun generateModel(): PhotosFilter.Categories? = PhotosFilter.Categories(
         enabled = true,
-        sortDumpCategory = getFilterData(),
+        filterDumpCategory = getFilterData(),
         sortTypeCategory = getSorterData()
     )
         .takeIf { filter != it }  // prevent false triggering
 
-    private fun getFilterData(): CategoriesPhotosRequest.SortDumpCategory = filterMapping
+    private fun getFilterData(): CategoriesPhotosRequest.FilterDumpCategory = filterMapping
         .first { it.first.isChecked }
         .second
 

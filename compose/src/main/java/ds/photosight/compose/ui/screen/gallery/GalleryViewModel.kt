@@ -9,9 +9,9 @@ import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.model.Photo
-import ds.photosight.compose.ui.model.PhotosFilter
 import ds.photosight.compose.usecase.CheckVersionUseCase
 import ds.photosight.compose.usecase.ToolbarDataUseCase
+import ds.photosight.parser.CategoriesPhotosRequest
 import ds.photosight.parser.PhotoCategory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -73,16 +73,20 @@ class GalleryViewModel @Inject constructor(
             state.copy(
                 selectedItem = item,
                 bottomSheetState = BottomSheetValue.Collapsed,
+                categoriesFilter = if (item is CategoryMenuItemState) PhotosFilter() else null
             )
         }
     }
 
-    fun onFilterChanged(filter: PhotosFilter) {
+    fun onFilterSelected(filter: CategoriesPhotosRequest.FilterDumpCategory) {
         _menuStateFlow.update { state ->
-            when (filter) {
-                is PhotosFilter.Categories -> state.copy(categoriesFilter = filter)
-                else -> error("not supported")
-            }
+            state.copy(categoriesFilter = state.categoriesFilter?.copy(filterDumpCategory = filter))
+        }
+    }
+
+    fun onSorterSelected(sorter: CategoriesPhotosRequest.SortTypeCategory) {
+        _menuStateFlow.update { state ->
+            state.copy(categoriesFilter = state.categoriesFilter?.copy(sortTypeCategory = sorter))
         }
     }
 
