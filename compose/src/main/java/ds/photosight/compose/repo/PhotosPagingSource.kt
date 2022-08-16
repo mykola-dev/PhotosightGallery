@@ -2,6 +2,7 @@ package ds.photosight.compose.repo
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import androidx.paging.compose.LazyPagingItems
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -10,6 +11,7 @@ import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.gallery.CategoryMenuItemState
 import ds.photosight.compose.ui.screen.gallery.MenuState
 import ds.photosight.compose.ui.screen.gallery.RatingMenuItemState
+import ds.photosight.compose.util.log
 import ds.photosight.parser.*
 
 const val PAGE_SIZE = 24
@@ -28,7 +30,7 @@ class PhotosPagingSource @AssistedInject constructor(
         val key = params.key ?: 1
 
         val request = buildRequest(key)
-        val page = photosightRepo.apiRequest(request)
+        val page: List<PhotoInfo> = photosightRepo.apiRequest(request)
 
         val prevKey = if (request is Multipage && key > 1) key - 1
         else null
@@ -38,8 +40,8 @@ class PhotosPagingSource @AssistedInject constructor(
             && request is Multipage
         ) key + 1
         else null
-
-        val data = page.mapIndexed { idx, item -> item.asUiModel(idx + (key - 1) * PAGE_SIZE) }
+        log.v("loading page $key next=$nextKey")
+        val data: List<Photo> = page.map { item -> item.asUiModel() }
         LoadResult.Page(data, prevKey, nextKey)
     } catch (e: Exception) {
         e.printStackTrace()
@@ -75,4 +77,4 @@ class PhotosPagingSource @AssistedInject constructor(
     }
 }
 
-
+fun LazyPagingItems<Photo>.getIndexById(selectedId: Int): Int? = itemSnapshotList.indexOfFirst { it?.id == selectedId }.takeIf { it>=0 }

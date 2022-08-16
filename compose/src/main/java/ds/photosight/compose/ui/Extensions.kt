@@ -1,6 +1,6 @@
 package ds.photosight.compose.ui
 
-import androidx.compose.foundation.lazy.LazyItemScope
+import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
@@ -35,6 +35,7 @@ fun <T : Any> LazyGridScope.pagedItems(
 /**
  * Used to isolate re-compositions inside one big composable
  */
+@SuppressLint("ComposableNaming")
 @Composable
 fun <T> isolate(
     executable: (@Composable () -> T),
@@ -43,6 +44,7 @@ fun <T> isolate(
     content(executable())
 }
 
+@SuppressLint("ComposableNaming")
 @Composable
 fun isolate(
     content: @Composable () -> Unit

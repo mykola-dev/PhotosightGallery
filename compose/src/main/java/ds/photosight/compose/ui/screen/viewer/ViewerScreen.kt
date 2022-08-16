@@ -3,9 +3,7 @@ package ds.photosight.compose.ui.screen.viewer
 import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.DrawerValue
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -18,11 +16,13 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
 import ds.photosight.compose.core.SaveImage
+import ds.photosight.compose.repo.getIndexById
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.navigation.MainViewModel
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.TranslucentTheme
+import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
 import kotlinx.coroutines.launch
 
@@ -34,7 +34,7 @@ fun ViewerScreen(mainViewModel: MainViewModel) {
     val state by viewModel.state.collectAsState()
     val event by viewModel.events.collectAsState(null)
     val photos = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
-    val currentPage = mainViewModel.selected
+    val currentPageIndex = photos.getIndexById(mainViewModel.selectedId) ?: 0
 
     val downloadLauncher = rememberLauncherForActivityResult(SaveImage()) { uri ->
         if (uri != null) {
@@ -48,10 +48,11 @@ fun ViewerScreen(mainViewModel: MainViewModel) {
                 state = state,
                 event = event,
                 photos = photos,
-                currentPage = currentPage,
+                currentPageIndex = currentPageIndex,
                 onPageChanged = {
-                    mainViewModel.onPhotoSelected(it)
-                    viewModel.onPageChanged(photos[it]!!)
+                    val photo = photos[it]!!
+                    mainViewModel.onPhotoSelected(photo.id)
+                    viewModel.onPageChanged(photo)
                 },
                 onClicked = viewModel::onClicked,
                 onShareUrl = viewModel::onUrlShare,
@@ -76,7 +77,7 @@ fun ViewerContent(
     state: ViewerState,
     event: UiEvent?,
     photos: LazyPagingItems<Photo>,
-    currentPage: Int,
+    currentPageIndex: Int,
     onPageChanged: (Int) -> Unit,
     onClicked: () -> Unit,
     onShareUrl: () -> Unit,
@@ -90,13 +91,17 @@ fun ViewerContent(
 
     val scaffoldState = rememberScaffoldState()
     val isFabExpanded = remember { mutableStateOf(false) }
+    val infoState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     val ctx = LocalContext.current
     LaunchedEffect(event) {
+        log.v("event=$event")
         when (event) {
             is UiEvent.Snack -> scaffoldState.snackbarHostState.showSnackbar(ctx.getString(event.stringId))
+            is UiEvent.OpenInfo -> infoState.show()
         }
     }
+
     with(scaffoldState.drawerState) {
         LaunchedEffect(currentValue) {
             onDrawerToggle(currentValue)
@@ -132,7 +137,7 @@ fun ViewerContent(
     ) {
         val pagerState = rememberPagerState()
         LaunchedEffect(pagerState) {
-            pagerState.scrollToPage(currentPage)
+            pagerState.scrollToPage(currentPageIndex)
         }
 
         LaunchedEffect(pagerState) {
@@ -157,5 +162,16 @@ fun ViewerContent(
 
         ViewerToolbar(state.showUi, state.title, state.subtitle)
     }
+
+    state.currentPhoto?.let { photo ->
+        ModalBottomSheetLayout(
+            sheetContent = { InfoSheet(photo, infoState.isVisible) },
+            sheetState = infoState,
+            sheetBackgroundColor = MaterialTheme.colors.primary,
+            scrimColor = Palette.translucent
+        ) { }
+    }
 }
+
+
 

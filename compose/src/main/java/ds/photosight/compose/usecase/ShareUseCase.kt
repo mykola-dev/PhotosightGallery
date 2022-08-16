@@ -3,7 +3,6 @@ package ds.photosight.compose.usecase
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
-import coil.imageLoader
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ds.photosight.compose.R
 import ds.photosight.compose.util.loadImageFile
@@ -34,7 +33,7 @@ class ShareUseCase @Inject constructor(
     }
 
     private fun Context.shareImage(imageUrl: String) {
-        val file = imageLoader.loadImageFile(imageUrl)
+        val file = this.loadImageFile(imageUrl)
         val uri = FileProvider.getUriForFile(applicationContext, packageName, file)
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND

@@ -136,7 +136,7 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
                 .getElementsByTag("p")
                 .first()!!
                 .let { e -> e.getElementsByTag("a").first() ?: e }
-                .let { e -> e.text() to e.attr("abs:href").takeIf { it.isNotBlank() } }
+                .let { e -> e.text() to baseUrl + e.attr("href").takeIf { it.isNotBlank() } }
 
             val paginationKey = (this as? Multipage)?.page?.key
 

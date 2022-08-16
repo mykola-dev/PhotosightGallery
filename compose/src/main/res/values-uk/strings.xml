@@ -80,4 +80,5 @@ Change Log:
     <string name="source">Джерело</string>
     <string name="title">Назва</string>
     <string name="saved_successfully">Збережено вдало</string>
+    <string name="photo_details">Подробиці</string>
 </resources>

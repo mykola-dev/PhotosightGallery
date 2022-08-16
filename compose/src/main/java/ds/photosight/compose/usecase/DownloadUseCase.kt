@@ -2,7 +2,6 @@ package ds.photosight.compose.usecase
 
 import android.content.Context
 import android.net.Uri
-import coil.imageLoader
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.util.loadImageFile
@@ -13,13 +12,17 @@ class DownloadUseCase @Inject constructor(
 ) {
 
     operator fun invoke(photo: Photo, uri: Uri) {
-        val file = context.imageLoader.loadImageFile(photo.large)
         context
-            .contentResolver
-            .openOutputStream(uri)
-            ?.use {
-                it.write(file.inputStream().readBytes())
+            .loadImageFile(photo.large)
+            .inputStream()
+            .use { input ->
+                context
+                    .contentResolver
+                    .openOutputStream(uri)
+                    ?.use { output ->
+                        input.copyTo(output)
+                    }
+                    ?: error("can't open stream")
             }
-            ?: error("can't open stream")
     }
 }

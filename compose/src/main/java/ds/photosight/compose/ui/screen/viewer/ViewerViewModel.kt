@@ -93,7 +93,7 @@ class ViewerViewModel @Inject constructor(
     }
 
     fun onInfo() {
-
+        event(UiEvent.OpenInfo())
     }
 
     fun saveFile(uri: Uri) = launch {

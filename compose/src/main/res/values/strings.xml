@@ -92,6 +92,7 @@ Change Log:
 	<string name="source">Source</string>
 	<string name="title">Title</string>
 	<string name="saved_successfully">Saved Successfully</string>
+    <string name="photo_details">Photo Details</string>
 
 
 </resources>

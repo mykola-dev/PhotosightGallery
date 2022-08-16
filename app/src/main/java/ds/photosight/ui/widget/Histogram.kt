@@ -47,10 +47,6 @@ class Histogram(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
         }
 
-        /*val text = context.getString(R.string.processing)
-        paint.alpha = 255 - alpha
-        canvas.drawText(text, (w.toFloat() - paint.measureText(text)) / 2, (h / 2).toFloat(), paint)*/
-
     }
 
 

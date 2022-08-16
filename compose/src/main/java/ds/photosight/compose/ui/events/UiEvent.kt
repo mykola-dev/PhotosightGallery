@@ -11,6 +11,7 @@ interface UiEvent {
     class Toast(val message: String) : UiEvent
     class Retry : UiEvent
     class Snack(@StringRes val stringId: Int) : UiEvent
+    class OpenInfo : UiEvent
 }
 
 @Composable

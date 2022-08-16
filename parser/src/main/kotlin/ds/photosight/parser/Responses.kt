@@ -19,10 +19,7 @@ data class PhotoInfo(
     val authorUrl: String?,
     var paginationKey: String?,
     var failed: Boolean = false
-) : Serializable {
-    // workaround for old photos
-    val altLarge: String get() = large.replace("_xlarge", "_large")
-}
+) : Serializable
 
 data class PhotoDetails(
     val id: Int,

@@ -24,6 +24,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import ds.photosight.compose.R
+import ds.photosight.compose.repo.getIndexById
 import ds.photosight.compose.ui.ToolbarNestedScrollConnection
 import ds.photosight.compose.ui.destinations.ViewerScreenDestination
 import ds.photosight.compose.ui.dialog.AboutDialog
@@ -51,10 +52,9 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
 
     val menuState by viewModel.menuStateFlow.collectAsState()
     val galleryState by viewModel.galleryState.collectAsState()
-    val selectedPhoto = mainViewModel.selected
-    log.v("selected photo=$selectedPhoto")
-
     val photosStream: LazyPagingItems<Photo> = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
+    val selectedPhotoIndex = photosStream.getIndexById(mainViewModel.selectedId)
+
     //val title = viewModel.title.collectAsState("")
 
     isolate({ photosStream.loadState }) { state ->
@@ -68,11 +68,10 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         photos = photosStream,
         menuState = menuState,
         galleryState = galleryState,
-        selectedPhoto = selectedPhoto,
+        selectedPhotoIndex = selectedPhotoIndex,
         onMenuItemSelected = { viewModel.onMenuSelected(it) },
         onPhotoClicked = {
-            log.v("index=${it.index}")
-            mainViewModel.onPhotoSelected(it.index)
+            mainViewModel.onPhotoSelected(it.id)
             navigator.navigate(ViewerScreenDestination)
         },
         event = event,
@@ -92,6 +91,8 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
 }
 
 
+
+
 @Composable
 fun LoadingSlot(isLoading: Boolean) {
     if (isLoading) {
@@ -105,7 +106,7 @@ fun GalleryContent(
     photos: LazyPagingItems<Photo>,
     galleryState: GalleryState,
     menuState: MenuState,
-    selectedPhoto: Int?,
+    selectedPhotoIndex: Int?,
     event: State<UiEvent?>,
     onMenuItemSelected: (MenuItemState) -> Unit,
     onPhotoClicked: (Photo) -> Unit,
@@ -170,18 +171,18 @@ fun GalleryContent(
         ) {
 
             LazyGrid(
-                nestedScrollConnection,
-                photos,
-                selectedPhoto,
-                onPhotoClicked,
-                onFirstVisibleItem,
-                { scrollingUp -> showMenu = scrollingUp }
+                nestedScrollConnection = nestedScrollConnection,
+                photos = photos,
+                selectedPhotoIndex = selectedPhotoIndex,
+                onPhotoClicked = onPhotoClicked,
+                onFirstVisibleItem = onFirstVisibleItem,
+                onScrollingUp = { scrollingUp -> showMenu = scrollingUp }
             )
             MainToolbar(
-                galleryState.title,
-                galleryState.subtitle,
-                Modifier.offset { IntOffset(x = 0, y = nestedScrollConnection.toolbarOffsetHeightPx.value.roundToInt()) },
-                onShowAboutDialog
+                title = galleryState.title,
+                subtitle = galleryState.subtitle,
+                modifier = Modifier.offset { IntOffset(x = 0, y = nestedScrollConnection.toolbarOffsetHeightPx.value.roundToInt()) },
+                onShowAboutDialog = onShowAboutDialog
             )
 
             loadingSlot()
@@ -198,7 +199,7 @@ fun GalleryContent(
 private fun LazyGrid(
     nestedScrollConnection: ToolbarNestedScrollConnection,
     photos: LazyPagingItems<Photo>,
-    selectedPhoto: Int?,
+    selectedPhotoIndex: Int?,
     onPhotoClicked: (Photo) -> Unit,
     onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
     onScrollingUp: (Boolean) -> Unit,
@@ -206,8 +207,8 @@ private fun LazyGrid(
     logCompositions(msg = "lazy grid")
     val state: LazyListState = rememberLazyListState()
 
-    LaunchedEffect(selectedPhoto) {
-        selectedPhoto?.let { state.scrollToItem(it) }
+    LaunchedEffect(selectedPhotoIndex) {
+        selectedPhotoIndex?.let { state.scrollToItem(it) }
     }
     val scrollingUp by state.isScrollingUp()
     LaunchedEffect(scrollingUp) {

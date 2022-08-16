@@ -48,10 +48,6 @@ class GalleryViewModel @Inject constructor(
     private val _menuStateFlow: MutableStateFlow<MenuState> = MutableStateFlow(MenuState())
     val menuStateFlow: StateFlow<MenuState> = _menuStateFlow.asStateFlow()
 
-/*    val title: Flow<String> = menuStateFlow.map {
-        it.selectedItem?.title ?: appNameProvider()
-    }*/
-
     init {
         launch {
             categoriesFlow.collect { categories ->
@@ -71,7 +67,6 @@ class GalleryViewModel @Inject constructor(
         }
 
     }
-
 
     fun onMenuSelected(item: MenuItemState) {
         _menuStateFlow.update { state ->
@@ -106,7 +101,6 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun setFirstVisibleItem(photoInfo: Photo) {
-        log.v("new first item")
         _galleryState.update { it.copy(subtitle = toolbarDataUseCase.getSubtitle(photoInfo)) }
     }
 
@@ -117,7 +111,6 @@ class GalleryViewModel @Inject constructor(
     fun onDismissAboutDialog() {
         _galleryState.update { it.copy(showAboutDialog = false) }
     }
-
 
 }
 

@@ -21,7 +21,6 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
-import ds.photosight.compose.util.log
 import kotlinx.coroutines.launch
 
 @Composable
@@ -32,7 +31,6 @@ fun BottomMenu(
 ) {
 
     LaunchedEffect(menuState) {
-        log.w("bss effect: ${menuState.bottomSheetState}")
         if (shitState.currentValue != menuState.bottomSheetState && shitState.isExpanded) {
             shitState.collapse()
         }
