@@ -17,8 +17,8 @@ data class PhotoInfo(
     val title: String,
     val authorName: String,
     val authorUrl: String?,
-    var paginationKey: String?,
-    var failed: Boolean = false
+    @Deprecated("not a proper place")
+    val paginationKey: String?,
 ) : Serializable
 
 data class PhotoDetails(

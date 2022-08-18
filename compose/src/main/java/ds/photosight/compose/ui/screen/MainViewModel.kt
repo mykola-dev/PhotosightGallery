@@ -1,4 +1,4 @@
-package ds.photosight.compose.ui.screen.navigation
+package ds.photosight.compose.ui.screen
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager

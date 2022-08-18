@@ -1,10 +1,9 @@
-package ds.photosight.compose.ui.screen.navigation
+package ds.photosight.compose.ui.screen
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.dependency
-import ds.photosight.compose.ui.DebugView
 import ds.photosight.compose.ui.NavGraphs
 import ds.photosight.compose.ui.theme.PhotosightTheme
 

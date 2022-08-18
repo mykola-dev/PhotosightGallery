@@ -22,10 +22,8 @@ import ds.photosight.R
 import ds.photosight.parser.PhotoInfo
 import ds.photosight.repo.PAGE_SIZE
 import ds.photosight.ui.SharedElementsHelper
-import ds.photosight.utils.postDelayed
 import kotlinx.android.synthetic.main.item_gallery_photo.*
 import timber.log.Timber
-import java.io.FileNotFoundException
 
 
 class GalleryAdapter(
@@ -61,9 +59,7 @@ class GalleryAdapter(
         holder.itemView.setOnClickListener {
             val position = holder.absoluteAdapterPosition
             val item = getItem(position)!!
-            if (!item.failed) {
-                onClick(ClickedItem(holder.photoImage, position, true))
-            }
+            onClick(ClickedItem(holder.photoImage, position, true))
             //notifyItemChanged(position)
             holder.loadImage(item.large, true, item, position) {
                 onClick(ClickedItem(holder.photoImage, position, false))
@@ -110,20 +106,11 @@ class GalleryAdapter(
             .error(R.drawable.ic_photo_error)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return if (e?.rootCauses?.any { it is FileNotFoundException } == true) {
-                        Timber.e("file not found! $model isFirst=$isFirstResource")
-                        item.large = item.altLarge
-                        notifyItemChanged(position)
-                        true
-                    } else {
-                        false
-                    }
+                    return false
                 }
 
                 override fun onResourceReady(resource: Drawable, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    item.failed = false
                     callback()
-
                     return false
                 }
             })

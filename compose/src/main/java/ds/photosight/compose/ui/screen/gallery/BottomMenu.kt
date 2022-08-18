@@ -74,25 +74,27 @@ fun BottomMenu(
                     text = { Text(stringResource(item.resId).uppercase()) })
             }
         }
-        val pagerPadding = remember(collapsedFraction) { nbHeight * (1 - collapsedFraction) }
+        val pagerPadding = remember(collapsedFraction, nbHeight) { nbHeight * (1 - collapsedFraction) }
         Spacer(modifier = Modifier.height(pagerPadding))
 
         HorizontalPager(
             count = MenuTabs.values().size,
             state = pagerState,
-            //modifier = Modifier.fillMaxHeight(),
             verticalAlignment = Alignment.Top,
         ) { index ->
-            LazyColumn(content = {
-                val currTab = MenuTabs.values()[index]
-                val menuItems = when (currTab) {
-                    MenuTabs.RATINGS -> menuState.ratings
-                    MenuTabs.CATEGORIES -> menuState.categories
-                }
-                items(menuItems) {
-                    MenuItem(model = it, isSelected = it == menuState.selectedItem, onMenuItemSelected = onMenuItemSelected)
-                }
-            })
+            LazyColumn(
+                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                content = {
+                    val currTab = MenuTabs.values()[index]
+                    val menuItems = when (currTab) {
+                        MenuTabs.RATINGS -> menuState.ratings
+                        MenuTabs.CATEGORIES -> menuState.categories
+                    }
+                    items(menuItems) {
+                        MenuItem(model = it, isSelected = it == menuState.selectedItem, onMenuItemSelected = onMenuItemSelected)
+                    }
+                },
+            )
         }
     }
 }

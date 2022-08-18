@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
+import ds.photosight.compose.util.log
 import kotlin.math.abs
 
 fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modifier = composed {
@@ -24,7 +25,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
     val panAnimated by animateOffsetAsState(pan)
 
     val transformableState = rememberTransformableState { z, p, r ->
-        //log.v("zoom=$z pan=$p rotate=$r")
+        log.v("zoom=$z pan=$p rotate=$r")
         scale *= z
         pan += p
         angle += r

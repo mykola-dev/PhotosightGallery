@@ -2,10 +2,15 @@ package ds.photosight.compose.ui.screen.viewer
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.forEachGesture
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,7 +24,7 @@ import ds.photosight.compose.core.SaveImage
 import ds.photosight.compose.repo.getIndexById
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.model.Photo
-import ds.photosight.compose.ui.screen.navigation.MainViewModel
+import ds.photosight.compose.ui.screen.MainViewModel
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.TranslucentTheme
 import ds.photosight.compose.util.log
@@ -133,36 +138,38 @@ fun ViewerContent(
         drawerElevation = 0.dp,
         drawerScrimColor = Palette.drawerBackground,
         drawerGesturesEnabled = true,
-        drawerShape = RoundedCornerShape(0)
+        drawerShape = RoundedCornerShape(0),
     ) {
         val pagerState = rememberPagerState()
+
         LaunchedEffect(pagerState) {
             pagerState.scrollToPage(currentPageIndex)
         }
 
         LaunchedEffect(pagerState) {
-            snapshotFlow { pagerState.currentPage }
-                .collect { page ->
-                    onPageChanged(page)
-                }
+            snapshotFlow { pagerState.currentPage }.collect { page ->
+                onPageChanged(page)
+            }
         }
 
+        val pagerEnabled = remember(scaffoldState.drawerState.currentValue, scaffoldState.drawerState.isAnimationRunning) { mutableStateOf(true) }
+
+        logCompositions("pager $pagerEnabled drawer=${scaffoldState.drawerState.currentValue}")
         HorizontalPager(
             count = Int.MAX_VALUE / 2,
             state = pagerState,
+            userScrollEnabled = pagerEnabled.value,
+            modifier = Modifier.edgeBypass(pagerEnabled)
         ) { index ->
             val item = photos[index] ?: error("empty item")
-            ZoomableImage(
-                photo = item,
-                onClicked = {
-                    if (isFabExpanded.value) isFabExpanded.value = false
-                    else onClicked()
-                })
+            ZoomableImage(photo = item, onClicked = {
+                if (isFabExpanded.value) isFabExpanded.value = false
+                else onClicked()
+            })
         }
 
         ViewerToolbar(state.showUi, state.title, state.subtitle)
     }
-
     state.currentPhoto?.let { photo ->
         ModalBottomSheetLayout(
             sheetContent = { InfoSheet(photo, infoState.isVisible) },
@@ -173,5 +180,15 @@ fun ViewerContent(
     }
 }
 
-
+private fun Modifier.edgeBypass(scrollEnabled: MutableState<Boolean>): Modifier = this then Modifier.pointerInput(scrollEnabled) {
+    val drawerTapArea = 48.dp.toPx()
+    forEachGesture {
+        awaitPointerEventScope {
+            val down = awaitFirstDown(false)
+            scrollEnabled.value = down.position.x >= drawerTapArea
+            val up = waitForUpOrCancellation()
+            scrollEnabled.value = true
+        }
+    }
+}
 

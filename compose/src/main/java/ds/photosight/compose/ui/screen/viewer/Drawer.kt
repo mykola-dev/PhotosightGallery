@@ -1,6 +1,5 @@
 package ds.photosight.compose.ui.screen.viewer
 
-import android.graphics.Typeface
 import android.text.format.DateUtils
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
@@ -20,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.DeviceFontFamilyName
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,7 +52,7 @@ fun ColumnScope.Drawer(state: DetailsState) {
                 Image(Icons.Default.Close, null)
             }
             is DetailsState.Payload -> {
-                LazyColumn {
+                LazyColumn(contentPadding = WindowInsets.navigationBars.asPaddingValues()) {
                     item {
                         Ratings(state.details.stats, state.details.awards)
                     }
@@ -68,17 +69,7 @@ fun ColumnScope.Drawer(state: DetailsState) {
     }
 }
 
-@Composable
-fun Comments(comments: List<PhotoDetails.Comment>) {
-    LazyColumn(contentPadding = PaddingValues(16.dp)) {
-        items(comments) { comment ->
-            Comment(comment)
-            Spacer(Modifier.height(32.dp))
-        }
-    }
-}
-
-private val condensedTypeface = Typeface.create("sans-serif-condensed", Typeface.NORMAL)
+private val condensedTypeface = Font(DeviceFontFamilyName("sans-serif-condensed"))
 
 @Composable
 fun Comment(comment: PhotoDetails.Comment) {
@@ -177,3 +168,12 @@ fun CommentsPreview() {
     }
 }
 
+@Composable
+private fun Comments(comments: List<PhotoDetails.Comment>) {
+    LazyColumn(contentPadding = PaddingValues(16.dp)) {
+        items(comments) { comment ->
+            Comment(comment)
+            Spacer(Modifier.height(32.dp))
+        }
+    }
+}

@@ -33,7 +33,7 @@ import ds.photosight.compose.ui.isolate
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.pagedItems
 import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
-import ds.photosight.compose.ui.screen.navigation.MainViewModel
+import ds.photosight.compose.ui.screen.MainViewModel
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
@@ -62,6 +62,17 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         }
     }
 
+    val toolbarState by derivedStateOf {
+        ToolbarState(
+            galleryState.title,
+            galleryState.subtitle,
+            menuState.categoriesFilter,
+            viewModel::onShowAboutDialog,
+            viewModel::onFilterSelected,
+            viewModel::onSorterSelected
+        )
+    }
+
     GalleryContent(
         photos = photosStream,
         menuState = menuState,
@@ -78,14 +89,7 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         onFirstVisibleItem = { state ->
             state.value?.let { viewModel.setFirstVisibleItem(it) }
         },
-        toolbarState = ToolbarState(
-            galleryState.title,
-            galleryState.subtitle,
-            menuState.categoriesFilter,
-            viewModel::onShowAboutDialog,
-            viewModel::onFilterSelected,
-            viewModel::onSorterSelected
-        ),
+        toolbarState = toolbarState,
         onDismissAboutDialog = viewModel::onDismissAboutDialog,
     )
 
@@ -173,13 +177,14 @@ fun GalleryContent(
                 .nestedScroll(nestedScrollConnection)
         ) {
 
-            LazyGrid(
+            LazyGrid(GridState(
                 nestedScrollConnection = nestedScrollConnection,
                 photos = photos,
                 selectedPhotoIndex = selectedPhotoIndex,
                 onPhotoClicked = onPhotoClicked,
                 onFirstVisibleItem = onFirstVisibleItem,
                 onScrollingUp = { scrollingUp -> showMenu = scrollingUp }
+            )
             )
             MainToolbar(
                 state = toolbarState,
@@ -197,14 +202,7 @@ fun GalleryContent(
 }
 
 @Composable
-private fun LazyGrid(
-    nestedScrollConnection: ToolbarNestedScrollConnection,
-    photos: LazyPagingItems<Photo>,
-    selectedPhotoIndex: Int?,
-    onPhotoClicked: (Photo) -> Unit,
-    onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
-    onScrollingUp: (Boolean) -> Unit,
-) {
+private fun LazyGrid(gridState: GridState) = with(gridState) {
     logCompositions(msg = "lazy grid")
     val state: LazyListState = rememberLazyListState()
 
@@ -264,6 +262,14 @@ private fun LazyListState.isScrollingUp(): State<Boolean> {
     }
 }
 
+data class GridState(
+    val nestedScrollConnection: ToolbarNestedScrollConnection,
+    val photos: LazyPagingItems<Photo>,
+    val selectedPhotoIndex: Int?,
+    val onPhotoClicked: (Photo) -> Unit,
+    val onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
+    val onScrollingUp: (Boolean) -> Unit,
+)
 
 /*@SuppressLint("UnrememberedMutableState")
 @Preview(showSystemUi = true)

@@ -13,7 +13,7 @@ import ds.photosight.parser.PhotoInfo
 
 fun PhotoCategory.asUiModel(): CategoryMenuItemState = CategoryMenuItemState(index, name)
 
-fun PhotoInfo.asUiModel(): Photo = Photo(id, thumb, large, pageUrl, title, authorName, authorUrl, paginationKey)
+fun PhotoInfo.asUiModel(paginationKey: String): Photo = Photo(id, thumb, large, pageUrl, title, authorName, authorUrl, paginationKey)
 
 @DrawableRes
 fun PhotoDetails.Award.asDrawableResource(context: Context): Int = context.resources.getIdentifier(this.toString(), "drawable", context.packageName)

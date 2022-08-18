@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -61,7 +62,7 @@ fun Ratings(stats: PhotoDetails.Stats, awardsList: List<PhotoDetails.Award>) {
         Modifier
             .fillMaxWidth()
             .background(Color(0x20808080))
-        //.systemBarsPadding()
+            .statusBarsPadding()
     ) {
         val (labels, bar, values, awards) = createRefs()
 
@@ -73,8 +74,8 @@ fun Ratings(stats: PhotoDetails.Stats, awardsList: List<PhotoDetails.Award>) {
         }
 
         Column(horizontalAlignment = Alignment.End, modifier = Modifier.constrainAs(labels) {
-            start.linkTo(parent.start, 16.dp)
-            linkTo(parent.top, parent.bottom, 32.dp, 16.dp, bias = 0f)
+            start.linkTo(parent.start, 32.dp)
+            linkTo(parent.top, parent.bottom, 32.dp, 32.dp, bias = 0f)
         }) {
             labelsList.forEachIndexed { index, label ->
                 AnimatedVisibility(

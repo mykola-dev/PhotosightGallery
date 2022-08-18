@@ -1,5 +1,6 @@
 package ds.photosight.ui.adapter
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,7 +16,6 @@ import ds.photosight.ui.PhotoGestureListener
 import ds.photosight.ui.SharedElementsHelper
 import kotlinx.android.synthetic.main.item_viewer_photo.*
 import timber.log.Timber
-import java.io.FileNotFoundException
 
 class ViewerAdapter(
     val transitionHelper: SharedElementsHelper,
@@ -31,7 +31,7 @@ class ViewerAdapter(
         return holder
     }
 
-    override fun onBindViewHolder(holder: SimpleViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SimpleViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val item = getItem(position)!!
         val photoView = holder.photoImage
         transitionHelper.bindView(photoView, item.id.toString())
@@ -51,15 +51,7 @@ class ViewerAdapter(
                 }
 
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
-                    return if (e?.rootCauses?.any { it is FileNotFoundException } == true) {
-                        Timber.e("file not found! $model isFirst=$isFirstResource")
-                        item.large = item.altLarge
-                        notifyItemChanged(position)
-                        true
-                    } else {
-                        onCompleted()
-                    }
-
+                    return onCompleted()
                 }
 
                 override fun onResourceReady(resource: Drawable, model: Any?, target: Target<Drawable>, dataSource: DataSource?, isFirstResource: Boolean): Boolean =

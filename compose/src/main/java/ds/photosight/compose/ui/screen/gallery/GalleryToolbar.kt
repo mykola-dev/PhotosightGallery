@@ -4,7 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.*
@@ -60,7 +60,7 @@ fun MainToolbar(
                     }
                 }
                 IconButton(onClick = { filtersExpanded = true }) {
-                    Icon(Icons.Filled.Filter, null)
+                    Icon(Icons.Filled.FilterList, null)
                     FiltersMenu(filtersExpanded, filter.filterDumpCategory, { filtersExpanded = false }) {
                         onFilterSelected(it)
                         filtersExpanded = false
