@@ -225,7 +225,7 @@ private fun LazyGrid(gridState: GridState) = with(gridState) {
     onFirstVisibleItem(firstItem)
     TheGrid(
         gridState = state,
-        contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight),
+        contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight, bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()),
         cells = StaggeredCells.Fixed(2)
     ) {
         pagedItems(photos) { item ->

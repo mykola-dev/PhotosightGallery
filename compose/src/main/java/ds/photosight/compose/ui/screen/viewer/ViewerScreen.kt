@@ -23,6 +23,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import ds.photosight.compose.core.SaveImage
 import ds.photosight.compose.repo.getIndexById
 import ds.photosight.compose.ui.events.UiEvent
+import ds.photosight.compose.ui.getOrNull
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.MainViewModel
 import ds.photosight.compose.ui.theme.Palette
@@ -55,9 +56,10 @@ fun ViewerScreen(mainViewModel: MainViewModel) {
                 photos = photos,
                 currentPageIndex = currentPageIndex,
                 onPageChanged = {
-                    val photo = photos[it]!!
-                    mainViewModel.onPhotoSelected(photo.id)
-                    viewModel.onPageChanged(photo)
+                    photos.getOrNull(it)?.let { photo ->
+                        mainViewModel.onPhotoSelected(photo.id)
+                        viewModel.onPageChanged(photo)
+                    }
                 },
                 onClicked = viewModel::onClicked,
                 onShareUrl = viewModel::onUrlShare,
@@ -146,9 +148,10 @@ fun ViewerContent(
             pagerState.scrollToPage(currentPageIndex)
         }
 
+        val updatedOnPageChanged by rememberUpdatedState(onPageChanged)
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect { page ->
-                onPageChanged(page)
+                updatedOnPageChanged(page)
             }
         }
 
@@ -161,11 +164,14 @@ fun ViewerContent(
             userScrollEnabled = pagerEnabled.value,
             modifier = Modifier.edgeBypass(pagerEnabled)
         ) { index ->
-            val item = photos[index] ?: error("empty item")
-            ZoomableImage(photo = item, onClicked = {
-                if (isFabExpanded.value) isFabExpanded.value = false
-                else onClicked()
-            })
+            photos
+                .getOrNull(index)
+                ?.let { item ->
+                    ZoomableImage(photo = item, onClicked = {
+                        if (isFabExpanded.value) isFabExpanded.value = false
+                        else onClicked()
+                    })
+                }
         }
 
         ViewerToolbar(state.showUi, state.title, state.subtitle)

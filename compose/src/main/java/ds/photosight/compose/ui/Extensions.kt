@@ -52,3 +52,4 @@ fun isolate(
     content()
 }
 
+fun <T : Any> LazyPagingItems<T>.getOrNull(index: Int): T? = if (index < itemCount) get(index) else null
