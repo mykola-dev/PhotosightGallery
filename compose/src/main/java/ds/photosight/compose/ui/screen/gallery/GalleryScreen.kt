@@ -5,7 +5,6 @@ package ds.photosight.compose.ui.screen.gallery
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,7 +17,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.nesyou.staggeredgrid.LazyStaggeredGrid
 import com.nesyou.staggeredgrid.StaggeredCells
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -35,6 +33,8 @@ import ds.photosight.compose.ui.pagedItems
 import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
 import ds.photosight.compose.ui.screen.MainViewModel
 import ds.photosight.compose.ui.theme.Palette
+import ds.photosight.compose.ui.widget.TheGrid
+import ds.photosight.compose.ui.widget.rememberGridState
 import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
 import ds.photosight.compose.util.rememberDerived
@@ -204,10 +204,12 @@ fun GalleryContent(
 @Composable
 private fun LazyGrid(gridState: GridState) = with(gridState) {
     logCompositions(msg = "lazy grid")
-    val state: LazyListState = rememberLazyListState()
+    val state = rememberGridState()
 
     LaunchedEffect(selectedPhotoIndex) {
-        selectedPhotoIndex?.let { state.scrollToItem(it) }
+        selectedPhotoIndex?.let {
+            state.scrollToItem(it)
+        }
     }
     val scrollingUp by state.isScrollingUp()
     LaunchedEffect(scrollingUp) {
@@ -221,9 +223,8 @@ private fun LazyGrid(gridState: GridState) = with(gridState) {
         }
     }
     onFirstVisibleItem(firstItem)
-
-    LazyStaggeredGrid(
-        state = state,
+    TheGrid(
+        gridState = state,
         contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight),
         cells = StaggeredCells.Fixed(2)
     ) {
@@ -231,16 +232,6 @@ private fun LazyGrid(gridState: GridState) = with(gridState) {
             Thumb(item, onPhotoClicked)
         }
     }
-
-/*    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(top = nestedScrollConnection.toolbarHeight),
-    ) {
-        pagedItems(photos, { it }) { item ->
-            logCompositions(msg = "paged items ${item.id}")
-            Thumb(item, onPhotoClicked)
-        }
-    }*/
 
 }
 
@@ -270,25 +261,3 @@ data class GridState(
     val onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
     val onScrollingUp: (Boolean) -> Unit,
 )
-
-/*@SuppressLint("UnrememberedMutableState")
-@Preview(showSystemUi = true)
-@Composable
-fun GalleryPreview() {
-    PhotosightTheme {
-        GalleryContent(
-            flowOf(PagingData.empty<Photo>()).collectAsLazyPagingItems(),
-            mutableStateOf("World"),
-            "world",
-            mutableStateOf(false),
-            MenuState(),
-            0,
-            {},
-            {},
-            null,
-            {},
-            { },
-            {}
-        )
-    }
-}*/

@@ -52,10 +52,10 @@ class PhotosPagingSource @AssistedInject constructor(
             is CategoryMenuItemState -> {
                 val filter = menuState.categoriesFilter ?: error("filter is null")
                 CategoriesPhotosRequest(
-                    selected.category,
-                    SimplePage(page),
-                    filter.filterDumpCategory,
-                    filter.sortTypeCategory
+                    category = selected.category,
+                    page = SimplePage(page),
+                    filterDumpCategory = filter.filterDumpCategory,
+                    sortTypeCategory = filter.sortTypeCategory
                 )
             }
             is RatingMenuItemState -> {
