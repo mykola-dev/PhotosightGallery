@@ -13,7 +13,7 @@ import kotlin.math.max
 
 @Composable
 fun Histogram(data: HistogramData?) {
-    logCompositions("histogram")
+    logCompositions("histogram $data")
 
     Canvas(
         Modifier

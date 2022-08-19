@@ -51,7 +51,7 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
     val event: State<UiEvent?> = viewModel.events.collectAsState(null)
 
     val menuState by viewModel.menuStateFlow.collectAsState()
-    val galleryState by viewModel.galleryState.collectAsState()
+    val galleryState = viewModel.galleryState.collectAsState()
     val photosStream: LazyPagingItems<Photo> = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
     val selectedPhotoIndex = photosStream.getIndexById(mainViewModel.selectedId)
 
@@ -62,10 +62,10 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         }
     }
 
-    val toolbarState by derivedStateOf {
+    val toolbarState = derivedStateOf {
         ToolbarState(
-            galleryState.title,
-            galleryState.subtitle,
+            galleryState.value.title,
+            galleryState.value.subtitle,
             menuState.categoriesFilter,
             viewModel::onShowAboutDialog,
             viewModel::onFilterSelected,
@@ -85,7 +85,7 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         },
         event = event,
         onRetry = photosStream::retry,
-        loadingSlot = { LoadingSlot(galleryState.isLoading) },
+        loadingSlot = { LoadingSlot(galleryState.value.isLoading) },
         onFirstVisibleItem = { state ->
             state.value?.let { viewModel.setFirstVisibleItem(it) }
         },
@@ -111,7 +111,7 @@ fun LoadingSlot(isLoading: Boolean) {
 @Composable
 fun GalleryContent(
     photos: LazyPagingItems<Photo>,
-    galleryState: GalleryState,
+    galleryState: State<GalleryState>,
     menuState: MenuState,
     selectedPhotoIndex: Int?,
     event: State<UiEvent?>,
@@ -120,7 +120,7 @@ fun GalleryContent(
     onRetry: () -> Unit,
     loadingSlot: @Composable () -> Unit,
     onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
-    toolbarState: ToolbarState,
+    toolbarState: State<ToolbarState>,
     onDismissAboutDialog: () -> Unit,
 ) {
     logCompositions(msg = "gallery content")
@@ -193,7 +193,7 @@ fun GalleryContent(
 
             loadingSlot()
 
-            if (galleryState.showAboutDialog) {
+            if (galleryState.value.showAboutDialog) {
                 AboutDialog(onDismiss = onDismissAboutDialog)
             }
 

@@ -37,10 +37,8 @@ class ViewerViewModel @Inject constructor(
     private val detailsCache = mutableMapOf<Int, PhotoDetails>()
 
     private fun fetchDetails() = launch {
-        log.v("fetching...")
         val detailsState = try {
             val details: PhotoDetails = detailsCache.getOrPut(photo.id) { repo.getPhotoDetails(photo.id) }
-            log.v("publishing")
             DetailsState.Payload(details)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -59,7 +57,6 @@ class ViewerViewModel @Inject constructor(
                 currentPhoto = item,
                 title = item.title,
                 subtitle = item.authorName,
-                details = DetailsState.Loading
             )
         }
     }
@@ -76,13 +73,16 @@ class ViewerViewModel @Inject constructor(
         when (value) {
             DrawerValue.Open -> {
                 _state.update {
-                    it.copy(showUi = false)
+                    it.copy(
+                        showUi = false,
+                        details = DetailsState.Loading
+                    )
                 }
                 fetchDetails()
             }
             DrawerValue.Closed -> {
                 _state.update {
-                    it.copy(details = DetailsState.Loading)
+                    it.copy(details = DetailsState.Hidden)
                 }
             }
         }

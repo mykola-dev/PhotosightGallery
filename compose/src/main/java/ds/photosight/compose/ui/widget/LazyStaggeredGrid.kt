@@ -15,13 +15,15 @@ import androidx.compose.ui.unit.dp
 import com.nesyou.staggeredgrid.StaggeredCells
 import com.nesyou.staggeredgrid.StaggeredGridScope
 import com.nesyou.staggeredgrid.StaggeredGridScopeImpl
+import ds.photosight.compose.util.logCompositions
 import kotlinx.coroutines.launch
 
 class StaggeredGridState {
     var states: List<LazyListState> = emptyList()
 
-    val firstVisibleItemIndex: Int get() = states.map { it.firstVisibleItemIndex }.fold(0) { acc, i -> acc + i }
-    private val firstVisibleItemScrollOffset get() = states.getOrNull(0)?.firstVisibleItemScrollOffset ?: 0
+    inline val firstVisibleItemIndex: Int get() = states.map { it.firstVisibleItemIndex }.fold(0) { acc, i -> acc + i }
+    private inline val firstVisibleItemIndexFast: Int get() = states.getOrNull(0)?.firstVisibleItemIndex ?: 0
+    private inline val firstVisibleItemScrollOffset get() = states.getOrNull(0)?.firstVisibleItemScrollOffset ?: 0
 
     suspend fun scrollToItem(index: Int) {
         if (states.isEmpty()) return
@@ -32,19 +34,23 @@ class StaggeredGridState {
 
     @Composable
     fun isScrollingUp(): State<Boolean> {
+        logCompositions("is scrolling")
         if (states.isEmpty()) return remember { mutableStateOf(false) }
 
-        var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
+        var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndexFast) }
         var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
         return remember(this) {
             derivedStateOf {
-                if (previousIndex != firstVisibleItemIndex) {
-                    previousIndex > firstVisibleItemIndex
+                //log.v("derive scrolling")
+                val index = firstVisibleItemIndexFast
+                val offset = firstVisibleItemScrollOffset
+                if (previousIndex != index) {
+                    previousIndex > index
                 } else {
-                    previousScrollOffset >= firstVisibleItemScrollOffset
+                    previousScrollOffset >= offset
                 }.also {
-                    previousIndex = firstVisibleItemIndex
-                    previousScrollOffset = firstVisibleItemScrollOffset
+                    previousIndex = index
+                    previousScrollOffset = offset
                 }
             }
         }

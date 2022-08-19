@@ -65,6 +65,7 @@ fun ColumnScope.Drawer(state: DetailsState) {
                     }
                 }
             }
+            is DetailsState.Hidden -> {}
         }
     }
 }
@@ -74,7 +75,10 @@ private val condensedTypeface = Font(DeviceFontFamilyName("sans-serif-condensed"
 @Composable
 fun Comment(comment: PhotoDetails.Comment) {
     val dateText = DateUtils.getRelativeDateTimeString(LocalContext.current, comment.timestamp.toEpochMilli(), 0, DateUtils.DAY_IN_MILLIS, 0).toString()
-    ConstraintLayout(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
+    ConstraintLayout(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)) {
         val (author, avatar, text, date, likes) = createRefs()
         Text(
             text = comment.author,

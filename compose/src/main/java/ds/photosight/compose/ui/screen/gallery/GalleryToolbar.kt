@@ -12,11 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ds.photosight.compose.data.getTitleId
-import ds.photosight.compose.ui.theme.PhotosightTheme
+import ds.photosight.compose.util.logCompositions
 import ds.photosight.parser.CategoriesPhotosRequest
 
 data class ToolbarState(
@@ -30,9 +29,10 @@ data class ToolbarState(
 
 @Composable
 fun MainToolbar(
-    state: ToolbarState,
+    state: State<ToolbarState>,
     modifier: Modifier = Modifier,
-) = with(state) {
+) = with(state.value) {
+    logCompositions("toolbar")
     TopAppBar(
         contentPadding = WindowInsets.statusBars.asPaddingValues(),
         modifier = modifier
@@ -108,11 +108,11 @@ fun SortersMenu(
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun ToolbarPreview() {
     PhotosightTheme {
         MainToolbar(ToolbarState(title = "hello", subtitle = "world", PhotosFilter(), {}, {}, {}))
     }
-}
+}*/
 
