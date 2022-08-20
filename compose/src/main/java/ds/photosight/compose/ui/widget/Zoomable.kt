@@ -13,7 +13,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
 import kotlin.math.abs
 
-fun Modifier.zoomable(imageWidth: Float, imageHeight: Float, onClicked: (() -> Unit)? = null): Modifier = composed {
+fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modifier = composed {
     var size by remember { mutableStateOf(IntSize.Zero) }
     var scale by remember { mutableStateOf(1f) }
     var pan by remember { mutableStateOf(Offset.Zero) }
@@ -30,13 +30,18 @@ fun Modifier.zoomable(imageWidth: Float, imageHeight: Float, onClicked: (() -> U
     }
 
     fun fitScreen(offset: Offset) {
-
-        val targetZoom = if (imageHeight < size.height) {
-            size.height / imageHeight
-        } else if (imageWidth < size.width) {
-            size.width / imageWidth
+        val screenScale = size.width / size.height.toFloat()
+        val shouldFitVertically = screenScale < imageScale
+        val (imageWidth: Float, imageHeight: Float) = if (shouldFitVertically) {
+            size.width.toFloat() to size.width / imageScale
         } else {
-            1f
+            size.height * imageScale to size.height.toFloat()
+        }
+
+        val targetZoom = if (shouldFitVertically) {
+            imageScale / screenScale
+        } else {
+            screenScale / imageScale
         }
 
         val maxOffsetX = ((imageWidth * targetZoom - size.width) / 2).coerceAtLeast(0f)
@@ -48,7 +53,7 @@ fun Modifier.zoomable(imageWidth: Float, imageHeight: Float, onClicked: (() -> U
         scale = if (abs(targetZoom - scale) > 0.1) targetZoom else 1f
         pan = targetPan
 
-        //log.v("screenScale=$screenScale imageScale=$imageScale scale=$targetZoom maxPanX=$maxOffsetX panX=$panX")
+        //log.v("screenScale=$screenScale imageScale=$imageScale zoom=$targetZoom maxPan=${maxOffsetX}x${maxOffsetY} panX=$panX size=${imageWidth}x${imageHeight}")
     }
 
     val idle by derivedStateOf {
@@ -79,7 +84,7 @@ fun Modifier.zoomable(imageWidth: Float, imageHeight: Float, onClicked: (() -> U
             translationY = panAnimated.y
             rotationZ = angleAnimated
         }
-        .pointerInput(imageWidth, imageHeight) {
+        .pointerInput(Unit) {
             detectTapGestures(
                 onDoubleTap = {
                     fitScreen(it)

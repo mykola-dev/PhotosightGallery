@@ -53,16 +53,18 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
             showPlaceHolder = this.transition.currentState != EnterExitState.Visible
 
             state as AsyncImagePainter.State.Success
-            val (w,h) = remember {
+            val scale = remember {
                 painter.intrinsicSize.run {
-                    width to height
+                    width / height
                 }
             }
-            //log.v("measured $w x $h")
+
+            //log.v("photo=$photo")
+            //log.v("measured scale $scale")
             SubcomposeAsyncImageContent(
                 modifier = Modifier
                     .fillMaxSize()
-                    .zoomable(w,h) { onClicked() }
+                    .zoomable(scale) { onClicked() }
             )
         }
 
