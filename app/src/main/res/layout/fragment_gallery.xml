@@ -22,8 +22,6 @@
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:title="Photosight Gallery"
             />
-
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -40,7 +38,6 @@
         tools:itemCount="100"
         tools:listitem="@layout/item_gallery_photo"
         />
-
 
     <include
         android:id="@+id/bottomSheet"
@@ -74,12 +71,6 @@
             android:background="@null"
             android:indeterminate="true"
             />
-        <!--<com.google.android.material.progressindicator.ProgressIndicator
-            android:id="@+id/progress"
-            style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />-->
 
         <View
             android:id="@+id/screenBottom"

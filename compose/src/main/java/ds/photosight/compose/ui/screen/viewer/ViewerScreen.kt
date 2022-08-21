@@ -157,7 +157,6 @@ fun ViewerContent(
 
         val pagerEnabled = remember(scaffoldState.drawerState.currentValue, scaffoldState.drawerState.isAnimationRunning) { mutableStateOf(true) }
 
-        logCompositions("pager $pagerEnabled drawer=${scaffoldState.drawerState.currentValue}")
         HorizontalPager(
             count = Int.MAX_VALUE / 2,
             state = pagerState,

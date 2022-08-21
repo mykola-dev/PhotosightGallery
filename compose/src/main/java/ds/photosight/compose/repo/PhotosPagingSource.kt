@@ -40,7 +40,8 @@ class PhotosPagingSource @AssistedInject constructor(
         ) key + 1
         else null
 
-        val data: List<Photo> = page.map { item -> item.asUiModel(key.toString()) }
+        val paginationKey = key.toString().takeIf { request is Multipage }
+        val data: List<Photo> = page.map { item -> item.asUiModel(paginationKey) }
         LoadResult.Page(data, prevKey, nextKey)
     } catch (e: Exception) {
         e.printStackTrace()
