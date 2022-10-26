@@ -3,6 +3,7 @@ package ds.photosight.compose.ui
 import android.annotation.SuppressLint
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.runtime.Composable
 import androidx.paging.compose.LazyPagingItems
 import com.nesyou.staggeredgrid.StaggeredGridScope
@@ -27,6 +28,17 @@ fun <T : Any> LazyGridScope.pagedItems(
     items(
         count = items.itemCount,
         key = key,
+    ) { index ->
+        itemContent(items[index]!!)
+    }
+}
+
+fun <T : Any> LazyStaggeredGridScope.pagedItems(
+    items: LazyPagingItems<T>,
+    itemContent: @Composable LazyStaggeredGridScope.(value: T) -> Unit
+) {
+    items(
+        count = items.itemCount,
     ) { index ->
         itemContent(items[index]!!)
     }

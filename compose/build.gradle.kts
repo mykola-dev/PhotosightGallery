@@ -7,10 +7,10 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
-    id("androidx.navigation.safeargs.kotlin")
+    //id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
     id("com.github.breadmoirai.github-release") version "2.4.1"
-    id("com.google.devtools.ksp") version "1.7.0-1.0.6"
+    id("com.google.devtools.ksp") version "1.7.20-1.0.7"
 }
 
 val changelog = File(rootProject.projectDir, "changelog.txt").readText()
@@ -20,12 +20,12 @@ val (appVersion, recentChanges) = Regex("""^v(\d\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:
 val appVersionCode = changelog.lines().size + 20
 
 android {
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "ds.photosight.compose"
         minSdk = 26
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "2.0"
 
@@ -96,7 +96,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
+        kotlinCompilerExtensionVersion = "1.3.2"
     }
 
     packagingOptions {
@@ -104,6 +104,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    namespace = "ds.photosight.compose"
 
     // ksp bug
     applicationVariants.all {
@@ -131,26 +132,26 @@ githubRelease {
 dependencies {
     val hiltVersion: String by rootProject.extra
     //val navVersion: String by rootProject.extra
-    val composeVersion = "1.2.0"
-    val accompanist = "0.24.13-rc"
-    val composeDestinations = "1.6.15-beta"
+    val composeVersion = "1.3.0"
+    val accompanist = "0.25.1"
+    val composeDestinations = "1.7.23-beta"
 
     implementation(project(":parser"))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
-    //implementation("androidx.profileinstaller:profileinstaller:1.2.0")
-
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.0")
 
     // compose
     implementation("androidx.compose.ui:ui:$composeVersion")
     //implementation("androidx.compose.material3:material3:1.0.0-alpha14")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.5.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha15")
-    implementation("androidx.navigation:navigation-compose:2.5.1")
+    implementation("androidx.compose.foundation:foundation:$composeVersion")
+    implementation("androidx.activity:activity-compose:1.6.1")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
 
     // accompanist https://github.com/google/accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")
@@ -158,12 +159,12 @@ dependencies {
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanist")
     implementation("com.google.accompanist:accompanist-pager:$accompanist")
 
-    // navigation
+    // navigation https://github.com/raamcosta/compose-destinations
     implementation("io.github.raamcosta.compose-destinations:animations-core:$composeDestinations")
     ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinations")
 
     // androidx
-    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")              // https://developer.android.com/jetpack/androidx
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
@@ -177,7 +178,6 @@ dependencies {
     implementation("com.github.nesyou01:LazyStaggeredGrid:1.2.0")
 
     // kotlin
-    //implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")          // https://kotlinlang.org/docs/reference/coroutines/basics.html
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
 
