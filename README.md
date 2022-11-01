@@ -18,5 +18,4 @@ Shared element transitions
 Jetpack Compose (see the compose branch)    
 
 ### ToDo:
-Compose: shared element transitions  
-Compose: better staggered grid  
+Compose: shared element transitions
