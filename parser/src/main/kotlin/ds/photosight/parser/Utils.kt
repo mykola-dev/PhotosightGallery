@@ -1,9 +1,9 @@
 package ds.photosight.parser
 
-val pattern2022 = Regex("""https://cdny\.de/p/(t).+?\d+.jpg""")
+private val pattern = Regex("""https://ecdn\.pro/p/(t).+?\d+.jpg""")
 
 fun String.thumbToLarge(): String =
-    pattern2022.matchEntire(this)
+    pattern.matchEntire(this)
         ?.let {
             val range = it.groups[1]!!.range
             this.replaceRange(range, "x")
