@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -45,7 +45,7 @@ import kotlin.math.roundToInt
 @Composable
 fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel) {
     logCompositions(msg = "root")
-    val viewModel: GalleryViewModel = hiltViewModel()
+    val viewModel: GalleryViewModel = koinViewModel()
     mainViewModel.setMenuStateFlow(viewModel.menuStateFlow)
 
     val event: State<UiEvent?> = viewModel.events.collectAsState(null)

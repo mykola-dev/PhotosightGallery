@@ -3,15 +3,11 @@ package ds.photosight.compose.usecase
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ds.photosight.compose.R
 import ds.photosight.compose.util.loadImageFile
-import javax.inject.Inject
 
 
-class ShareUseCase @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+class ShareUseCase(private val context: Context) {
 
     fun shareUrl(pageUrl: String) {
         context.shareUrl(pageUrl)

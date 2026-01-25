@@ -3,7 +3,6 @@ package ds.photosight.compose.ui.screen.gallery
 import androidx.compose.material.BottomSheetValue
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import ds.photosight.compose.data.asUiModel
 import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
@@ -17,10 +16,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class GalleryViewModel @Inject constructor(
+class GalleryViewModel(
     private val photosightRepo: PhotosightRepo,
     private val toolbarDataUseCase: ToolbarDataUseCase,
     checkVersionUseCase: CheckVersionUseCase,

@@ -10,9 +10,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +25,7 @@ import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomMenu(
     shitState: BottomSheetState,
@@ -40,11 +43,12 @@ fun BottomMenu(
         val pagerState = rememberPagerState(initialPage = 0)
         val tabIndex = pagerState.currentPage
 
+        // Simplified calculation using progress property
         val collapsedFraction by derivedStateOf {
-            if (shitState.progress.to == BottomSheetValue.Collapsed) {
-                1 - shitState.progress.fraction
-            } else {
-                shitState.progress.fraction
+            when (shitState.targetValue) {
+                BottomSheetValue.Collapsed -> shitState.progress
+                BottomSheetValue.Expanded -> 1 - shitState.progress
+                else -> 0f
             }
         }
         val sbHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
@@ -135,7 +139,8 @@ fun MenuItemPreview() {
 @Preview
 @Composable
 fun BottomMenuPreview() {
+    val density = LocalDensity.current
     PhotosightTheme {
-        BottomMenu(BottomSheetState(BottomSheetValue.Expanded), MenuState(), {})
+        BottomMenu(BottomSheetState(BottomSheetValue.Expanded, density), MenuState(), {})
     }
 }

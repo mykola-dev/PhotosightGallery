@@ -3,9 +3,6 @@ package ds.photosight.compose.repo
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.paging.compose.LazyPagingItems
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import ds.photosight.compose.data.asUiModel
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.gallery.CategoryMenuItemState
@@ -15,13 +12,12 @@ import ds.photosight.parser.*
 
 const val PAGE_SIZE = 24
 
-@AssistedFactory
 interface PhotosPagingSourceFactory {
     operator fun invoke(menuState: MenuState): PhotosPagingSource
 }
 
-class PhotosPagingSource @AssistedInject constructor(
-    @Assisted private val menuState: MenuState,
+class PhotosPagingSource(
+    private val menuState: MenuState,
     private val photosightRepo: PhotosightRepo,
 ) : PagingSource<Int, Photo>() {
 

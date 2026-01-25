@@ -2,7 +2,6 @@ package ds.photosight.compose.ui.screen.viewer
 
 import android.net.Uri
 import androidx.compose.material.DrawerValue
-import dagger.hilt.android.lifecycle.HiltViewModel
 import ds.photosight.compose.R
 import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
@@ -18,10 +17,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class ViewerViewModel @Inject constructor(
+class ViewerViewModel(
     private val shareUseCase: ShareUseCase,
     private val downloadUseCase: DownloadUseCase,
     private val openBrowserUseCase: OpenBrowserUseCase,

@@ -5,7 +5,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import dagger.hilt.android.lifecycle.HiltViewModel
 import ds.photosight.compose.repo.PAGE_SIZE
 import ds.photosight.compose.repo.PhotosPagingSourceFactory
 import ds.photosight.compose.ui.BaseViewModel
@@ -15,10 +14,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
+class MainViewModel(
     log: Timber.Tree,
     private val photosPagingSourceFactory: PhotosPagingSourceFactory,
 ) : BaseViewModel(log) {

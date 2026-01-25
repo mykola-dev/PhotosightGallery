@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import org.koin.androidx.compose.koinViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.pager.HorizontalPager
@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ViewerScreen(mainViewModel: MainViewModel) {
     logCompositions(msg = "viewer screen")
-    val viewModel: ViewerViewModel = hiltViewModel()
+    val viewModel: ViewerViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
     val event by viewModel.events.collectAsState(null)
     val photos = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()

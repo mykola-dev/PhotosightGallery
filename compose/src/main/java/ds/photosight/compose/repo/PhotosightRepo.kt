@@ -1,16 +1,12 @@
 package ds.photosight.compose.repo
 
 import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ds.photosight.compose.ui.screen.gallery.RatingMenuItemState
 import ds.photosight.parser.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PhotosightRepo @Inject constructor(@ApplicationContext private val context: Context) {
+class PhotosightRepo(private val context: Context) {
 
     suspend fun <T> apiRequest(request: Request<T>): T = withContext(Dispatchers.Default) {
         println("==> executing request ${request.url}")

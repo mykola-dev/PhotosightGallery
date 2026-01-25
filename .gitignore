@@ -7,3 +7,7 @@ keystore.properties
 lint.xml
 gradlew*
 /bin
+.claude/
+CLAUDE.md
+.old/
+.kotlin/

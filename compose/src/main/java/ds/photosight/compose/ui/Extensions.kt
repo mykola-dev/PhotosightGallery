@@ -37,10 +37,14 @@ fun <T : Any> LazyStaggeredGridScope.pagedItems(
     items: LazyPagingItems<T>,
     itemContent: @Composable LazyStaggeredGridScope.(value: T) -> Unit
 ) {
+    val gridScope = this
     items(
         count = items.itemCount,
     ) { index ->
-        itemContent(items[index]!!)
+        items[index]?.let { item ->
+            // Call the extension function explicitly with the captured scope
+            gridScope.itemContent(item)
+        }
     }
 }
 

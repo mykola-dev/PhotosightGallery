@@ -1,7 +1,6 @@
 buildscript {
-    val kotlinVersion by extra("1.7.20")
-    val navVersion by extra("2.5.0")
-    val hiltVersion by extra("2.42")
+    val kotlinVersion by extra("2.3.0")
+    val navVersion by extra("2.8.3")
 
 
     repositories {
@@ -9,10 +8,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.0.0")
+        classpath("com.android.tools.build:gradle:8.7.3")
         classpath(kotlin("gradle-plugin", version = kotlinVersion))
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
     }
 }
 

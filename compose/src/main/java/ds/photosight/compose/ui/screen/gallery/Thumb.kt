@@ -60,7 +60,7 @@ fun Thumb(
             )
         },
         error = {
-            Image(painterResource(id = R.drawable.photo_placeholder), null)
+            Image(painterResource(id = R.drawable.photo_placeholder_vector), null)
         },
         contentDescription = item.title,
         contentScale = ContentScale.FillWidth,

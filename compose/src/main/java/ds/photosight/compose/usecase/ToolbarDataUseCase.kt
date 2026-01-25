@@ -1,14 +1,12 @@
 package ds.photosight.compose.usecase
 
 import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.screen.gallery.MenuState
-import javax.inject.Inject
 
-class ToolbarDataUseCase @Inject constructor(
-    @ApplicationContext private val context: Context,
+class ToolbarDataUseCase(
+    private val context: Context,
     private val appNameProvider: AppNameUseCase,
 ) {
 
