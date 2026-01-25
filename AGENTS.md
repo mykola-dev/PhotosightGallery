@@ -2,29 +2,43 @@
 
 This file guides agentic coding assistants working in this Kotlin/Android multi-module project.
 
+## Module Structure
+
+### Main Application
+- `compose/` - **Primary application** - Modern Jetpack Compose UI (minSdk 26, targetSdk 33)
+  - This is the actively maintained and deployed application
+  - Build with: `./gradlew :compose:assembleDebug` or `./gradlew :compose:assembleRelease`
+  - Install on device: `adb install -r compose/build/outputs/apk/debug/compose-debug.apk`
+
+### Legacy Application
+- `app/` - **Legacy application** - Old XML-based UI (minSdk 21, targetSdk 32)
+  - Maintained for backwards compatibility but not actively developed
+  - Build with: `./gradlew :app:assembleDebug` or `./gradlew :app:assembleRelease`
+
+### Shared Modules
+- `parser/` - Pure Kotlin/JVM module (web scraping, data models, HTTP client)
+  - Shared by both `app` and `compose` modules
+  - Contains all business logic and data parsing
+
 ## Build/Test/Lint Commands
 
 ### Building
+- `./gradlew :compose:assembleDebug` - Build compose debug APK (primary)
+- `./gradlew :compose:assembleRelease` - Build compose release APK (primary)
+- `./gradlew :app:assembleDebug` - Build app debug APK (legacy)
+- `./gradlew :app:assembleRelease` - Build app release APK (legacy)
 - `./gradlew build` - Build and test all modules
-- `./gradlew assembleDebug` - Build debug APK
-- `./gradlew assembleRelease` - Build release APK (signed)
 
 ### Testing
 - `./gradlew test` - Run all unit tests
-- `./gradlew app:testDebugUnitTest` - Run app module unit tests
 - `./gradlew parser:test` - Run parser module unit tests
-- `./gradlew :app:test --tests "ds.photosight.utils.ReflectionDelegateTest"` - Run single test class
-- `./gradlew :app:test --tests "ds.photosight.utils.ReflectionDelegateTest.test read"` - Run single test method
+- `./gradlew :compose:testDebugUnitTest` - Run compose module unit tests
+- `./gradlew :app:testDebugUnitTest` - Run app module unit tests
+- `./gradlew :parser:test --tests "ds.photosight.parser.RequestsTest"` - Run single test class
 
 ### Linting
-- `./gradlew lint` - Run lint on all variants
-- `./gradlew app:lintDebug` - Run lint on debug variant
-- `./gradlew app:lintFix` - Auto-fix safe lint issues
-
-### Module Structure
-- `app/` - Main Android application (UI, ViewModels, Repositories)
-- `parser/` - Pure Kotlin/JVM module (web scraping, data models, HTTP client)
-- `compose/` - Jetpack Compose implementation (separate branch)
+- `./gradlew :compose:lintDebug` - Run lint on compose debug variant
+- `./gradlew :app:lintDebug` - Run lint on app debug variant
 
 ## Code Style Guidelines
 
@@ -125,17 +139,25 @@ This file guides agentic coding assistants working in this Kotlin/Android multi-
 ### Build Configuration
 - Kotlin 1.7.20
 - Gradle 8.0
-- compileSdk 32, minSdk 21, targetSdk 32
 - JVM target: 1.8
-- Use kapt for annotation processing (Hilt, Glide)
 - Android SDK location: `C:\dev\android-sdk-windows\`
 - SDK Build-Tools: 30.0.3 (auto-installed during build)
 
+#### Compose Module (Primary)
+- compileSdk 33, minSdk 26, targetSdk 33
+- Use kapt and ksp for annotation processing (Hilt, Compose Destinations)
+- Jetpack Compose 1.3.0
+- Accompanist 0.25.1
+
+#### App Module (Legacy)
+- compileSdk 32, minSdk 21, targetSdk 32
+- Use kapt for annotation processing (Hilt, Glide)
+- Traditional XML-based UI with Navigation Component
+
 ## Known Issues & Warnings
 
-### Critical Warnings (Build Time)
+### App Module (Legacy) Issues
 - `kotlin-android-extensions` plugin is deprecated - using `kotlinx.android.synthetic.*` throughout codebase
-- Unsafe compiler argument `-XXLanguage:+InlineClasses` in use (not production-ready)
 - Kotlinx coroutines experimental flags not supported by current compiler version
 - Multiple API deprecations:
   - `Handler()` constructor deprecated in Java
@@ -146,11 +168,14 @@ This file guides agentic coding assistants working in this Kotlin/Android multi-
 - Unnecessary non-null assertions in `Histogram.kt:78`
 - Unchecked casts in `LiveDataExt.kt:29,41`
 
+### Compose Module (Primary) Issues
+- Unsafe compiler argument `-XXLanguage:+InlineClasses` in use (not production-ready)
+
 ### Android SDK Setup
 - adb command may not be in PATH - ensure `C:\dev\android-sdk-windows\platform-tools\` is in PATH
 - Use Android Studio or SDK Manager to manage SDK updates
 
-### Migration Priorities
+### Migration Priorities (App Module - Legacy)
 1. **HIGH**: Migrate from `kotlinx.android.synthetic` to View Binding
 2. **MEDIUM**: Remove deprecated API calls (Handler, systemWindowInsets, UI flags)
 3. **LOW**: Remove unused parameters and unnecessary assertions
