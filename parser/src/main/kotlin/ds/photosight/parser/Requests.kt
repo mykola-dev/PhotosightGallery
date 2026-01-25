@@ -121,7 +121,9 @@ abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
             val id = el
                 .getElementsByTag("a")
                 .first()!!
-                .attr("data-href")
+                .let { link ->
+                    link.attr("data-href").ifBlank { link.attr("href") }
+                }
                 .let { Regex("/photos/(\\d+).*").matchEntire(it) }
                 ?.groupValues
                 ?.get(1)

@@ -191,14 +191,7 @@ tasks {
         overwrite.set(true)
         dryRun.set(false)
 
-        // postpone asset preparation
-        doFirst {
-            val filter = FilenameFilter { dir, filename -> appVersion in filename }
-            val releaseFile = File(rootProject.rootDir, "bin").listFiles(filter)
-            setReleaseAssets(releaseFile)
-
-        }
-
+        releaseAssets.from(File(rootProject.rootDir, "bin").listFiles { dir, filename -> appVersion in filename })
     }
 
 }

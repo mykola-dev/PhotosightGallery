@@ -1,3 +1,6 @@
+v2.0.1
+- fixed parser
+
 v2.0
 - rewritten with jetpack compose
 

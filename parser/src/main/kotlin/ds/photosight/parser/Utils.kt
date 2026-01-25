@@ -1,6 +1,6 @@
 package ds.photosight.parser
 
-private val pattern = Regex("""https://ecdn\.pro/p/(t).+?\d+.jpg""")
+private val pattern = Regex("""https://cdn\.sight\.photo/p/(t).+?\d+\.jpg""")
 
 fun String.thumbToLarge(): String =
     pattern.matchEntire(this)
