@@ -1,6 +1,7 @@
 package ds.photosight.compose.ui.screen.viewer
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.forEachGesture
@@ -16,10 +17,9 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.ramcosta.composedestinations.annotation.Destination
 import ds.photosight.compose.core.SaveImage
 import ds.photosight.compose.repo.getIndexById
 import ds.photosight.compose.ui.events.UiEvent
@@ -32,14 +32,23 @@ import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
 import kotlinx.coroutines.launch
 
-@Destination
 @Composable
-fun ViewerScreen(mainViewModel: MainViewModel) {
+fun ViewerScreen(
+    mainViewModel: MainViewModel,
+    photoId: Int,
+    onBack: () -> Unit,
+) {
     logCompositions(msg = "viewer screen")
     val viewModel: ViewerViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
     val event by viewModel.events.collectAsState(null)
     val photos = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
+
+    // Set the selected photo when the screen opens
+    LaunchedEffect(photoId) {
+        mainViewModel.onPhotoSelected(photoId)
+    }
+
     val currentPageIndex = photos.getIndexById(mainViewModel.selectedId) ?: 0
 
     val downloadLauncher = rememberLauncherForActivityResult(SaveImage()) { uri ->
@@ -61,7 +70,9 @@ fun ViewerScreen(mainViewModel: MainViewModel) {
                         viewModel.onPageChanged(photo)
                     }
                 },
-                onClicked = viewModel::onClicked,
+                onClicked = {
+                    // Handle back button press when image is clicked (optional)
+                },
                 onShareUrl = viewModel::onUrlShare,
                 onShareImage = viewModel::onImageShare,
                 onDrawerToggle = viewModel::onDrawerStateChanged,
@@ -70,6 +81,11 @@ fun ViewerScreen(mainViewModel: MainViewModel) {
                 onInfoClick = viewModel::onInfo
             )
         }
+    }
+
+    // Handle system back button
+    BackHandler(enabled = true) {
+        onBack()
     }
 
     val systemUiController = rememberSystemUiController()
@@ -106,6 +122,7 @@ fun ViewerContent(
         when (event) {
             is UiEvent.Snack -> scaffoldState.snackbarHostState.showSnackbar(ctx.getString(event.stringId))
             is UiEvent.OpenInfo -> infoState.show()
+            null -> Unit
         }
     }
 
@@ -142,7 +159,7 @@ fun ViewerContent(
         drawerGesturesEnabled = true,
         drawerShape = RoundedCornerShape(0),
     ) {
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState(pageCount = { Int.MAX_VALUE / 2 })
 
         LaunchedEffect(pagerState) {
             pagerState.scrollToPage(currentPageIndex)
@@ -158,13 +175,11 @@ fun ViewerContent(
         val pagerEnabled = remember(scaffoldState.drawerState.currentValue, scaffoldState.drawerState.isAnimationRunning) { mutableStateOf(true) }
 
         HorizontalPager(
-            count = Int.MAX_VALUE / 2,
             state = pagerState,
-            userScrollEnabled = pagerEnabled.value,
-            modifier = Modifier.edgeBypass(pagerEnabled)
-        ) { index ->
+            userScrollEnabled = pagerEnabled.value
+        ) { page ->
             photos
-                .getOrNull(index)
+                .getOrNull(page)
                 ?.let { item ->
                     ZoomableImage(photo = item, onClicked = {
                         if (isFabExpanded.value) isFabExpanded.value = false
@@ -196,4 +211,3 @@ private fun Modifier.edgeBypass(scrollEnabled: MutableState<Boolean>): Modifier 
         }
     }
 }
-

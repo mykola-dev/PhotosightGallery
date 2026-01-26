@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
 import kotlinx.coroutines.launch
@@ -40,15 +40,17 @@ fun BottomMenu(
     }
 
     Column {
-        val pagerState = rememberPagerState(initialPage = 0)
+        val pagerState = rememberPagerState(pageCount = { MenuTabs.values().size }, initialPage = 0)
         val tabIndex = pagerState.currentPage
 
         // Simplified calculation using progress property
-        val collapsedFraction by derivedStateOf {
-            when (shitState.targetValue) {
-                BottomSheetValue.Collapsed -> shitState.progress
-                BottomSheetValue.Expanded -> 1 - shitState.progress
-                else -> 0f
+        val collapsedFraction by remember {
+            derivedStateOf {
+                when (shitState.targetValue) {
+                    BottomSheetValue.Collapsed -> shitState.progress
+                    BottomSheetValue.Expanded -> 1 - shitState.progress
+                    else -> 0f
+                }
             }
         }
         val sbHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
@@ -82,14 +84,13 @@ fun BottomMenu(
         Spacer(modifier = Modifier.height(pagerPadding))
 
         HorizontalPager(
-            count = MenuTabs.values().size,
             state = pagerState,
             verticalAlignment = Alignment.Top,
-        ) { index ->
+        ) { page ->
             LazyColumn(
                 contentPadding = WindowInsets.navigationBars.asPaddingValues(),
                 content = {
-                    val currTab = MenuTabs.values()[index]
+                    val currTab = MenuTabs.values()[page]
                     val menuItems = when (currTab) {
                         MenuTabs.RATINGS -> menuState.ratings
                         MenuTabs.CATEGORIES -> menuState.categories
@@ -114,7 +115,8 @@ fun MenuItem(model: MenuItemState, isSelected: Boolean, onMenuItemSelected: (Men
 
     val style = MaterialTheme.typography.subtitle1
 
-    Text(text = model.title,
+    Text(
+        text = model.title,
         color = textColor,
         style = style,
         textAlign = TextAlign.Center,

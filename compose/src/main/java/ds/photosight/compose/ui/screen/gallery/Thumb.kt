@@ -21,6 +21,7 @@ import coil.request.ImageRequest
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.theme.Palette
+import ds.photosight.compose.ui.modifiers.sharedBounds
 import ds.photosight.compose.util.logCompositions
 
 @Composable
@@ -67,6 +68,7 @@ fun Thumb(
         modifier = Modifier
             .fillMaxWidth()
             .padding(1.dp)
+            .sharedBounds(key = item.transitionKey) // Shared element transition!
             .clickable { onPhotoClicked(item) }
         //.animateContentSize()
     )

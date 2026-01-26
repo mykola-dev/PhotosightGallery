@@ -16,6 +16,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import coil.memory.MemoryCache
 import ds.photosight.compose.ui.model.Photo
+import ds.photosight.compose.ui.modifiers.sharedBounds
 import ds.photosight.compose.ui.widget.zoomable
 import ds.photosight.compose.util.log
 
@@ -64,6 +65,7 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
             SubcomposeAsyncImageContent(
                 modifier = Modifier
                     .fillMaxSize()
+                    .sharedBounds(key = photo.transitionKey) // Shared element transition!
                     .zoomable(scale) { onClicked() }
             )
         }

@@ -11,6 +11,7 @@ data class Photo(
     val paginationKey: String?,
 ) {
     val cacheKey: String = id.toString()
+    val transitionKey: String = "photo_$id"
 }
 
 

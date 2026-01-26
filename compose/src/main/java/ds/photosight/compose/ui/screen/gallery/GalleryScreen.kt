@@ -20,13 +20,9 @@ import org.koin.androidx.compose.koinViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import ds.photosight.compose.R
 import ds.photosight.compose.repo.getIndexById
 import ds.photosight.compose.ui.ToolbarNestedScrollConnection
-import ds.photosight.compose.ui.destinations.ViewerScreenDestination
 import ds.photosight.compose.ui.dialog.AboutDialog
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.isolate
@@ -40,10 +36,11 @@ import ds.photosight.compose.util.logCompositions
 import ds.photosight.compose.util.rememberDerived
 import kotlin.math.roundToInt
 
-@RootNavGraph(start = true)
-@Destination
 @Composable
-fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel) {
+fun GalleryScreen(
+    mainViewModel: MainViewModel,
+    onNavigateToViewer: (Int) -> Unit,
+) {
     logCompositions(msg = "root")
     val viewModel: GalleryViewModel = koinViewModel()
     mainViewModel.setMenuStateFlow(viewModel.menuStateFlow)
@@ -81,7 +78,7 @@ fun GalleryScreen(navigator: DestinationsNavigator, mainViewModel: MainViewModel
         onMenuItemSelected = { viewModel.onMenuSelected(it) },
         onPhotoClicked = {
             mainViewModel.onPhotoSelected(it.id)
-            navigator.navigate(ViewerScreenDestination)
+            onNavigateToViewer(it.id)
         },
         event = event,
         onRetry = photosStream::retry,

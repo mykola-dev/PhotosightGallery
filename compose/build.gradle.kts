@@ -8,7 +8,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.3.0"
     id("com.github.breadmoirai.github-release") version "2.4.1"
-    id("com.google.devtools.ksp") version "2.3.0"
 }
 
 val changelog = File(rootProject.projectDir, "changelog.txt").readText()
@@ -98,15 +97,6 @@ val appVersionCode = changelog.lines().size + 20
         }
     }
     namespace = "ds.photosight.compose"
-
-    // ksp bug
-    applicationVariants.all {
-        kotlin.sourceSets {
-            getByName(name) {
-                kotlin.srcDir("build/generated/ksp/$name/kotlin")
-            }
-        }
-    }
 }
 
 // Koin configuration - no special config needed, pure Kotlin DSL
@@ -120,7 +110,7 @@ dependencies {
     val composeVersion = "1.10.1"
     val materialIconsVersion = "1.7.6"
     val coilVersion = "2.7.0"
-    val composeDestinations = "1.10.2"
+    val navigation3Version = "1.1.0-alpha02" // Latest alpha (Jan 14, 2026)
 
     implementation(project(":parser"))
 
@@ -143,11 +133,10 @@ dependencies {
     // accompanist https://github.com/google/accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
     implementation("com.google.accompanist:accompanist-permissions:0.36.0")
-    implementation("com.google.accompanist:accompanist-pager:0.36.0")
+    // Note: Pager migrated to official androidx.compose.foundation.pager (Compose 1.4+)
 
-    // navigation https://github.com/raamcosta/compose-destinations
-    implementation("io.github.raamcosta.compose-destinations:animations-core:$composeDestinations")
-    ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinations")
+    // Navigation Compose 2.8.3 (stable, with shared element support)
+    implementation("androidx.navigation:navigation-compose:2.8.3")
 
     // androidx
     implementation("androidx.core:core-ktx:1.15.0")
