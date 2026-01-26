@@ -49,7 +49,8 @@ fun ViewerScreen(
         mainViewModel.onPhotoSelected(photoId)
     }
 
-    val currentPageIndex = photos.getIndexById(mainViewModel.selectedId) ?: 0
+    // Use photoId directly for initial page index to avoid stale selectedId
+    val currentPageIndex = photos.getIndexById(photoId) ?: 0
 
     val downloadLauncher = rememberLauncherForActivityResult(SaveImage()) { uri ->
         if (uri != null) {

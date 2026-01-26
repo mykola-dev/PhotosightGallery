@@ -1,13 +1,20 @@
 package ds.photosight.compose.ui.screen.viewer
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -38,7 +45,14 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
                 ?.bitmap
                 ?.asImageBitmap()
         }
-        if (placeholder != null && showPlaceHolder) {
+
+        // Check if full-size image is already in memory cache (from preloading)
+        val fullImageCached = remember(state) {
+            painter.imageLoader.memoryCache?.get(MemoryCache.Key(photo.large)) != null
+        }
+
+        // Don't show placeholder if full image is cached (transition scenario)
+        if (placeholder != null && showPlaceHolder && !fullImageCached) {
             Image(placeholder, contentDescription = null, modifier = Modifier.fillMaxSize())
         }
 
@@ -50,9 +64,9 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
             else -> {}
         }
 
-        AnimatedVisibility(state is AsyncImagePainter.State.Success, enter = fadeIn()) {
-            showPlaceHolder = this.transition.currentState != EnterExitState.Visible
-
+        // If image is cached, skip the animation for immediate display
+        val enterTransition = if (fullImageCached) EnterTransition.None else fadeIn()
+        AnimatedVisibility(state is AsyncImagePainter.State.Success, enter = enterTransition) {
             state as AsyncImagePainter.State.Success
             val scale = remember {
                 painter.intrinsicSize.run {
@@ -60,8 +74,6 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
                 }
             }
 
-            //log.v("photo=$photo")
-            //log.v("measured scale $scale")
             SubcomposeAsyncImageContent(
                 modifier = Modifier
                     .fillMaxSize()
@@ -70,7 +82,8 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
             )
         }
 
-        AnimatedVisibility(state is AsyncImagePainter.State.Loading, enter = EnterTransition.None, exit = fadeOut()) {
+        // Only show loading if not cached
+        AnimatedVisibility(state is AsyncImagePainter.State.Loading && !fullImageCached, enter = EnterTransition.None, exit = fadeOut()) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator()
             }

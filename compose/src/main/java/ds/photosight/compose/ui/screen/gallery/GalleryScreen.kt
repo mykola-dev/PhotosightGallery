@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -31,6 +32,7 @@ import ds.photosight.compose.ui.pagedItems
 import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
 import ds.photosight.compose.ui.screen.MainViewModel
 import ds.photosight.compose.ui.theme.Palette
+import ds.photosight.compose.util.ImagePreloader
 import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
 import ds.photosight.compose.util.rememberDerived
@@ -59,6 +61,9 @@ fun GalleryScreen(
         }
     }
 
+    // Track which photo is currently being preloaded
+    var preloadingPhotoId by remember { mutableStateOf<Int?>(null) }
+
     val toolbarState = derivedStateOf {
         ToolbarState(
             galleryState.value.title,
@@ -70,15 +75,27 @@ fun GalleryScreen(
         )
     }
 
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
     GalleryContent(
         photos = photosStream,
         menuState = menuState,
         galleryState = galleryState,
         selectedPhotoIndex = selectedPhotoIndex,
+        preloadingPhotoId = preloadingPhotoId,
         onMenuItemSelected = { viewModel.onMenuSelected(it) },
-        onPhotoClicked = {
-            mainViewModel.onPhotoSelected(it.id)
-            onNavigateToViewer(it.id)
+        onPhotoClicked = { photo ->
+            scope.launch {
+                // Preload full-size image before navigating for smooth transition
+                val success = ImagePreloader.preload(context, photo.large)
+                if (success) {
+                    onNavigateToViewer(photo.id)
+                } else {
+                    // Navigate anyway even if preload failed
+                    onNavigateToViewer(photo.id)
+                }
+            }
         },
         event = event,
         onRetry = photosStream::retry,
@@ -111,6 +128,7 @@ fun GalleryContent(
     galleryState: State<GalleryState>,
     menuState: MenuState,
     selectedPhotoIndex: Int?,
+    preloadingPhotoId: Int?,
     event: State<UiEvent?>,
     onMenuItemSelected: (MenuItemState) -> Unit,
     onPhotoClicked: (Photo) -> Unit,
@@ -178,6 +196,7 @@ fun GalleryContent(
                 nestedScrollConnection = nestedScrollConnection,
                 photos = photos,
                 selectedPhotoIndex = selectedPhotoIndex,
+                preloadingPhotoId = preloadingPhotoId,
                 onPhotoClicked = onPhotoClicked,
                 onFirstVisibleItem = onFirstVisibleItem,
                 onScrollingUp = { scrollingUp -> showMenu = scrollingUp }
@@ -203,11 +222,6 @@ private fun LazyGrid(gridState: GridState) = with(gridState) {
     logCompositions(msg = "lazy grid")
     val state = rememberLazyStaggeredGridState()
 
-    LaunchedEffect(selectedPhotoIndex) {
-        selectedPhotoIndex?.let {
-            state.scrollToItem(it)
-        }
-    }
     val scrollingUp by state.isScrollingUp()
     LaunchedEffect(scrollingUp) {
         log.v("scroll direction: $scrollingUp")
@@ -228,7 +242,8 @@ private fun LazyGrid(gridState: GridState) = with(gridState) {
     ) {
 
         pagedItems(photos) { item ->
-            Thumb(item, onPhotoClicked)
+            val isPreloading = item.id == preloadingPhotoId
+            Thumb(item, onPhotoClicked, isPreloading)
         }
 
     }
@@ -257,6 +272,7 @@ data class GridState(
     val nestedScrollConnection: ToolbarNestedScrollConnection,
     val photos: LazyPagingItems<Photo>,
     val selectedPhotoIndex: Int?,
+    val preloadingPhotoId: Int?,
     val onPhotoClicked: (Photo) -> Unit,
     val onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
     val onScrollingUp: (Boolean) -> Unit,
