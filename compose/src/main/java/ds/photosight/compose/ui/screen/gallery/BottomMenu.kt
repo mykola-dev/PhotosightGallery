@@ -5,12 +5,32 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,8 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
 import kotlinx.coroutines.launch
@@ -39,23 +57,29 @@ fun BottomMenu(
         }
     }
 
-    Column {
+    Column(Modifier.fillMaxSize()) {
         val pagerState = rememberPagerState(pageCount = { MenuTabs.values().size }, initialPage = 0)
         val tabIndex = pagerState.currentPage
 
-        // Simplified calculation using progress property
+        // Stabilized calculation using progress and state values
         val collapsedFraction by remember {
             derivedStateOf {
-                when (shitState.targetValue) {
-                    BottomSheetValue.Collapsed -> shitState.progress
-                    BottomSheetValue.Expanded -> 1 - shitState.progress
+                when (shitState.currentValue) {
+                    BottomSheetValue.Collapsed -> {
+                        if (shitState.targetValue == BottomSheetValue.Collapsed) 1f
+                        else 1f - shitState.progress
+                    }
+                    BottomSheetValue.Expanded -> {
+                        if (shitState.targetValue == BottomSheetValue.Expanded) 0f
+                        else shitState.progress
+                    }
                     else -> 0f
                 }
             }
         }
         val sbHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
         val nbHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        val tabsPadding = remember(collapsedFraction) { sbHeight * collapsedFraction }
+        val tabsPadding = remember(collapsedFraction) { sbHeight * (1 - collapsedFraction) }
 
         TabRow(
             selectedTabIndex = tabIndex,
@@ -80,12 +104,13 @@ fun BottomMenu(
                     text = { Text(stringResource(item.resId).uppercase()) })
             }
         }
-        val pagerPadding = remember(collapsedFraction, nbHeight) { nbHeight * (1 - collapsedFraction) }
+        val pagerPadding = remember(collapsedFraction, nbHeight) { nbHeight * collapsedFraction }
         Spacer(modifier = Modifier.height(pagerPadding))
 
         HorizontalPager(
             state = pagerState,
             verticalAlignment = Alignment.Top,
+            modifier = Modifier.weight(1f)
         ) { page ->
             LazyColumn(
                 contentPadding = WindowInsets.navigationBars.asPaddingValues(),
