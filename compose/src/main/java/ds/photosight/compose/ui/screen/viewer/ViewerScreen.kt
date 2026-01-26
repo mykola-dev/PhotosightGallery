@@ -3,15 +3,11 @@ package ds.photosight.compose.ui.screen.viewer
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.forEachGesture
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
@@ -71,9 +67,7 @@ fun ViewerScreen(
                         viewModel.onPageChanged(photo)
                     }
                 },
-                onClicked = {
-                    // Handle back button press when image is clicked (optional)
-                },
+                onClicked = { viewModel.onClicked() },
                 onShareUrl = viewModel::onUrlShare,
                 onShareImage = viewModel::onImageShare,
                 onDrawerToggle = viewModel::onDrawerStateChanged,
@@ -173,11 +167,9 @@ fun ViewerContent(
             }
         }
 
-        val pagerEnabled = remember(scaffoldState.drawerState.currentValue, scaffoldState.drawerState.isAnimationRunning) { mutableStateOf(true) }
-
         HorizontalPager(
             state = pagerState,
-            userScrollEnabled = pagerEnabled.value
+            userScrollEnabled = true
         ) { page ->
             photos
                 .getOrNull(page)
@@ -201,14 +193,3 @@ fun ViewerContent(
     }
 }
 
-private fun Modifier.edgeBypass(scrollEnabled: MutableState<Boolean>): Modifier = this then Modifier.pointerInput(scrollEnabled) {
-    val drawerTapArea = 48.dp.toPx()
-    forEachGesture {
-        awaitPointerEventScope {
-            val down = awaitFirstDown(false)
-            scrollEnabled.value = down.position.x >= drawerTapArea
-            val up = waitForUpOrCancellation()
-            scrollEnabled.value = true
-        }
-    }
-}
