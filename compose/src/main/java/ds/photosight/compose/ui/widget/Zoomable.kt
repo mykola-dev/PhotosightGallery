@@ -2,12 +2,11 @@ package ds.photosight.compose.ui.widget
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateOffsetAsState
-import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateRotation
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.forEachGesture
-import androidx.compose.foundation.gestures.rememberTransformableState
-import androidx.compose.foundation.gestures.transformable
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,12 +30,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
     val scaleAnimated by animateFloatAsState(scale)
     val panAnimated by animateOffsetAsState(pan)
 
-    val transformableState = rememberTransformableState { z, p, r ->
-        //log.v("zoom=$z pan=$p rotate=$r")
-        scale *= z
-        pan += p
-        angle += r
-    }
+    val isTransformInProgress = remember { mutableStateOf(false) }
 
     fun fitScreen(offset: Offset) {
         val screenScale = size.width / size.height.toFloat()
@@ -61,13 +55,11 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
 
         scale = if (abs(targetZoom - scale) > 0.1) targetZoom else 1f
         pan = targetPan
-
-        //log.v("screenScale=$screenScale imageScale=$imageScale zoom=$targetZoom maxPan=${maxOffsetX}x${maxOffsetY} panX=$panX size=${imageWidth}x${imageHeight}")
     }
 
     val idle by remember {
         derivedStateOf {
-            transformableState.isTransformInProgress.not() //&& angle != 0f
+            isTransformInProgress.value.not()
         }
     }
 
@@ -83,11 +75,36 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
         .onGloballyPositioned {
             size = it.size
         }
-        .transformable(
-            state = transformableState,
-            lockRotationOnZoomPan = false,
-            enabled = true
-        )
+        .pointerInput(Unit) {
+            // Manual implementation to handle consumption precisely
+            awaitEachGesture {
+                do {
+                    val event = awaitPointerEvent()
+                    val zoomChange = event.calculateZoom()
+                    val panChange = event.calculatePan()
+                    val rotationChange = event.calculateRotation()
+
+                    if (scale > 1f || zoomChange != 1f) {
+                        isTransformInProgress.value = true
+                        // Consuming all changes if we are zoomed or zooming
+                        event.changes.forEach { it.consume() }
+                        
+                        scale = (scale * zoomChange).coerceIn(1f, 10f)
+                        pan += panChange
+                        angle += rotationChange
+                    } else if (event.changes.size > 1) {
+                        isTransformInProgress.value = true
+                        // Multi-finger gesture, consume it to prevent Pager from weird behavior
+                        event.changes.forEach { it.consume() }
+                    } else {
+                        isTransformInProgress.value = false
+                    }
+                    // If scale is 1f and it's a single finger move, we don't consume, 
+                    // allowing HorizontalPager to catch it.
+                } while (event.changes.any { it.pressed })
+                isTransformInProgress.value = false
+            }
+        }
         .graphicsLayer {
             scaleX = scaleAnimated
             scaleY = scaleAnimated
@@ -95,7 +112,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
             translationY = panAnimated.y
             rotationZ = angleAnimated
         }
-        .pointerInput(Unit) {
+        .pointerInput(onClicked) {
             detectTapGestures(
                 onDoubleTap = {
                     fitScreen(it)
@@ -105,15 +122,4 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
                 }
             )
         }
-}
-
-
-fun Modifier.onPointerUp(block: () -> Unit): Modifier = pointerInput(Unit) {
-    forEachGesture {
-        awaitPointerEventScope {
-            awaitFirstDown()
-            waitForUpOrCancellation()
-            block()
-        }
-    }
 }

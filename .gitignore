@@ -6,7 +6,7 @@ local.properties
 keystore.properties
 lint.xml
 gradlew*
-/bin
+bin/
 .claude/
 CLAUDE.md
 .old/
