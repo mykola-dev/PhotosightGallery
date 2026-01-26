@@ -235,6 +235,15 @@ private fun LazyGrid(gridState: GridState) = with(gridState) {
     }
     onFirstVisibleItem(firstItem)
 
+    LaunchedEffect(selectedPhotoIndex) {
+        selectedPhotoIndex?.let { index ->
+            val isVisible = state.layoutInfo.visibleItemsInfo.any { it.index == index }
+            if (!isVisible) {
+                state.scrollToItem(index)
+            }
+        }
+    }
+
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
         state = state,
