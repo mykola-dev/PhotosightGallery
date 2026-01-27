@@ -23,8 +23,8 @@ val appVersionCode = changelog.lines().size + 20
         applicationId = "ds.photosight.compose"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "2.0.2"
+        versionCode = appVersionCode
+        versionName = appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -198,14 +198,10 @@ tasks {
         overwrite.set(true)
         dryRun.set(false)
 
-        // postpone asset preparation
-        doFirst {
-            val filter = FilenameFilter { dir, filename -> appVersion in filename }
-            val releaseFile = File(rootProject.rootDir, "bin").listFiles(filter)
+        val binDir = File(rootProject.rootDir, "bin")
+        val releaseFile = binDir.listFiles { _, name -> appVersion in name }
+        if (releaseFile != null) {
             setReleaseAssets(releaseFile)
-
         }
-
     }
-
 }
