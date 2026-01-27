@@ -15,6 +15,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -166,8 +167,10 @@ fun GalleryContent(
     }
 
     var showMenu by remember { mutableStateOf(true) }
-    val shitPeekHeight = if (showMenu && menuState.selectedItem != null) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
+    val targetPeekHeight = if (showMenu && menuState.selectedItem != null) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
     else 0.dp
+
+    val sheetPeekHeight by animateDpAsState(targetValue = targetPeekHeight)
 
     BottomSheetScaffold(
         sheetContent = {
@@ -181,7 +184,7 @@ fun GalleryContent(
         sheetBackgroundColor = MaterialTheme.colors.primary,
         sheetShape = MaterialTheme.shapes.large,
         sheetContentColor = MaterialTheme.colors.surface,
-        sheetPeekHeight = shitPeekHeight,
+        sheetPeekHeight = sheetPeekHeight,
     ) {
 
         Box(
