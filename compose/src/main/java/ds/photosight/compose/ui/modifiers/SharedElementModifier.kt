@@ -1,6 +1,7 @@
 package ds.photosight.compose.ui.modifiers
 
 import androidx.compose.animation.BoundsTransform
+import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SharedTransitionScope
@@ -41,15 +42,19 @@ fun Modifier.sharedBounds(
                 sharedContentState = rememberSharedContentState(key = key),
                 animatedVisibilityScope = animatedVisibilityScope,
                 boundsTransform = BoundsTransform { _, _ ->
-                    // Match legacy app timing: 300ms with FastOutSlowInEasing
+                    // Entry: 400ms (as requested by user for luxurious feel)
+                    // Exit: 300ms
+                    val isExiting = animatedVisibilityScope.transition.targetState == EnterExitState.PostExit
+                    val finalDuration = if (isExiting) 300 else 400
+                    
                     tween(
-                        durationMillis = durationMs,
+                        durationMillis = finalDuration,
                         easing = FastOutSlowInEasing
                     )
                 },
                 enter = EnterTransition.None,
                 exit = ExitTransition.None
-            )
+            ).skipToLookaheadSize()
         }
     } else {
         this@composed

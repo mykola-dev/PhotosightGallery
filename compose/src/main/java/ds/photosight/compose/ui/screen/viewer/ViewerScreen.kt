@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 fun ViewerScreen(
     mainViewModel: MainViewModel,
     photoId: Int,
+    index: Int,
     onBack: () -> Unit,
 ) {
     logCompositions(msg = "viewer screen")
@@ -45,8 +46,8 @@ fun ViewerScreen(
         mainViewModel.onPhotoSelected(photoId)
     }
 
-    // Use photoId directly for initial page index to avoid stale selectedId
-    val currentPageIndex = photos.getIndexById(photoId) ?: 0
+    // Use passed index directly for initial page index to ensure stability during transition
+    val currentPageIndex = index
 
     val downloadLauncher = rememberLauncherForActivityResult(SaveImage()) { uri ->
         if (uri != null) {
@@ -154,11 +155,7 @@ fun ViewerContent(
         drawerGesturesEnabled = true,
         drawerShape = RoundedCornerShape(0),
     ) {
-        val pagerState = rememberPagerState(pageCount = { Int.MAX_VALUE / 2 })
-
-        LaunchedEffect(pagerState) {
-            pagerState.scrollToPage(currentPageIndex)
-        }
+        val pagerState = rememberPagerState(initialPage = currentPageIndex, pageCount = { Int.MAX_VALUE / 2 })
 
         val updatedOnPageChanged by rememberUpdatedState(onPageChanged)
         LaunchedEffect(pagerState) {

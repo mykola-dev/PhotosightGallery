@@ -1,8 +1,13 @@
 package ds.photosight.compose.ui.screen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -39,7 +44,11 @@ fun ComposeApp() {
             CompositionLocalProvider(LocalSharedTransitionScope provides this) {
                 NavHost(
                     navController = navController,
-                    startDestination = "gallery"
+                    startDestination = "gallery",
+                    enterTransition = { fadeIn(tween(400)) },
+                    exitTransition = { fadeOut(tween(300)) },
+                    popEnterTransition = { fadeIn(tween(300)) },
+                    popExitTransition = { fadeOut(tween(400)) }
                 ) {
                     // Gallery Screen
                     composable("gallery") {
@@ -48,8 +57,8 @@ fun ComposeApp() {
                         CompositionLocalProvider(LocalAnimatedVisibilityScope provides scope) {
                             GalleryScreen(
                                 mainViewModel = mainViewModel,
-                                onNavigateToViewer = { photoId ->
-                                    navController.navigate("viewer/$photoId")
+                                onNavigateToViewer = { photoId, index ->
+                                    navController.navigate("viewer/$photoId/$index")
                                 }
                             )
                         }
@@ -57,18 +66,21 @@ fun ComposeApp() {
 
                     // Viewer Screen
                     composable(
-                        route = "viewer/{photoId}",
+                        route = "viewer/{photoId}/{index}",
                         arguments = listOf(
-                            androidx.navigation.navArgument("photoId") { type = NavType.IntType }
+                            androidx.navigation.navArgument("photoId") { type = NavType.IntType },
+                            androidx.navigation.navArgument("index") { type = NavType.IntType }
                         )
                     ) { backStackEntry ->
                         val photoId = backStackEntry.arguments?.getInt("photoId") ?: return@composable
+                        val index = backStackEntry.arguments?.getInt("index") ?: 0
                         // Provide AnimatedVisibilityScope to children
                         val scope = this@composable
                         CompositionLocalProvider(LocalAnimatedVisibilityScope provides scope) {
                             ViewerScreen(
                                 mainViewModel = mainViewModel,
                                 photoId = photoId,
+                                index = index,
                                 onBack = {
                                     navController.popBackStack()
                                 }

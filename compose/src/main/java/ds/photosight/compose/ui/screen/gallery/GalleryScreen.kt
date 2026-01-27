@@ -41,7 +41,7 @@ import kotlin.math.roundToInt
 @Composable
 fun GalleryScreen(
     mainViewModel: MainViewModel,
-    onNavigateToViewer: (Int) -> Unit,
+    onNavigateToViewer: (Int, Int) -> Unit,
 ) {
     logCompositions(msg = "root")
     val viewModel: GalleryViewModel = koinViewModel()
@@ -86,15 +86,13 @@ fun GalleryScreen(
         preloadingPhotoId = preloadingPhotoId,
         onMenuItemSelected = { viewModel.onMenuSelected(it) },
         onPhotoClicked = { photo ->
+            // Use current index if available, otherwise find it
+            val index = photosStream.getIndexById(photo.id) ?: 0
+            // Navigate immediately to eliminate lag
+            onNavigateToViewer(photo.id, index)
             scope.launch {
-                // Preload full-size image before navigating for smooth transition
-                val success = ImagePreloader.preload(context, photo.large)
-                if (success) {
-                    onNavigateToViewer(photo.id)
-                } else {
-                    // Navigate anyway even if preload failed
-                    onNavigateToViewer(photo.id)
-                }
+                // Preload full-size image in background for smoother swap once viewer opens
+                ImagePreloader.preload(context, photo.large)
             }
         },
         event = event,
