@@ -1,23 +1,33 @@
 package ds.photosight.compose.ui.screen.viewer
 
+// Note: System UI controller now handled by Activity's enableEdgeToEdge() configuration
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.koinViewModel
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DrawerValue
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import ds.photosight.compose.core.SaveImage
-import ds.photosight.compose.repo.getIndexById
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.getOrNull
 import ds.photosight.compose.ui.model.Photo
@@ -27,6 +37,7 @@ import ds.photosight.compose.ui.theme.TranslucentTheme
 import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ViewerScreen(
@@ -84,13 +95,10 @@ fun ViewerScreen(
         onBack()
     }
 
-    val systemUiController = rememberSystemUiController()
-    SideEffect {
-        systemUiController.setSystemBarsColor(color = Color(0x01000000))    // transparent doesn't work on nav bar :(
-    }
+    // System UI colors are now handled by the Activity's enableEdgeToEdge() configuration
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "LocalContextGetResourceValueCall")
 @Composable
 fun ViewerContent(
     state: ViewerState,
@@ -106,7 +114,6 @@ fun ViewerContent(
     onBrowserClick: () -> Unit,
     onInfoClick: () -> Unit
 ) {
-
 
     val scaffoldState = rememberScaffoldState()
     val isFabExpanded = remember { mutableStateOf(false) }
@@ -189,4 +196,3 @@ fun ViewerContent(
         ) { }
     }
 }
-

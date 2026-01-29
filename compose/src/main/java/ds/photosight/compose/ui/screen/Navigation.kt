@@ -1,8 +1,6 @@
 package ds.photosight.compose.ui.screen
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
@@ -11,22 +9,20 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.koin.androidx.compose.koinViewModel
 import ds.photosight.compose.ui.screen.gallery.GalleryScreen
 import ds.photosight.compose.ui.screen.viewer.ViewerScreen
 import ds.photosight.compose.ui.theme.PhotosightTheme
+import org.koin.androidx.compose.koinViewModel
 
 // CompositionLocal to provide SharedTransitionScope to destinations
 val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }
 
 // CompositionLocal to provide AnimatedVisibilityScope to destination content
-val LocalAnimatedVisibilityScope = compositionLocalOf<androidx.compose.animation.AnimatedVisibilityScope?> {
+val LocalAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> {
     null
 }
 
@@ -45,10 +41,10 @@ fun ComposeApp() {
                 NavHost(
                     navController = navController,
                     startDestination = "gallery",
-                    enterTransition = { fadeIn(tween(400)) },
-                    exitTransition = { fadeOut(tween(300)) },
-                    popEnterTransition = { fadeIn(tween(300)) },
-                    popExitTransition = { fadeOut(tween(400)) }
+                    enterTransition = { fadeIn(tween(300)) },
+                    exitTransition = { fadeOut(tween(200)) },
+                    popEnterTransition = { fadeIn(tween(200)) },
+                    popExitTransition = { fadeOut(tween(300)) }
                 ) {
                     // Gallery Screen
                     composable("gallery") {

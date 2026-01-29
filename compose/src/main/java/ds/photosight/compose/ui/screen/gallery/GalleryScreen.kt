@@ -3,25 +3,42 @@
 package ds.photosight.compose.ui.screen.gallery
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.SnackbarResult
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import ds.photosight.compose.R
 import ds.photosight.compose.repo.getIndexById
 import ds.photosight.compose.ui.ToolbarNestedScrollConnection
@@ -32,11 +49,12 @@ import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.pagedItems
 import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
 import ds.photosight.compose.ui.screen.MainViewModel
-import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.util.ImagePreloader
 import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
 import ds.photosight.compose.util.rememberDerived
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
@@ -65,15 +83,17 @@ fun GalleryScreen(
     // Track which photo is currently being preloaded
     var preloadingPhotoId by remember { mutableStateOf<Int?>(null) }
 
-    val toolbarState = derivedStateOf {
-        ToolbarState(
-            galleryState.value.title,
-            galleryState.value.subtitle,
-            menuState.categoriesFilter,
-            viewModel::onShowAboutDialog,
-            viewModel::onFilterSelected,
-            viewModel::onSorterSelected
-        )
+    val toolbarState = remember {
+        derivedStateOf {
+            ToolbarState(
+                galleryState.value.title,
+                galleryState.value.subtitle,
+                menuState.categoriesFilter,
+                viewModel::onShowAboutDialog,
+                viewModel::onFilterSelected,
+                viewModel::onSorterSelected
+            )
+        }
     }
 
     val scope = rememberCoroutineScope()
@@ -105,13 +125,7 @@ fun GalleryScreen(
         toolbarState = toolbarState,
         onDismissAboutDialog = viewModel::onDismissAboutDialog,
     )
-
-    val systemUiController = rememberSystemUiController()
-    SideEffect {
-        systemUiController.setSystemBarsColor(color = Palette.translucent)
-    }
 }
-
 
 @Composable
 fun LoadingSlot(isLoading: Boolean) {
@@ -193,15 +207,16 @@ fun GalleryContent(
                 .nestedScroll(nestedScrollConnection)
         ) {
 
-            LazyGrid(GridState(
-                nestedScrollConnection = nestedScrollConnection,
-                photos = photos,
-                selectedPhotoIndex = selectedPhotoIndex,
-                preloadingPhotoId = preloadingPhotoId,
-                onPhotoClicked = onPhotoClicked,
-                onFirstVisibleItem = onFirstVisibleItem,
-                onScrollingUp = { scrollingUp -> showMenu = scrollingUp }
-            )
+            LazyGrid(
+                GridState(
+                    nestedScrollConnection = nestedScrollConnection,
+                    photos = photos,
+                    selectedPhotoIndex = selectedPhotoIndex,
+                    preloadingPhotoId = preloadingPhotoId,
+                    onPhotoClicked = onPhotoClicked,
+                    onFirstVisibleItem = onFirstVisibleItem,
+                    onScrollingUp = { isScrollingUp -> showMenu = isScrollingUp }
+                )
             )
             MainToolbar(
                 state = toolbarState,
@@ -213,7 +228,6 @@ fun GalleryContent(
             if (galleryState.value.showAboutDialog) {
                 AboutDialog(onDismiss = onDismissAboutDialog)
             }
-
         }
     }
 }

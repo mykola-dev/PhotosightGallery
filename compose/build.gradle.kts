@@ -1,13 +1,12 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import java.io.FilenameFilter
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.3.0"
-    id("com.github.breadmoirai.github-release") version "2.4.1"
+    id("com.github.breadmoirai.github-release") version "2.5.2"
 }
 
 val changelog = File(rootProject.projectDir, "changelog.txt").readText()
@@ -106,70 +105,60 @@ githubRelease {
 }
 
 dependencies {
-    val koinVersion = "4.0.2"
-    val composeVersion = "1.10.1"
-    val materialIconsVersion = "1.7.6"
+    val koinVersion = "4.1.1"
+    val composeVersion = "1.10.2"
+    val materialIconsVersion = "1.7.8"
     val coilVersion = "2.7.0"
     val navigation3Version = "1.1.0-alpha02" // Latest alpha (Jan 14, 2026)
 
     implementation(project(":parser"))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
     // compose
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.3.1")
+    implementation("androidx.compose.material3:material3:1.4.0")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.9.3")
-    implementation("androidx.paging:paging-runtime-ktx:3.3.6")
-    implementation("androidx.paging:paging-compose:3.3.6")
-    implementation("androidx.navigation:navigation-compose:2.8.3")
+    implementation("androidx.activity:activity-compose:1.12.3")
+    implementation("androidx.paging:paging-runtime-ktx:3.4.0")
+    implementation("androidx.paging:paging-compose:3.4.0")
+    implementation("androidx.navigation:navigation-compose:2.9.7")
     implementation("androidx.compose.material:material-icons-extended:$materialIconsVersion")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
-
-
-    // accompanist https://github.com/google/accompanist
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
-    implementation("com.google.accompanist:accompanist-permissions:0.36.0")
-    // Note: Pager migrated to official androidx.compose.foundation.pager (Compose 1.4+)
-
-    // Navigation Compose 2.8.3 (stable, with shared element support)
-    implementation("androidx.navigation:navigation-compose:2.8.3")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
 
     // androidx
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
 
     // di - Koin (no KSP/KAPT needed)
     implementation("io.insert-koin:koin-android:$koinVersion")
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
     implementation("io.insert-koin:koin-compose:$koinVersion")
 
-    // widgets
-    implementation("com.github.nesyou01:LazyStaggeredGrid:1.2.0")
+    // widgets - using built-in Compose LazyStaggeredGrid (Compose 1.4+)
 
     // kotlin
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
     // network
     implementation("io.coil-kt:coil-compose:$coilVersion")
 
     // prefs
-    implementation("com.chibatching.kotpref:kotpref:2.13.1")
+    implementation("com.chibatching.kotpref:kotpref:2.13.2")
 
     // misc
     implementation("com.jakewharton.timber:timber:5.0.1")
 
     // tests
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
@@ -198,10 +187,9 @@ tasks {
         overwrite.set(true)
         dryRun.set(false)
 
-        val binDir = File(rootProject.rootDir, "bin")
-        val releaseFile = binDir.listFiles { _, name -> appVersion in name }
-        if (releaseFile != null) {
-            setReleaseAssets(releaseFile)
+        val apkFile = File(rootProject.rootDir, "bin/photosight-v${appVersion}-release.apk")
+        if (apkFile.exists()) {
+            releaseAssets.setFrom(apkFile)
         }
     }
 }
