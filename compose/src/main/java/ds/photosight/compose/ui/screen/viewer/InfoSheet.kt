@@ -22,9 +22,12 @@ import ds.photosight.compose.util.loadBitmap
 
 @Composable
 fun InfoSheet(photo: Photo, visible: Boolean) {
-    Column(Modifier.padding(16.dp).navigationBarsPadding()) {
+    Column(
+            Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
+                    .navigationBarsPadding()
+    ) {
         Text(stringResource(R.string.photo_details), style = MaterialTheme.typography.titleLarge)
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
         InfoRow(stringResource(R.string.title), photo.title)
         InfoRow(stringResource(R.string.author), "${photo.authorName} ${photo.authorUrl}")
         InfoRow(stringResource(R.string.source), photo.pageUrl)

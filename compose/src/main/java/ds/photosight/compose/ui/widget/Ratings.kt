@@ -38,7 +38,7 @@ import ds.photosight.compose.util.logCompositions
 import ds.photosight.parser.PhotoDetails
 
 private val PhotoDetails.Stats.ratingFactor: Float
-    get() = 1 / (likes + dislikes).toFloat() * likes.toFloat()
+    get() = if (likes + dislikes > 0) likes.toFloat() / (likes + dislikes) else 0f
 
 @Composable
 fun Ratings(stats: PhotoDetails.Stats, awardsList: List<PhotoDetails.Award>) {

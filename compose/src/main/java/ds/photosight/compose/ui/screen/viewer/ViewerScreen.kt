@@ -4,7 +4,11 @@ package ds.photosight.compose.ui.screen.viewer
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
@@ -29,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -141,6 +145,7 @@ fun ViewerContent(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet(
+                        modifier = Modifier.width(300.dp),
                         drawerContainerColor = Palette.drawerBackground,
                         drawerShape = RoundedCornerShape(0),
                         drawerTonalElevation = 0.dp
@@ -148,28 +153,8 @@ fun ViewerContent(
             },
             gesturesEnabled = true
     ) {
-        Scaffold(
-                snackbarHost = { SnackbarHost(snackbarHostState) },
-                bottomBar = {
-                    ViewerBottomBar(
-                            isVisible = state.showUi,
-                            isExpanded = isFabExpanded,
-                            onDrawerClick = { scope.launch { drawerState.open() } },
-                            onDownloadClick = onDownloadClick,
-                            onBrowserClick = onBrowserClick,
-                            onInfoClick = onInfoClick,
-                    )
-                },
-                floatingActionButton = {
-                    Fab(
-                            state.showUi,
-                            isFabExpanded,
-                            onShareUrl = onShareUrl,
-                            onShareImage = onShareImage
-                    )
-                },
-                containerColor = MaterialTheme.colorScheme.background
-        ) { innerPadding ->
+        // Custom Box layout instead of Scaffold to avoid resize jumps
+        Box(Modifier.fillMaxSize().background(Palette.surface)) {
             val pagerState =
                     rememberPagerState(
                             initialPage = currentPageIndex,
@@ -186,7 +171,7 @@ fun ViewerContent(
             HorizontalPager(
                     state = pagerState,
                     userScrollEnabled = true,
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.fillMaxSize()
             ) { page ->
                 photos.getOrNull(page)?.let { item ->
                     ZoomableImage(
@@ -199,7 +184,34 @@ fun ViewerContent(
                 }
             }
 
-            ViewerToolbar(state.showUi, state.title, state.subtitle)
+            Box(Modifier.align(Alignment.TopCenter)) {
+                ViewerToolbar(state.showUi, state.title, state.subtitle)
+            }
+
+            // Bottom Bar & FAB
+            Box(Modifier.align(Alignment.BottomCenter)) {
+                ViewerBottomBar(
+                        isVisible = state.showUi,
+                        isExpanded = isFabExpanded,
+                        onDrawerClick = { scope.launch { drawerState.open() } },
+                        onDownloadClick = onDownloadClick,
+                        onBrowserClick = onBrowserClick,
+                        onInfoClick = onInfoClick,
+                        fab = {
+                            Fab(
+                                    state.showUi,
+                                    isFabExpanded,
+                                    onShareUrl = onShareUrl,
+                                    onShareImage = onShareImage
+                            )
+                        }
+                )
+            }
+
+            // Snackbar
+            Box(Modifier.align(Alignment.BottomCenter).padding(bottom = 80.dp)) {
+                SnackbarHost(snackbarHostState)
+            }
         }
     }
 

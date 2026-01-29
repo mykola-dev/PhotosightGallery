@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ds.photosight.compose.R
+import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
 
 @Composable
@@ -77,10 +78,10 @@ fun Fab(
 @Composable
 private fun MenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
     DropdownMenuItem(
-            text = { Text(title) },
+            text = { Text(title, color = Palette.greyDark) },
             onClick = onClick,
-            leadingIcon = { Icon(icon, null) },
-            modifier = Modifier.width(IntrinsicSize.Max).defaultMinSize(minWidth = 200.dp)
+            leadingIcon = { Icon(icon, null, tint = Palette.greyDark) },
+            modifier = Modifier.width(IntrinsicSize.Max).defaultMinSize(minWidth = 120.dp)
     )
 }
 

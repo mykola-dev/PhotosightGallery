@@ -25,8 +25,17 @@ fun ViewerToolbar(isVisible: Boolean, title: String, subtitle: String) {
                     transitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform() }
             ) { content ->
                 Column(modifier = Modifier.padding(16.dp).statusBarsPadding().fillMaxWidth()) {
-                    Text(content.first, fontSize = 16.sp, fontWeight = FontWeight.Medium)
-                    Text(content.second, fontSize = 12.sp)
+                    Text(
+                            content.first,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = androidx.compose.ui.graphics.Color.White
+                    )
+                    Text(
+                            content.second,
+                            fontSize = 12.sp,
+                            color = androidx.compose.ui.graphics.Color.White
+                    )
                 }
             }
         }
