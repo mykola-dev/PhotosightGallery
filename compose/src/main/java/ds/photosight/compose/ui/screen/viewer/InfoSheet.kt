@@ -1,8 +1,10 @@
 package ds.photosight.compose.ui.screen.viewer
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,12 +22,8 @@ import ds.photosight.compose.util.loadBitmap
 
 @Composable
 fun InfoSheet(photo: Photo, visible: Boolean) {
-    Column(
-        Modifier
-            .padding(16.dp)
-            .navigationBarsPadding()
-    ) {
-        Text(stringResource(R.string.photo_details), style = MaterialTheme.typography.h6)
+    Column(Modifier.padding(16.dp).navigationBarsPadding()) {
+        Text(stringResource(R.string.photo_details), style = MaterialTheme.typography.titleLarge)
         Spacer(Modifier.height(16.dp))
         InfoRow(stringResource(R.string.title), photo.title)
         InfoRow(stringResource(R.string.author), "${photo.authorName} ${photo.authorUrl}")
@@ -46,7 +44,7 @@ fun InfoSheet(photo: Photo, visible: Boolean) {
 
 @Composable
 fun InfoRow(header: String, value: String) {
-    val style = MaterialTheme.typography.body2
+    val style = MaterialTheme.typography.bodyMedium
     Row(Modifier.padding(vertical = 4.dp)) {
         Text(header, color = Palette.greyDark, style = style, modifier = Modifier.weight(1f))
         LinkifyText(value, style = style, modifier = Modifier.weight(2f))
@@ -67,31 +65,27 @@ private fun process(bitmap: Bitmap): HistogramData {
     }
 
     return HistogramData(r, g, b)
-
 }
 
 @Preview
 @Composable
 fun InfoPreview() {
     PhotosightTheme {
-        ModalBottomSheetLayout(
-            {
-                InfoSheet(
+        // ModalBottomSheetLayout removed due to migration
+        Box(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+            InfoSheet(
                     Photo(
-                        2,
-                        "https://cdny.de/p/t/4/93a/7256654.jpg",
-                        "",
-                        "https://sight.photo/photos/7256852",
-                        "The Title",
-                        "John Smith",
-                        "google.com",
-                        "key"
+                            2,
+                            "https://cdny.de/p/t/4/93a/7256654.jpg",
+                            "",
+                            "https://sight.photo/photos/7256852",
+                            "The Title",
+                            "John Smith",
+                            "google.com",
+                            "key"
                     ),
                     true
-                )
-            },
-            sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Expanded),
-            sheetBackgroundColor = MaterialTheme.colors.primary,
-        ) {}
+            )
+        }
     }
 }

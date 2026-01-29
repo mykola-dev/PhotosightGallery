@@ -8,11 +8,11 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -28,48 +28,35 @@ import ds.photosight.compose.R
 import ds.photosight.compose.ui.theme.PhotosightTheme
 
 @Composable
-fun Fab(isVisible: Boolean, isExpanded: MutableState<Boolean>, onShareUrl: () -> Unit, onShareImage: () -> Unit) {
+fun Fab(
+        isVisible: Boolean,
+        isExpanded: MutableState<Boolean>,
+        onShareUrl: () -> Unit,
+        onShareImage: () -> Unit
+) {
 
-    BackHandler(isExpanded.value) {
-        isExpanded.value = false
-    }
+    BackHandler(isExpanded.value) { isExpanded.value = false }
 
     AnimatedVisibility(isVisible, enter = scaleIn(), exit = scaleOut()) {
         val updater = updateTransition(isExpanded.value, "updater")
-        val cornerAnimated by updater.animateInt(label = "corner") { expanded ->
-            if (expanded) 10 else 50
-        }
+        val cornerAnimated by
+                updater.animateInt(label = "corner") { expanded -> if (expanded) 10 else 50 }
 
         Surface(
-            color = MaterialTheme.colors.secondary,
-            elevation = 16.dp,
-            modifier = Modifier
-                .clip(RoundedCornerShape(percent = cornerAnimated))
+                color = MaterialTheme.colorScheme.secondary,
+                tonalElevation = 16.dp,
+                modifier = Modifier.clip(RoundedCornerShape(percent = cornerAnimated))
         ) {
-           /* val sizeTransform = SizeTransform { initialSize, targetSize ->
-                keyframes {
-                    if (initialSize.width < targetSize.width) {
-                        IntSize(initialSize.width, targetSize.height) at 100
-                    } else {
-                        IntSize(targetSize.width, initialSize.height) at 100
-                    }
-                    this.durationMillis = 300
-                }
-            }*/
             updater.AnimatedContent(
-                transitionSpec = { fadeIn() with fadeOut() using SizeTransform() }
+                    transitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform() }
             ) { expanded ->
                 if (!expanded) {
                     Box(
-                        modifier = Modifier
-                            .defaultMinSize(minWidth = 56.dp, minHeight = 56.dp)
-                            .clickable {
-                                isExpanded.value = true
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(Icons.Default.Share, null)
-                    }
+                            modifier =
+                                    Modifier.defaultMinSize(minWidth = 56.dp, minHeight = 56.dp)
+                                            .clickable { isExpanded.value = true },
+                            contentAlignment = Alignment.Center
+                    ) { Icon(Icons.Default.Share, null) }
                 } else {
                     Column {
                         MenuItem(Icons.Default.Link, stringResource(R.string.share_link)) {
@@ -90,15 +77,11 @@ fun Fab(isVisible: Boolean, isExpanded: MutableState<Boolean>, onShareUrl: () ->
 @Composable
 private fun MenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
     DropdownMenuItem(
-        onClick = onClick,
-        modifier = Modifier
-            .width(IntrinsicSize.Max)
-            .defaultMinSize(minWidth = 200.dp)
-    ) {
-        Icon(icon, null)
-        Spacer(Modifier.width(8.dp))
-        Text(title)
-    }
+            text = { Text(title) },
+            onClick = onClick,
+            leadingIcon = { Icon(icon, null) },
+            modifier = Modifier.width(IntrinsicSize.Max).defaultMinSize(minWidth = 200.dp)
+    )
 }
 
 @SuppressLint("UnrememberedMutableState")
@@ -107,19 +90,15 @@ private fun MenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
 fun FabPreview() {
     PhotosightTheme {
         Scaffold(
-            floatingActionButton = {
-                Fab(
-                    true,
-                    onShareUrl = {},
-                    onShareImage = {},
-                    isExpanded = mutableStateOf(false)
-                )
-            },
-            bottomBar = { BottomAppBar {} },
-            isFloatingActionButtonDocked = true,
-        ) {
-            it
-        }
-
+                floatingActionButton = {
+                    Fab(
+                            true,
+                            onShareUrl = {},
+                            onShareImage = {},
+                            isExpanded = mutableStateOf(false)
+                    )
+                },
+                bottomBar = { BottomAppBar {} },
+        ) { Box(Modifier.padding(it)) }
     }
 }

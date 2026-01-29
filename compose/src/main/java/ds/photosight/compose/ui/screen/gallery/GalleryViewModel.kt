@@ -1,6 +1,6 @@
 package ds.photosight.compose.ui.screen.gallery
 
-import androidx.compose.material.BottomSheetValue
+import androidx.compose.material3.SheetValue
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import ds.photosight.compose.data.asUiModel
@@ -18,29 +18,29 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class GalleryViewModel(
-    private val photosightRepo: PhotosightRepo,
-    private val toolbarDataUseCase: ToolbarDataUseCase,
-    checkVersionUseCase: CheckVersionUseCase,
-    log: Timber.Tree
+        private val photosightRepo: PhotosightRepo,
+        private val toolbarDataUseCase: ToolbarDataUseCase,
+        checkVersionUseCase: CheckVersionUseCase,
+        log: Timber.Tree
 ) : BaseViewModel(log) {
 
-    private val _galleryState = MutableStateFlow(
-        GalleryState(
-            title = toolbarDataUseCase.getTitle(),
-            subtitle = toolbarDataUseCase.getSubtitle(),
-            showAboutDialog = checkVersionUseCase.shouldShowAboutDialog()
-        )
-    )
+    private val _galleryState =
+            MutableStateFlow(
+                    GalleryState(
+                            title = toolbarDataUseCase.getTitle(),
+                            subtitle = toolbarDataUseCase.getSubtitle(),
+                            showAboutDialog = checkVersionUseCase.shouldShowAboutDialog()
+                    )
+            )
     val galleryState: StateFlow<GalleryState> = _galleryState.asStateFlow()
 
-    private val categoriesFlow: Flow<List<PhotoCategory>> = flow {
-        emit(photosightRepo.getCategories())
-    }.retry {
-        it.printStackTrace()
-        log.e("retry!")
-        delay(2000)
-        true
-    }
+    private val categoriesFlow: Flow<List<PhotoCategory>> =
+            flow { emit(photosightRepo.getCategories()) }.retry {
+                it.printStackTrace()
+                log.e("retry!")
+                delay(2000)
+                true
+            }
 
     private val _menuStateFlow: MutableStateFlow<MenuState> = MutableStateFlow(MenuState())
     val menuStateFlow: StateFlow<MenuState> = _menuStateFlow.asStateFlow()
@@ -48,29 +48,27 @@ class GalleryViewModel(
     init {
         launch {
             categoriesFlow.collect { categories ->
-                val menuState = MenuState(
-                    categories = categories.map { it.asUiModel() },
-                    ratings = photosightRepo.getRatingsList(),
-                )
+                val menuState =
+                        MenuState(
+                                categories = categories.map { it.asUiModel() },
+                                ratings = photosightRepo.getRatingsList(),
+                        )
                 _menuStateFlow.value = menuState
             }
         }
         launch {
             menuStateFlow.collect { menu ->
-                _galleryState.update {
-                    it.copy(title = toolbarDataUseCase.getTitle(menu))
-                }
+                _galleryState.update { it.copy(title = toolbarDataUseCase.getTitle(menu)) }
             }
         }
-
     }
 
     fun onMenuSelected(item: MenuItemState) {
         _menuStateFlow.update { state ->
             state.copy(
-                selectedItem = item,
-                bottomSheetState = BottomSheetValue.Collapsed,
-                categoriesFilter = if (item is CategoryMenuItemState) PhotosFilter() else null
+                    selectedItem = item,
+                    bottomSheetState = SheetValue.PartiallyExpanded,
+                    categoriesFilter = if (item is CategoryMenuItemState) PhotosFilter() else null
             )
         }
     }
@@ -88,15 +86,19 @@ class GalleryViewModel(
     }
 
     fun updateErrorState(state: CombinedLoadStates) {
-        val hasError = state.refresh is LoadState.Error || state.append is LoadState.Error || state.prepend is LoadState.Error
+        val hasError =
+                state.refresh is LoadState.Error ||
+                        state.append is LoadState.Error ||
+                        state.prepend is LoadState.Error
         if (hasError) event(UiEvent.Retry())
     }
 
     fun updateLoadingState(state: CombinedLoadStates) {
-        val loading = state.refresh is LoadState.Loading
-            || state.append is LoadState.Loading
-            || state.prepend is LoadState.Loading
-            || menuStateFlow.value.selectedItem == null
+        val loading =
+                state.refresh is LoadState.Loading ||
+                        state.append is LoadState.Loading ||
+                        state.prepend is LoadState.Loading ||
+                        menuStateFlow.value.selectedItem == null
 
         _galleryState.update { it.copy(isLoading = loading) }
     }
@@ -112,6 +114,4 @@ class GalleryViewModel(
     fun onDismissAboutDialog() {
         _galleryState.update { it.copy(showAboutDialog = false) }
     }
-
 }
-

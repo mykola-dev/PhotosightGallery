@@ -70,7 +70,7 @@ Change Log:
     <string name="photo_author">"&lt;AUTHOR&gt;"</string>
     <string name="likes">Likes</string>
     <string name="dislikes">Dislikes</string>
-	<string name="copyright" translatable="false">© 1997-2022 Deviant Studio</string>
+	<string name="copyright" translatable="false">© 1997-2026 Deviant Studio</string>
 	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
 	<string name="retry">Retry</string>
     <string name="views">Views</string>

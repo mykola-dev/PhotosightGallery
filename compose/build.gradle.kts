@@ -6,6 +6,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.3.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.0"
     id("com.github.breadmoirai.github-release") version "2.5.2"
 }
 
@@ -51,7 +52,7 @@ val appVersionCode = changelog.lines().size + 20
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -88,6 +89,7 @@ val appVersionCode = changelog.lines().size + 20
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
@@ -109,7 +111,7 @@ dependencies {
     val composeVersion = "1.10.2"
     val materialIconsVersion = "1.7.8"
     val coilVersion = "2.7.0"
-    val navigation3Version = "1.1.0-alpha02" // Latest alpha (Jan 14, 2026)
+    val navigation3Version = "1.1.0-alpha03"
 
     implementation(project(":parser"))
 
@@ -117,14 +119,14 @@ dependencies {
 
     // compose
     implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material3:material3:1.4.0")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.activity:activity-compose:1.12.3")
     implementation("androidx.paging:paging-runtime-ktx:3.4.0")
     implementation("androidx.paging:paging-compose:3.4.0")
-    implementation("androidx.navigation:navigation-compose:2.9.7")
+    implementation("androidx.navigation3:navigation3-runtime:$navigation3Version")
+    implementation("androidx.navigation3:navigation3-ui:$navigation3Version")
     implementation("androidx.compose.material:material-icons-extended:$materialIconsVersion")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
 
@@ -145,6 +147,7 @@ dependencies {
     // kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     // network
     implementation("io.coil-kt:coil-compose:$coilVersion")

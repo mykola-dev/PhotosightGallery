@@ -7,7 +7,7 @@ import org.jsoup.select.Elements
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 interface Request<T> {
     operator fun invoke(): T
@@ -177,7 +177,7 @@ class CategoriesPhotosRequest(
     }
 
 
-    override val url: String = "https://photosight.ru/photos/category/$category?pager=${page.key}"
+    override val url: String = "$baseUrl/photos/category/$category?pager=${page.key}"
 
     override val extraCookies: Map<String, String> = mapOf(
         "sort_dump_category" to filterDumpCategory.toString(),

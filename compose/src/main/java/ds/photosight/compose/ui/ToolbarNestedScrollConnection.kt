@@ -3,7 +3,6 @@ package ds.photosight.compose.ui
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.material.AppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,7 +14,6 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ds.photosight.compose.util.log
-import timber.log.Timber
 
 @Composable
 fun rememberToolbarNestedScrollConnection(): ToolbarNestedScrollConnection {
@@ -30,7 +28,8 @@ fun rememberToolbarNestedScrollConnection(): ToolbarNestedScrollConnection {
     }
 }
 
-class ToolbarNestedScrollConnection(val toolbarHeight: Dp, density: Density) : NestedScrollConnection {
+class ToolbarNestedScrollConnection(val toolbarHeight: Dp, density: Density) :
+        NestedScrollConnection {
     private val toolbarHeightPx = with(density) { toolbarHeight.toPx() }
     val toolbarOffsetHeightPx = mutableStateOf(0f)
 

@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,65 +33,57 @@ import ds.photosight.compose.util.logCompositions
 
 @Composable
 fun Thumb(
-    item: Photo,
-    onPhotoClicked: (Photo) -> Unit,
-    isPreloading: Boolean = false,
+        item: Photo,
+        onPhotoClicked: (Photo) -> Unit,
+        isPreloading: Boolean = false,
 ) {
     val url = item.thumb
     logCompositions(msg = "paged item ${item.id}")
 
     Box(modifier = Modifier.fillMaxWidth()) {
         SubcomposeAsyncImage(
-            //model = R.drawable.shrek,
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(url)
-                .placeholderMemoryCacheKey(item.cacheKey)
-                //.size(200) // Set the target size to load the image at.
-                .crossfade(200)
-                .build(),
-            loading = {
-                val infiniteTransition = rememberInfiniteTransition()
-                val color by infiniteTransition.animateColor(
-                    initialValue = Palette.greyDark,
-                    targetValue = Palette.grey,
-                    animationSpec = infiniteRepeatable(
-                        animation = tween(2000, easing = LinearEasing),
-                        repeatMode = RepeatMode.Reverse
-                    )
-                )
+                model =
+                        ImageRequest.Builder(LocalContext.current)
+                                .data(url)
+                                .placeholderMemoryCacheKey(item.cacheKey)
+                                .crossfade(200)
+                                .build(),
+                loading = {
+                    val infiniteTransition = rememberInfiniteTransition()
+                    val color by
+                            infiniteTransition.animateColor(
+                                    initialValue = Palette.greyDark,
+                                    targetValue = Palette.grey,
+                                    animationSpec =
+                                            infiniteRepeatable(
+                                                    animation = tween(2000, easing = LinearEasing),
+                                                    repeatMode = RepeatMode.Reverse
+                                            )
+                            )
 
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .drawBehind {
-                            drawRect(color)
-                        }
-                )
-            },
-            error = {
-                Image(painterResource(id = R.drawable.photo_placeholder_vector), null)
-            },
-            contentDescription = item.title,
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(1.dp)
-                .sharedBounds(key = item.transitionKey) // Shared element transition!
-                .clickable(enabled = !isPreloading) { onPhotoClicked(item) }
-            //.animateContentSize()
+                    Box(Modifier.fillMaxWidth().aspectRatio(1f).drawBehind { drawRect(color) })
+                },
+                error = { Image(painterResource(id = R.drawable.photo_placeholder_vector), null) },
+                contentDescription = item.title,
+                contentScale = ContentScale.FillWidth,
+                modifier =
+                        Modifier.fillMaxWidth()
+                                .padding(1.dp)
+                                .sharedBounds(
+                                        key = item.transitionKey
+                                ) // Shared element transition!
+                                .clickable(enabled = !isPreloading) { onPhotoClicked(item) }
         )
 
         // Show loading overlay when preloading full-size image
         if (isPreloading) {
             Box(
-                modifier = Modifier
-                    .matchParentSize()  // Match the SubcomposeAsyncImage size exactly
-                    .padding(1.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colors.secondary)
-            }
+                    modifier =
+                            Modifier.matchParentSize() // Match the SubcomposeAsyncImage size
+                                    // exactly
+                                    .padding(1.dp),
+                    contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary) }
         }
     }
 }

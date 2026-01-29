@@ -1,30 +1,32 @@
 package ds.photosight.compose.ui.screen.gallery
 
 import androidx.annotation.StringRes
-import androidx.compose.material.BottomSheetValue
+import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Immutable
 import ds.photosight.compose.R
 import ds.photosight.parser.CategoriesPhotosRequest
 
 data class GalleryState(
-    val title: String,
-    val subtitle: String? = null,
-    val isLoading: Boolean = true,
-    val showAboutDialog: Boolean = false
+        val title: String,
+        val subtitle: String? = null,
+        val isLoading: Boolean = true,
+        val showAboutDialog: Boolean = false
 )
 
 data class PhotosFilter(
-    val filterDumpCategory: CategoriesPhotosRequest.FilterDumpCategory = CategoriesPhotosRequest.FilterDumpCategory.ALL,
-    val sortTypeCategory: CategoriesPhotosRequest.SortTypeCategory = CategoriesPhotosRequest.SortTypeCategory.DEFAULT,
+        val filterDumpCategory: CategoriesPhotosRequest.FilterDumpCategory =
+                CategoriesPhotosRequest.FilterDumpCategory.ALL,
+        val sortTypeCategory: CategoriesPhotosRequest.SortTypeCategory =
+                CategoriesPhotosRequest.SortTypeCategory.DEFAULT,
 )
 
 @Immutable
 data class MenuState(
-    val categories: List<CategoryMenuItemState> = emptyList(),
-    val ratings: List<RatingMenuItemState> = emptyList(),
-    val selectedItem: MenuItemState? = ratings.firstOrNull(),    // default is 'new photos'
-    val categoriesFilter: PhotosFilter? = null,
-    val bottomSheetState: BottomSheetValue = BottomSheetValue.Collapsed
+        val categories: List<CategoryMenuItemState> = emptyList(),
+        val ratings: List<RatingMenuItemState> = emptyList(),
+        val selectedItem: MenuItemState? = ratings.firstOrNull(), // default is 'new photos'
+        val categoriesFilter: PhotosFilter? = null,
+        val bottomSheetState: SheetValue = SheetValue.PartiallyExpanded
 )
 
 enum class MenuTabs(@StringRes val resId: Int) {
@@ -37,15 +39,14 @@ sealed interface MenuItemState {
 }
 
 data class CategoryMenuItemState(
-    val category: Int,
-    override val title: String,
+        val category: Int,
+        override val title: String,
 ) : MenuItemState
 
 data class RatingMenuItemState(
-    val type: Type,
-    override val title: String,
+        val type: Type,
+        override val title: String,
 ) : MenuItemState {
-
 
     enum class Type(@StringRes val resId: Int) {
         ALL(R.string.new_photos),

@@ -1,7 +1,6 @@
 package ds.photosight.compose.ui.screen.viewer
 
 import android.net.Uri
-import androidx.compose.material.DrawerValue
 import ds.photosight.compose.R
 import ds.photosight.compose.repo.PhotosightRepo
 import ds.photosight.compose.ui.BaseViewModel
@@ -19,28 +18,32 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ViewerViewModel(
-    private val shareUseCase: ShareUseCase,
-    private val downloadUseCase: DownloadUseCase,
-    private val openBrowserUseCase: OpenBrowserUseCase,
-    private val repo: PhotosightRepo,
-    log: Timber.Tree,
+        private val shareUseCase: ShareUseCase,
+        private val downloadUseCase: DownloadUseCase,
+        private val openBrowserUseCase: OpenBrowserUseCase,
+        private val repo: PhotosightRepo,
+        log: Timber.Tree,
 ) : BaseViewModel(log) {
 
     private val _state = MutableStateFlow(ViewerState())
-    val state: StateFlow<ViewerState> get() = _state.asStateFlow()
+    val state: StateFlow<ViewerState>
+        get() = _state.asStateFlow()
 
-    val photo: Photo get() = _state.value.currentPhoto ?: error("must be not null")
+    val photo: Photo
+        get() = _state.value.currentPhoto ?: error("must be not null")
 
     private val detailsCache = mutableMapOf<Int, PhotoDetails>()
 
     private fun fetchDetails() = launch {
-        val detailsState = try {
-            val details: PhotoDetails = detailsCache.getOrPut(photo.id) { repo.getPhotoDetails(photo.id) }
-            DetailsState.Payload(details)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            DetailsState.Error
-        }
+        val detailsState =
+                try {
+                    val details: PhotoDetails =
+                            detailsCache.getOrPut(photo.id) { repo.getPhotoDetails(photo.id) }
+                    DetailsState.Payload(details)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    DetailsState.Error
+                }
         _state.update { it.copy(details = detailsState) }
     }
 
@@ -51,9 +54,9 @@ class ViewerViewModel(
     fun onPageChanged(item: Photo) {
         _state.update {
             it.copy(
-                currentPhoto = item,
-                title = item.title,
-                subtitle = item.authorName,
+                    currentPhoto = item,
+                    title = item.title,
+                    subtitle = item.authorName,
             )
         }
     }
@@ -66,22 +69,12 @@ class ViewerViewModel(
         shareUseCase.shareImage(photo.large)
     }
 
-    fun onDrawerStateChanged(value: DrawerValue) {
-        when (value) {
-            DrawerValue.Open -> {
-                _state.update {
-                    it.copy(
-                        showUi = false,
-                        details = DetailsState.Loading
-                    )
-                }
-                fetchDetails()
-            }
-            DrawerValue.Closed -> {
-                _state.update {
-                    it.copy(details = DetailsState.Hidden)
-                }
-            }
+    fun onDrawerStateChanged(isOpen: Boolean) {
+        if (isOpen) {
+            _state.update { it.copy(showUi = false, details = DetailsState.Loading) }
+            fetchDetails()
+        } else {
+            _state.update { it.copy(details = DetailsState.Hidden) }
         }
     }
 
@@ -99,5 +92,4 @@ class ViewerViewModel(
     }
 
     fun providePhotoTitle(): String = photo.title + ".jpg"
-
 }

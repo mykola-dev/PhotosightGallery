@@ -1,86 +1,76 @@
 package ds.photosight.compose.ui.screen
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberNavBackStack
 import ds.photosight.compose.ui.screen.gallery.GalleryScreen
 import ds.photosight.compose.ui.screen.viewer.ViewerScreen
 import ds.photosight.compose.ui.theme.PhotosightTheme
+import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
+
+// Navigation 3 routes
+@Serializable data object GalleryRoute : NavKey
+
+@Serializable data class ViewerRoute(val photoId: Int, val index: Int) : NavKey
 
 // CompositionLocal to provide SharedTransitionScope to destinations
 val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }
 
 // CompositionLocal to provide AnimatedVisibilityScope to destination content
-val LocalAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> {
-    null
-}
+val LocalAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> { null }
 
-/**
- * Navigation 2 with SharedTransitionLayout for shared element transitions
- */
+/** Navigation 3 with SharedTransitionLayout for shared element transitions */
 @Composable
 fun ComposeApp() {
     val mainViewModel: MainViewModel = koinViewModel()
-    val navController = rememberNavController()
+
+    // Developer-owned back stack, defaulting to GalleryRoute
+    val backStack = rememberNavBackStack(GalleryRoute)
 
     PhotosightTheme {
         SharedTransitionLayout {
             // Provide the SharedTransitionScope to all destinations
             CompositionLocalProvider(LocalSharedTransitionScope provides this) {
-                NavHost(
-                    navController = navController,
-                    startDestination = "gallery",
-                    enterTransition = { fadeIn(tween(300)) },
-                    exitTransition = { fadeOut(tween(200)) },
-                    popEnterTransition = { fadeIn(tween(200)) },
-                    popExitTransition = { fadeOut(tween(300)) }
-                ) {
-                    // Gallery Screen
-                    composable("gallery") {
-                        // Provide AnimatedVisibilityScope to children
-                        val scope = this@composable
-                        CompositionLocalProvider(LocalAnimatedVisibilityScope provides scope) {
-                            GalleryScreen(
-                                mainViewModel = mainViewModel,
-                                onNavigateToViewer = { photoId, index ->
-                                    navController.navigate("viewer/$photoId/$index")
+                val selectedKey = backStack.lastOrNull()
+                AnimatedContent(
+                        targetState = selectedKey,
+                        transitionSpec = { fadeIn(tween(300)) togetherWith fadeOut(tween(200)) },
+                ) { key ->
+                    if (key != null) {
+                        CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
+                            when (key) {
+                                is GalleryRoute -> {
+                                    GalleryScreen(
+                                            mainViewModel = mainViewModel,
+                                            onNavigateToViewer = { photoId, index ->
+                                                // Navigate by adding to the back stack
+                                                backStack.add(ViewerRoute(photoId, index))
+                                            }
+                                    )
                                 }
-                            )
-                        }
-                    }
-
-                    // Viewer Screen
-                    composable(
-                        route = "viewer/{photoId}/{index}",
-                        arguments = listOf(
-                            androidx.navigation.navArgument("photoId") { type = NavType.IntType },
-                            androidx.navigation.navArgument("index") { type = NavType.IntType }
-                        )
-                    ) { backStackEntry ->
-                        val photoId = backStackEntry.arguments?.getInt("photoId") ?: return@composable
-                        val index = backStackEntry.arguments?.getInt("index") ?: 0
-                        // Provide AnimatedVisibilityScope to children
-                        val scope = this@composable
-                        CompositionLocalProvider(LocalAnimatedVisibilityScope provides scope) {
-                            ViewerScreen(
-                                mainViewModel = mainViewModel,
-                                photoId = photoId,
-                                index = index,
-                                onBack = {
-                                    navController.popBackStack()
+                                is ViewerRoute -> {
+                                    ViewerScreen(
+                                            mainViewModel = mainViewModel,
+                                            photoId = key.photoId,
+                                            index = key.index,
+                                            onBack = {
+                                                // Pop by removing the last item
+                                                backStack.removeAt(backStack.lastIndex)
+                                            }
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                 }
