@@ -18,7 +18,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -28,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -39,9 +47,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun BottomMenu(
-        shitState: SheetState,
-        menuState: MenuState,
-        onMenuItemSelected: (MenuItemState) -> Unit,
+    shitState: SheetState,
+    menuState: MenuState,
+    onMenuItemSelected: (MenuItemState) -> Unit,
 ) {
 
     LaunchedEffect(menuState) {
@@ -50,18 +58,43 @@ fun BottomMenu(
         }
     }
 
-    Column(Modifier.fillMaxSize()) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
+    ) {
         val pagerState = rememberPagerState(pageCount = { MenuTabs.entries.size }, initialPage = 0)
         val tabIndex = pagerState.currentPage
 
+        val density = LocalDensity.current
+        val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+        val screenHeightPx = with(density) { screenHeight.toPx() }
+
         // Stabilized calculation using progress and state values
-        // Simplified logic avoiding internal API usage
         val collapsedFraction by remember {
             derivedStateOf {
-                when (shitState.currentValue) {
-                    SheetValue.PartiallyExpanded -> 1f
-                    SheetValue.Expanded -> 0f
-                    else -> 0f
+                try {
+                    val offset = shitState.requireOffset()
+                    // Assuming Expanded is at 0 (or close to top) and PartiallyExpanded is at
+                    // bottom.
+                    // We normalized offset to 0..1 range.
+                    // This is an approximation since we don't have easy access to precise anchors
+                    // map here.
+                    // Max offset roughly screenHeight - peekHeight, but let's just use screenHeight
+                    // as base denominator
+                    // for smoothness, clamped.
+                    // A more accurate way: if offset is small (< 100), we are expanded (0).
+                    // If offset is large, we are collapsed (1).
+                    // Let's rely on the relative progress.
+                    // targetValue is not available on SheetState easily without Experimental APIs.
+                    // Heuristic: offset / (screenHeight/2)
+                    (offset / (screenHeightPx / 1.5f)).coerceIn(0f, 1f)
+                } catch (e: Exception) {
+                    when (shitState.currentValue) {
+                        SheetValue.PartiallyExpanded -> 1f
+                        SheetValue.Expanded -> 0f
+                        else -> 0f
+                    }
                 }
             }
         }
@@ -70,26 +103,32 @@ fun BottomMenu(
         val tabsPadding = remember(collapsedFraction) { sbHeight * (1 - collapsedFraction) }
 
         TabRow(
-                selectedTabIndex = tabIndex,
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier.padding(top = tabsPadding)
+            selectedTabIndex = tabIndex,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = Palette.greyDark,
+            modifier = Modifier.padding(top = tabsPadding),
+            indicator = { tabPositions ->
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[tabIndex]),
+                    color = Palette.greyDark
+                )
+            }
         ) {
             val coroutineScope = rememberCoroutineScope()
             MenuTabs.entries.forEach { item ->
                 Tab(
-                        selected = tabIndex == item.ordinal,
-                        onClick = {
-                            coroutineScope.launch {
-                                if (shitState.currentValue == SheetValue.PartiallyExpanded) {
-                                    pagerState.scrollToPage(item.ordinal)
-                                    shitState.expand()
-                                } else {
-                                    pagerState.animateScrollToPage(item.ordinal)
-                                }
+                    selected = tabIndex == item.ordinal,
+                    onClick = {
+                        coroutineScope.launch {
+                            if (shitState.currentValue == SheetValue.PartiallyExpanded) {
+                                pagerState.scrollToPage(item.ordinal)
+                                shitState.expand()
+                            } else {
+                                pagerState.animateScrollToPage(item.ordinal)
                             }
-                        },
-                        text = { Text(stringResource(item.resId).uppercase()) }
+                        }
+                    },
+                    text = { Text(stringResource(item.resId).uppercase()) }
                 )
             }
         }
@@ -97,27 +136,27 @@ fun BottomMenu(
         Spacer(modifier = Modifier.height(pagerPadding))
 
         HorizontalPager(
-                state = pagerState,
-                verticalAlignment = Alignment.Top,
-                modifier = Modifier.weight(1f)
+            state = pagerState,
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.weight(1f)
         ) { page ->
             LazyColumn(
-                    contentPadding = WindowInsets.navigationBars.asPaddingValues(),
-                    content = {
-                        val currTab = MenuTabs.entries[page]
-                        val menuItems =
-                                when (currTab) {
-                                    MenuTabs.RATINGS -> menuState.ratings
-                                    MenuTabs.CATEGORIES -> menuState.categories
-                                }
-                        items(menuItems) {
-                            MenuItem(
-                                    model = it,
-                                    isSelected = it == menuState.selectedItem,
-                                    onMenuItemSelected = onMenuItemSelected
-                            )
+                contentPadding = WindowInsets.navigationBars.asPaddingValues(),
+                content = {
+                    val currTab = MenuTabs.entries[page]
+                    val menuItems =
+                        when (currTab) {
+                            MenuTabs.RATINGS -> menuState.ratings
+                            MenuTabs.CATEGORIES -> menuState.categories
                         }
-                    },
+                    items(menuItems) {
+                        MenuItem(
+                            model = it,
+                            isSelected = it == menuState.selectedItem,
+                            onMenuItemSelected = onMenuItemSelected
+                        )
+                    }
+                },
             )
         }
     }
@@ -125,35 +164,36 @@ fun BottomMenu(
 
 @Composable
 fun MenuItem(
-        model: MenuItemState,
-        isSelected: Boolean,
-        onMenuItemSelected: (MenuItemState) -> Unit
+    model: MenuItemState,
+    isSelected: Boolean,
+    onMenuItemSelected: (MenuItemState) -> Unit
 ) {
     val transition = updateTransition(isSelected, "selector")
 
     val bgColor by
-            transition.animateColor({ tween(if (targetState) 0 else 500) }, "bg color") { selected
-                ->
-                if (selected) Palette.surface else Color.Transparent
-            }
+    transition.animateColor({ tween(if (targetState) 0 else 500) }, "bg color") { selected
+        ->
+        if (selected) Palette.greyDark else Color.Transparent
+    }
     val textColor = if (isSelected) Palette.primary else Palette.surface
 
     val style = MaterialTheme.typography.titleMedium
 
     Text(
-            text = model.title,
-            color = textColor,
-            style = style,
-            textAlign = TextAlign.Center,
-            modifier =
-                    Modifier.background(bgColor)
-                            .clickable { onMenuItemSelected(model) }
-                            .padding(16.dp)
-                            .fillMaxSize()
+        text = model.title,
+        color = textColor,
+        style = style,
+        textAlign = TextAlign.Center,
+        modifier =
+            Modifier
+                .background(bgColor)
+                .clickable { onMenuItemSelected(model) }
+                .padding(16.dp)
+                .fillMaxSize()
     )
 }
 
-@Preview()
+@Preview
 @Composable
 fun MenuItemPreview() {
     PhotosightTheme {
@@ -170,6 +210,13 @@ fun BottomMenuPreview() {
     val density = LocalDensity.current
     PhotosightTheme {
         // Preview disabled due to SheetState constructor restriction
-        // BottomMenu(SheetState(skipPartiallyExpanded = false), MenuState(), {})
+        BottomMenu(
+            shitState = SheetState(
+                skipPartiallyExpanded = false,
+                positionalThreshold = { 0f },
+                velocityThreshold = { 0f }),
+            menuState = MenuState(),
+            onMenuItemSelected = {},
+        )
     }
 }

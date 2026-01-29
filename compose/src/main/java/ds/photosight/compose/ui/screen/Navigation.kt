@@ -19,9 +19,7 @@ import ds.photosight.compose.ui.theme.PhotosightTheme
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
-// Navigation 3 routes
 @Serializable data object GalleryRoute : NavKey
-
 @Serializable data class ViewerRoute(val photoId: Int, val index: Int) : NavKey
 
 // CompositionLocal to provide SharedTransitionScope to destinations

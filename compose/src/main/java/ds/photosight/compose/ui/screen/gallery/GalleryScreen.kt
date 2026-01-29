@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
@@ -35,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -194,6 +196,7 @@ fun GalleryContent(
 
     BottomSheetScaffold(
             scaffoldState = scaffoldState,
+            sheetDragHandle = null,
             sheetContent = {
                 BottomMenu(
                         scaffoldState.bottomSheetState,
@@ -202,14 +205,21 @@ fun GalleryContent(
                 )
             },
             sheetPeekHeight = sheetPeekHeight,
-            sheetContainerColor = MaterialTheme.colorScheme.primary,
+            sheetContainerColor = Color.Transparent,
             sheetContentColor = MaterialTheme.colorScheme.onPrimary,
-            sheetShape = MaterialTheme.shapes.large,
+            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
             snackbarHost = { SnackbarHost(hostState) }
     ) { innerPadding ->
-        Box(Modifier.fillMaxSize().padding(innerPadding).nestedScroll(nestedScrollConnection)) {
+        // Only apply top padding to the Box, allowing it to extend behind the bottom sheet
+        Box(
+                Modifier.fillMaxSize()
+                        .padding(top = innerPadding.calculateTopPadding())
+                        .nestedScroll(nestedScrollConnection)
+        ) {
             LazyGrid(
                     GridState(
+                            // ... pass bottom padding to grid content padding instead
+                            bottomPadding = innerPadding.calculateBottomPadding(),
                             nestedScrollConnection = nestedScrollConnection,
                             photos = photos,
                             selectedPhotoIndex = selectedPhotoIndex,
@@ -279,7 +289,7 @@ private fun LazyGrid(gridState: GridState) =
                                     bottom =
                                             WindowInsets.navigationBars
                                                     .asPaddingValues()
-                                                    .calculateBottomPadding()
+                                                    .calculateBottomPadding() + bottomPadding
                             ),
             ) {
                 pagedItems(photos) { item ->
@@ -309,6 +319,7 @@ private fun LazyStaggeredGridState.isScrollingUp(): State<Boolean> {
 }
 
 data class GridState(
+        val bottomPadding: androidx.compose.ui.unit.Dp,
         val nestedScrollConnection: ToolbarNestedScrollConnection,
         val photos: LazyPagingItems<Photo>,
         val selectedPhotoIndex: Int?,

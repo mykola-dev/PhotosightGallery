@@ -19,7 +19,7 @@ import ds.photosight.compose.util.log
 fun rememberToolbarNestedScrollConnection(): ToolbarNestedScrollConnection {
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
-    val toolbarHeight = 56.dp + statusBarHeight
+    val toolbarHeight = 64.dp + statusBarHeight
     val density = LocalDensity.current
 
     return remember(toolbarHeight) {
