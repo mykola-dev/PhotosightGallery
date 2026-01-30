@@ -56,7 +56,6 @@ import ds.photosight.compose.ui.screen.MainViewModel
 import ds.photosight.compose.util.ImagePreloader
 import ds.photosight.compose.util.log
 import ds.photosight.compose.util.logCompositions
-import ds.photosight.compose.util.rememberDerived
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
@@ -267,13 +266,14 @@ private fun LazyGrid(gridState: GridState) =
                 onScrollingUp(scrollingUp)
             }
 
-            val firstItem =
-                    rememberDerived(state) {
-                        state.firstVisibleItemIndex.let {
-                            if (photos.itemCount > it) photos[it] else null
-                        }
-                    }
-            onFirstVisibleItem(firstItem)
+            val firstItemState = remember { mutableStateOf<Photo?>(null) }
+            LaunchedEffect(state.firstVisibleItemIndex) {
+                val index = state.firstVisibleItemIndex
+                if (photos.itemCount > index) {
+                    firstItemState.value = photos[index]
+                }
+            }
+            onFirstVisibleItem(firstItemState)
 
             LaunchedEffect(selectedPhotoIndex) {
                 if (selectedPhotoIndex != null && photos.itemCount > 0) {

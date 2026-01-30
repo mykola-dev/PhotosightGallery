@@ -1,13 +1,13 @@
 package ds.photosight.parser
 
 import ds.photosight.http_client.runHttpRequest
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
 
 interface Request<T> {
     operator fun invoke(): T
@@ -35,7 +35,16 @@ abstract class JsoupRequest<T> : Request<T> {
         return elements
     }
 
-    protected fun getDocument(): Document = Jsoup.parse(runHttpRequest(url, extraCookies + nudeModeCookie + adultModeCookie + categoryDescriptionCookie))
+    protected fun getDocument(): Document =
+            Jsoup.parse(
+                    runHttpRequest(
+                            url,
+                            extraCookies +
+                                    nudeModeCookie +
+                                    adultModeCookie +
+                                    categoryDescriptionCookie
+                    )
+            )
 
     override val extraCookies: Map<String, String> = emptyMap()
 }
@@ -43,22 +52,18 @@ abstract class JsoupRequest<T> : Request<T> {
 class CategoriesRequest : JsoupRequest<List<PhotoCategory>>() {
     private val photosCategoryPattern = Regex("""/photos/category/(\d+)/""")
 
-    override fun invoke(): List<PhotoCategory> = getDocument()
-        .parse("div.col > a[href~=/photos/category/.*]")
-        .mapNotNull { e ->
-            photosCategoryPattern
-                .matchEntire(e.attr("href"))
-                ?.groupValues
-                ?.get(1)
-                ?.toInt()
-                ?.let { index ->
-                    PhotoCategory(
-                        index,
-                        e.text()
-                    )
-                }
-        }
-        .sortedBy { it.index }
+    override fun invoke(): List<PhotoCategory> =
+            getDocument()
+                    .parse("div.col > a[href~=/photos/category/.*]")
+                    .mapNotNull { e ->
+                        photosCategoryPattern
+                                .matchEntire(e.attr("href"))
+                                ?.groupValues
+                                ?.get(1)
+                                ?.toInt()
+                                ?.let { index -> PhotoCategory(index, e.text()) }
+                    }
+                    .sortedBy { it.index }
 
     override val url: String = baseUrl
 }
@@ -69,38 +74,37 @@ class PhotoDetailsRequest(private val photoId: Int) : JsoupRequest<PhotoDetails>
 
     override fun invoke(): PhotoDetails {
         val doc = getDocument()
-        val comments = doc
-            .commentsSection()
-            .map { comment ->
-                val text = comment.select("div.right-part > p").text()
-                val dateRaw = comment.select("span.date").text()
-                val (avatar, author) = comment
-                    .getElementsByClass("avatar")
-                    .first()!!
-                    .getElementsByTag("img")
-                    .run { attr("src") to attr("alt") }
-                val likes = comment.select("span.count").text().ifEmpty { "0" }.toInt()
-                val isAuthor = comment.hasClass("author")
-                val timestamp = LocalDateTime.parse(dateRaw, dateFormat).atZone(ZoneId.systemDefault()).toInstant()
-                PhotoDetails.Comment(text, timestamp, author, avatar, likes, isAuthor)
-            }
+        val comments =
+                doc.commentsSection().map { comment ->
+                    val text = comment.select("div.right-part > p").text()
+                    val dateRaw = comment.select("span.date").text()
+                    val (avatar, author) =
+                            comment.getElementsByClass("avatar").first()!!.getElementsByTag("img")
+                                    .run { attr("src") to attr("alt") }
+                    val likes = comment.select("span.count").text().ifEmpty { "0" }.toInt()
+                    val isAuthor = comment.hasClass("author")
+                    val timestamp =
+                            LocalDateTime.parse(dateRaw, dateFormat)
+                                    .atZone(ZoneId.systemDefault())
+                                    .toInstant()
+                    PhotoDetails.Comment(text, timestamp, author, avatar, likes, isAuthor)
+                }
 
-        val awards = doc
-            .awardsSection()
-            .map { e -> e.classNames().first { it != "medal" } }
-            .mapNotNull { PhotoDetails.Award.fromString(it) }
+        val awards =
+                doc.awardsSection().map { e -> e.classNames().first { it != "medal" } }.mapNotNull {
+                    PhotoDetails.Award.fromString(it)
+                }
 
-        val stats = doc
-            .infoSection()
-            .let {
-                val views = it.select("div.count").text().replace(Regex("\\D"), "").toInt()
-                val art = it.select("div.item-x > span.count").text().toInt()
-                val original = it.select("div.item-o > span.count").text().toInt()
-                val tech = it.select("div.item-t > span.count").text().toInt()
-                val likes = it.select("div.item-up > span.count").text().toInt()
-                val dislikes = it.select("div.item-down > span.count").text().toInt()
-                PhotoDetails.Stats(art, original, tech, likes, dislikes, views)
-            }
+        val stats =
+                doc.infoSection().let {
+                    val views = it.select("div.count").text().replace(Regex("\\D"), "").toInt()
+                    val art = it.select("div.item-x > span.count").text().toInt()
+                    val original = it.select("div.item-o > span.count").text().toInt()
+                    val tech = it.select("div.item-t > span.count").text().toInt()
+                    val likes = it.select("div.item-up > span.count").text().toInt()
+                    val dislikes = it.select("div.item-down > span.count").text().toInt()
+                    PhotoDetails.Stats(art, original, tech, likes, dislikes, views)
+                }
 
         return PhotoDetails(photoId, comments, awards, stats)
     }
@@ -110,52 +114,68 @@ class PhotoDetailsRequest(private val photoId: Int) : JsoupRequest<PhotoDetails>
     private fun Document.infoSection() = parse("div.photo-info")
 
     override val url: String = "$baseUrl/photos/$photoId"
-
 }
 
-abstract class PhotosRequest : JsoupRequest<List<PhotoInfo>>() {
+abstract class PhotosRequest : JsoupRequest<PhotosPage>() {
 
-    override fun invoke(): List<PhotoInfo> = getDocument()
-        .parse("div.photo-item")
-        .map { el ->
-            val id = el
-                .getElementsByTag("a")
-                .first()!!
-                .let { link ->
-                    link.attr("data-href").ifBlank { link.attr("href") }
+    override fun invoke(): PhotosPage {
+        val doc = getDocument()
+        val photos =
+                doc.parse("div.photo-item").map { el ->
+                    val id =
+                            el.getElementsByTag("a").first()!!
+                                    .let { link ->
+                                        link.attr("data-href").ifBlank { link.attr("href") }
+                                    }
+                                    .let { Regex("/photos/(\\d+).*").matchEntire(it) }
+                                    ?.groupValues
+                                    ?.get(1)
+                                    ?.toInt()
+                                    ?: error("can't parse id")
+                    val (thumb, title) =
+                            el.getElementsByTag("img").run { attr("src") to attr("alt").trim() }
+                    val large = thumb.thumbToLarge()
+                    val pageUrl = "$baseUrl/photos/$id"
+                    val (author, authorUrl) =
+                            el.getElementsByTag("p").first()!!
+                                    .let { e -> e.getElementsByTag("a").first() ?: e }
+                                    .let { e ->
+                                        e.text() to
+                                                baseUrl + e.attr("href").takeIf { it.isNotBlank() }
+                                    }
+
+                    val paginationKey = (this as? Multipage)?.page?.key
+
+                    PhotoInfo(id, thumb, large, pageUrl, title, author, authorUrl, paginationKey)
                 }
-                .let { Regex("/photos/(\\d+).*").matchEntire(it) }
-                ?.groupValues
-                ?.get(1)
-                ?.toInt()
-                ?: error("can't parse id")
-            val (thumb, title) = el
-                .getElementsByTag("img")
-                .run { attr("src") to attr("alt").trim() }
-            val large = thumb.thumbToLarge()
-            val pageUrl = "$baseUrl/photos/$id"
-            val (author, authorUrl) = el
-                .getElementsByTag("p")
-                .first()!!
-                .let { e -> e.getElementsByTag("a").first() ?: e }
-                .let { e -> e.text() to baseUrl + e.attr("href").takeIf { it.isNotBlank() } }
-
-            val paginationKey = (this as? Multipage)?.page?.key
-
-            PhotoInfo(id, thumb, large, pageUrl, title, author, authorUrl, paginationKey)
-        }
-
+        val hasNext =
+                doc.select("div.paginator a.next-page").isNotEmpty() ||
+                        doc.select("div.paginator a").any {
+                            it.attr("data-href")
+                                    .substringAfter("pager=", "")
+                                    .substringBefore("&")
+                                    .toIntOrNull()
+                                    ?.let { p ->
+                                        val current = (this as? Multipage)?.page?.index ?: 1
+                                        p > current
+                                    }
+                                    ?: false
+                        }
+        return PhotosPage(photos, hasNext)
+    }
 }
 
-class DailyPhotosRequest(override val page: DatePage, category: Int? = null) : PhotosRequest(), Multipage {
-    override val url: String = "$baseUrl/outrun/date/${page.key}/${category?.let { "?category=$it" } ?: ""}"
+class DailyPhotosRequest(override val page: DatePage, category: Int? = null) :
+        PhotosRequest(), Multipage {
+    override val url: String =
+            "$baseUrl/outrun/date/${page.key}/${category?.let { "?category=$it" } ?: ""}"
 }
 
 class CategoriesPhotosRequest(
-    category: Int,
-    override val page: SimplePage,
-    filterDumpCategory: FilterDumpCategory = FilterDumpCategory.ALL,
-    sortTypeCategory: SortTypeCategory = SortTypeCategory.DEFAULT
+        category: Int,
+        override val page: SimplePage,
+        filterDumpCategory: FilterDumpCategory = FilterDumpCategory.ALL,
+        sortTypeCategory: SortTypeCategory = SortTypeCategory.DEFAULT
 ) : PhotosRequest(), Multipage {
 
     enum class FilterDumpCategory(private val value: String) {
@@ -176,14 +196,13 @@ class CategoriesPhotosRequest(
         override fun toString(): String = value
     }
 
+    override val url: String = "$baseUrl/photos/category/$category/?pager=${page.key}"
 
-    override val url: String = "$baseUrl/photos/category/$category?pager=${page.key}"
-
-    override val extraCookies: Map<String, String> = mapOf(
-        "sort_dump_category" to filterDumpCategory.toString(),
-        "sort_type_category" to sortTypeCategory.toString()
-    )
-
+    override val extraCookies: Map<String, String> =
+            mapOf(
+                    "sort_dump_category" to filterDumpCategory.toString(),
+                    "sort_type_category" to sortTypeCategory.toString()
+            )
 }
 
 class Top50PhotosRequest : PhotosRequest() {
@@ -219,7 +238,7 @@ class OutrunPhotosRequest : PhotosRequest() {
 }
 
 class NewPhotosRequest(override val page: SimplePage) : PhotosRequest(), Multipage {
-    override val url: String = "$baseUrl/new_on_site/photos/?pager=${page.key}"
+    override val url: String = "$baseUrl/photos/?pager=${page.key}"
 }
 
 class PretenderPhotosRequest(override val page: SimplePage) : PhotosRequest(), Multipage {
@@ -245,7 +264,6 @@ class BestPhotosRequest(sort: Sort = Sort.BEST, time: Time = Time.DAY) : PhotosR
         MONTH("month");
 
         override fun toString(): String = value
-
     }
 
     override val url: String = "$baseUrl/best/?sort=$sort&time=$time"
