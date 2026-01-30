@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +30,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,7 +46,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import ds.photosight.compose.R
 import ds.photosight.compose.repo.getIndexById
-import ds.photosight.compose.ui.ToolbarNestedScrollConnection
 import ds.photosight.compose.ui.dialog.AboutDialog
 import ds.photosight.compose.ui.events.UiEvent
 import ds.photosight.compose.ui.isolate
@@ -65,6 +64,7 @@ import kotlin.math.roundToInt
 @Composable
 fun GalleryScreen(
         mainViewModel: MainViewModel,
+        gridState: LazyStaggeredGridState,
         onNavigateToViewer: (Int, Int) -> Unit,
 ) {
     logCompositions(msg = "root")
@@ -107,6 +107,7 @@ fun GalleryScreen(
 
     GalleryContent(
             photos = photosStream,
+            gridState = gridState,
             menuState = menuState,
             galleryState = galleryState,
             selectedPhotoIndex = selectedPhotoIndex,
@@ -148,6 +149,7 @@ fun LoadingSlot(isLoading: Boolean) {
 @Composable
 fun GalleryContent(
         photos: LazyPagingItems<Photo>,
+        gridState: LazyStaggeredGridState,
         galleryState: State<GalleryState>,
         menuState: MenuState,
         selectedPhotoIndex: Int?,
@@ -188,9 +190,11 @@ fun GalleryContent(
 
     var showMenu by remember { mutableStateOf(true) }
     val targetPeekHeight =
-            if (showMenu && menuState.selectedItem != null)
-                    WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
-            else 0.dp
+            if (showMenu && menuState.selectedItem != null) {
+                WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
+            } else {
+                0.dp
+            }
 
     val sheetPeekHeight by animateDpAsState(targetValue = targetPeekHeight)
 
@@ -218,6 +222,7 @@ fun GalleryContent(
         ) {
             LazyGrid(
                     GridState(
+                            state = gridState,
                             // ... pass bottom padding to grid content padding instead
                             bottomPadding = innerPadding.calculateBottomPadding(),
                             nestedScrollConnection = nestedScrollConnection,
@@ -255,7 +260,6 @@ fun GalleryContent(
 private fun LazyGrid(gridState: GridState) =
         with(gridState) {
             logCompositions(msg = "lazy grid")
-            val state = rememberLazyStaggeredGridState()
 
             val scrollingUp by state.isScrollingUp()
             LaunchedEffect(scrollingUp) {
@@ -272,10 +276,18 @@ private fun LazyGrid(gridState: GridState) =
             onFirstVisibleItem(firstItem)
 
             LaunchedEffect(selectedPhotoIndex) {
-                selectedPhotoIndex?.let { index ->
-                    val isVisible = state.layoutInfo.visibleItemsInfo.any { it.index == index }
-                    if (!isVisible) {
-                        state.scrollToItem(index)
+                if (selectedPhotoIndex != null && photos.itemCount > 0) {
+                    val visibleItems = state.layoutInfo.visibleItemsInfo
+                    if (visibleItems.isNotEmpty()) {
+                        val first = visibleItems.minOf { it.index }
+                        val last = visibleItems.maxOf { it.index }
+
+                        if (selectedPhotoIndex !in first..last) {
+                            log.d(
+                                    "Selected photo $selectedPhotoIndex is out of viewport ($first..$last). Scrolling."
+                            )
+                            state.scrollToItem(selectedPhotoIndex)
+                        }
                     }
                 }
             }
@@ -301,8 +313,8 @@ private fun LazyGrid(gridState: GridState) =
 
 @Composable
 private fun LazyStaggeredGridState.isScrollingUp(): State<Boolean> {
-    var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
-    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
+    var previousIndex by remember(this) { mutableIntStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableIntStateOf(firstVisibleItemScrollOffset) }
     return remember(this) {
         derivedStateOf {
             if (previousIndex != firstVisibleItemIndex) {
@@ -317,14 +329,3 @@ private fun LazyStaggeredGridState.isScrollingUp(): State<Boolean> {
         }
     }
 }
-
-data class GridState(
-        val bottomPadding: androidx.compose.ui.unit.Dp,
-        val nestedScrollConnection: ToolbarNestedScrollConnection,
-        val photos: LazyPagingItems<Photo>,
-        val selectedPhotoIndex: Int?,
-        val preloadingPhotoId: Int?,
-        val onPhotoClicked: (Photo) -> Unit,
-        val onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
-        val onScrollingUp: (Boolean) -> Unit,
-)

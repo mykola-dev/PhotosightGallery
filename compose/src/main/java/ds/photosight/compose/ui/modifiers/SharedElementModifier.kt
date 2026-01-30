@@ -6,8 +6,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalInspectionMode
-import ds.photosight.compose.ui.screen.LocalAnimatedVisibilityScope
-import ds.photosight.compose.ui.screen.LocalSharedTransitionScope
+import ds.photosight.compose.ui.navigation.LocalAnimatedVisibilityScope
+import ds.photosight.compose.ui.navigation.LocalSharedTransitionScope
 
 /**
  * Helper modifier that applies shared bounds animation using CompositionLocal scopes.

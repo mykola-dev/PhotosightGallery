@@ -1,4 +1,4 @@
-package ds.photosight.compose.ui.widget
+package ds.photosight.compose.core.widget
 
 import android.os.Build
 import android.text.SpannableString

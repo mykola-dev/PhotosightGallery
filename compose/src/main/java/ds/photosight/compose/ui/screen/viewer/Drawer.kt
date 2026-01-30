@@ -35,7 +35,7 @@ import coil.request.ImageRequest
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
-import ds.photosight.compose.ui.widget.Ratings
+import ds.photosight.compose.core.widget.Ratings
 import ds.photosight.compose.util.isPreview
 import ds.photosight.compose.util.roundToPx
 import ds.photosight.parser.PhotoDetails

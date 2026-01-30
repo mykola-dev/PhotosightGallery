@@ -19,7 +19,7 @@ import androidx.compose.ui.window.Dialog
 import ds.photosight.compose.BuildConfig
 import ds.photosight.compose.R
 import ds.photosight.compose.ui.theme.PhotosightTheme
-import ds.photosight.compose.ui.widget.LinkifyText
+import ds.photosight.compose.core.widget.LinkifyText
 
 @Composable
 fun AboutDialog(onDismiss: () -> Unit) {

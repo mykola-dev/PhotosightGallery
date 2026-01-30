@@ -1,4 +1,4 @@
-package ds.photosight.compose.ui.widget
+package ds.photosight.compose.core.widget
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import ds.photosight.compose.R
+import ds.photosight.compose.ui.navigation.ComposeApp
 
 class MainActivity : ComponentActivity() {
 

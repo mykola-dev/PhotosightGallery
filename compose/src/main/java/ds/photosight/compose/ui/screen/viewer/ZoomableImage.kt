@@ -15,7 +15,7 @@ import coil.compose.SubcomposeAsyncImageContent
 import coil.request.ImageRequest
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.modifiers.sharedBounds
-import ds.photosight.compose.ui.widget.zoomable
+import ds.photosight.compose.core.widget.zoomable
 import ds.photosight.compose.util.log
 
 @Composable

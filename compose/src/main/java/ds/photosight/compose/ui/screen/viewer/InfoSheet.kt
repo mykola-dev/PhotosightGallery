@@ -15,9 +15,9 @@ import ds.photosight.compose.R
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.PhotosightTheme
-import ds.photosight.compose.ui.widget.Histogram
-import ds.photosight.compose.ui.widget.HistogramData
-import ds.photosight.compose.ui.widget.LinkifyText
+import ds.photosight.compose.core.widget.Histogram
+import ds.photosight.compose.core.widget.HistogramData
+import ds.photosight.compose.core.widget.LinkifyText
 import ds.photosight.compose.util.loadBitmap
 
 @Composable
