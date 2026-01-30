@@ -62,9 +62,9 @@ import kotlin.math.roundToInt
 
 @Composable
 fun GalleryScreen(
-        mainViewModel: MainViewModel,
-        gridState: LazyStaggeredGridState,
-        onNavigateToViewer: (Int, Int) -> Unit,
+    mainViewModel: MainViewModel,
+    gridState: LazyStaggeredGridState,
+    onNavigateToViewer: (Int, Int) -> Unit,
 ) {
     logCompositions(msg = "root")
     val viewModel: GalleryViewModel = koinViewModel()
@@ -75,7 +75,7 @@ fun GalleryScreen(
     val menuState by viewModel.menuStateFlow.collectAsState()
     val galleryState = viewModel.galleryState.collectAsState()
     val photosStream: LazyPagingItems<Photo> =
-            mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
+        mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
     val selectedPhotoIndex = photosStream.getIndexById(mainViewModel.selectedId)
 
     isolate({ photosStream.loadState }) { state ->
@@ -91,12 +91,12 @@ fun GalleryScreen(
     val toolbarState = remember {
         derivedStateOf {
             ToolbarState(
-                    galleryState.value.title,
-                    galleryState.value.subtitle,
-                    menuState.categoriesFilter,
-                    viewModel::onShowAboutDialog,
-                    viewModel::onFilterSelected,
-                    viewModel::onSorterSelected
+                galleryState.value.title,
+                galleryState.value.subtitle,
+                menuState.categoriesFilter,
+                viewModel::onShowAboutDialog,
+                viewModel::onFilterSelected,
+                viewModel::onSorterSelected
             )
         }
     }
@@ -105,31 +105,31 @@ fun GalleryScreen(
     val context = LocalContext.current
 
     GalleryContent(
-            photos = photosStream,
-            gridState = gridState,
-            menuState = menuState,
-            galleryState = galleryState,
-            selectedPhotoIndex = selectedPhotoIndex,
-            preloadingPhotoId = preloadingPhotoId,
-            onMenuItemSelected = { viewModel.onMenuSelected(it) },
-            onPhotoClicked = { photo ->
-                // Use current index if available, otherwise find it
-                val index = photosStream.getIndexById(photo.id) ?: 0
-                // Navigate immediately to eliminate lag
-                onNavigateToViewer(photo.id, index)
-                scope.launch {
-                    // Preload full-size image in background for smoother swap once viewer opens
-                    ImagePreloader.preload(context, photo.large)
-                }
-            },
-            event = event,
-            onRetry = photosStream::retry,
-            loadingSlot = { LoadingSlot(galleryState.value.isLoading) },
-            onFirstVisibleItem = { state ->
-                state.value?.let { viewModel.setFirstVisibleItem(it) }
-            },
-            toolbarState = toolbarState,
-            onDismissAboutDialog = viewModel::onDismissAboutDialog,
+        photos = photosStream,
+        gridState = gridState,
+        menuState = menuState,
+        galleryState = galleryState,
+        selectedPhotoIndex = selectedPhotoIndex,
+        preloadingPhotoId = preloadingPhotoId,
+        onMenuItemSelected = { viewModel.onMenuSelected(it) },
+        onPhotoClicked = { photo ->
+            // Use current index if available, otherwise find it
+            val index = photosStream.getIndexById(photo.id) ?: 0
+            // Navigate immediately to eliminate lag
+            onNavigateToViewer(photo.id, index)
+            scope.launch {
+                // Preload full-size image in background for smoother swap once viewer opens
+                ImagePreloader.preload(context, photo.large)
+            }
+        },
+        event = event,
+        onRetry = photosStream::retry,
+        loadingSlot = { LoadingSlot(galleryState.value.isLoading) },
+        onFirstVisibleItem = { state ->
+            state.value?.let { viewModel.setFirstVisibleItem(it) }
+        },
+        toolbarState = toolbarState,
+        onDismissAboutDialog = viewModel::onDismissAboutDialog,
     )
 }
 
@@ -138,8 +138,8 @@ fun LoadingSlot(isLoading: Boolean) {
     if (isLoading) {
         logCompositions(msg = "loading")
         LinearProgressIndicator(
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.fillMaxWidth()
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -147,20 +147,20 @@ fun LoadingSlot(isLoading: Boolean) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GalleryContent(
-        photos: LazyPagingItems<Photo>,
-        gridState: LazyStaggeredGridState,
-        galleryState: State<GalleryState>,
-        menuState: MenuState,
-        selectedPhotoIndex: Int?,
-        preloadingPhotoId: Int?,
-        event: State<UiEvent?>,
-        onMenuItemSelected: (MenuItemState) -> Unit,
-        onPhotoClicked: (Photo) -> Unit,
-        onRetry: () -> Unit,
-        loadingSlot: @Composable () -> Unit,
-        onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
-        toolbarState: State<ToolbarState>,
-        onDismissAboutDialog: () -> Unit,
+    photos: LazyPagingItems<Photo>,
+    gridState: LazyStaggeredGridState,
+    galleryState: State<GalleryState>,
+    menuState: MenuState,
+    selectedPhotoIndex: Int?,
+    preloadingPhotoId: Int?,
+    event: State<UiEvent?>,
+    onMenuItemSelected: (MenuItemState) -> Unit,
+    onPhotoClicked: (Photo) -> Unit,
+    onRetry: () -> Unit,
+    loadingSlot: @Composable () -> Unit,
+    onFirstVisibleItem: @Composable (State<Photo?>) -> Unit,
+    toolbarState: State<ToolbarState>,
+    onDismissAboutDialog: () -> Unit,
 ) {
     logCompositions(msg = "gallery content")
 
@@ -189,61 +189,62 @@ fun GalleryContent(
 
     var showMenu by remember { mutableStateOf(true) }
     val targetPeekHeight =
-            if (showMenu && menuState.selectedItem != null) {
-                WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
-            } else {
-                0.dp
-            }
+        if (showMenu && menuState.selectedItem != null) {
+            WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 48.dp
+        } else {
+            0.dp
+        }
 
     val sheetPeekHeight by animateDpAsState(targetValue = targetPeekHeight)
 
     BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            sheetDragHandle = null,
-            sheetContent = {
-                BottomMenu(
-                        scaffoldState.bottomSheetState,
-                        menuState,
-                        onMenuItemSelected,
-                )
-            },
-            sheetPeekHeight = sheetPeekHeight,
-            sheetContainerColor = Color.Transparent,
-            sheetContentColor = MaterialTheme.colorScheme.onPrimary,
-            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-            snackbarHost = { SnackbarHost(hostState) }
+        scaffoldState = scaffoldState,
+        sheetDragHandle = null,
+        sheetContent = {
+            BottomMenu(
+                scaffoldState.bottomSheetState,
+                menuState,
+                onMenuItemSelected,
+            )
+        },
+        sheetPeekHeight = sheetPeekHeight,
+        sheetContainerColor = Color.Transparent,
+        sheetContentColor = MaterialTheme.colorScheme.onPrimary,
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        snackbarHost = { SnackbarHost(hostState) }
     ) { innerPadding ->
         // Only apply top padding to the Box, allowing it to extend behind the bottom sheet
         Box(
-                Modifier.fillMaxSize()
-                        .padding(top = innerPadding.calculateTopPadding())
-                        .nestedScroll(nestedScrollConnection)
+            Modifier
+                .fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding())
+                .nestedScroll(nestedScrollConnection)
         ) {
             LazyGrid(
-                    GridState(
-                            state = gridState,
-                            // ... pass bottom padding to grid content padding instead
-                            bottomPadding = innerPadding.calculateBottomPadding(),
-                            nestedScrollConnection = nestedScrollConnection,
-                            photos = photos,
-                            selectedPhotoIndex = selectedPhotoIndex,
-                            preloadingPhotoId = preloadingPhotoId,
-                            onPhotoClicked = onPhotoClicked,
-                            onFirstVisibleItem = onFirstVisibleItem,
-                            onScrollingUp = { isScrollingUp -> showMenu = isScrollingUp }
-                    )
+                GridState(
+                    state = gridState,
+                    // ... pass bottom padding to grid content padding instead
+                    bottomPadding = innerPadding.calculateBottomPadding(),
+                    nestedScrollConnection = nestedScrollConnection,
+                    photos = photos,
+                    selectedPhotoIndex = selectedPhotoIndex,
+                    preloadingPhotoId = preloadingPhotoId,
+                    onPhotoClicked = onPhotoClicked,
+                    onFirstVisibleItem = onFirstVisibleItem,
+                    onScrollingUp = { isScrollingUp -> showMenu = isScrollingUp }
+                )
             )
             MainToolbar(
-                    state = toolbarState,
-                    modifier =
-                            Modifier.offset {
-                                IntOffset(
-                                        x = 0,
-                                        y =
-                                                nestedScrollConnection.toolbarOffsetHeightPx.value
-                                                        .roundToInt()
-                                )
-                            },
+                state = toolbarState,
+                modifier =
+                    Modifier.offset {
+                        IntOffset(
+                            x = 0,
+                            y =
+                                nestedScrollConnection.toolbarOffsetHeightPx.value
+                                    .roundToInt()
+                        )
+                    },
             )
 
             loadingSlot()
@@ -257,59 +258,59 @@ fun GalleryContent(
 
 @Composable
 private fun LazyGrid(gridState: GridState) =
-        with(gridState) {
-            logCompositions(msg = "lazy grid")
+    with(gridState) {
+        logCompositions(msg = "lazy grid")
 
-            val scrollingUp by state.isScrollingUp()
-            LaunchedEffect(scrollingUp) {
-                log.v("scroll direction: $scrollingUp")
-                onScrollingUp(scrollingUp)
+        val scrollingUp by state.isScrollingUp()
+        LaunchedEffect(scrollingUp) {
+            log.v("scroll direction: $scrollingUp")
+            onScrollingUp(scrollingUp)
+        }
+
+        val firstItemState = remember { mutableStateOf<Photo?>(null) }
+        LaunchedEffect(state.firstVisibleItemIndex) {
+            val index = state.firstVisibleItemIndex
+            if (photos.itemCount > index) {
+                firstItemState.value = photos[index]
             }
+        }
+        onFirstVisibleItem(firstItemState)
 
-            val firstItemState = remember { mutableStateOf<Photo?>(null) }
-            LaunchedEffect(state.firstVisibleItemIndex) {
-                val index = state.firstVisibleItemIndex
-                if (photos.itemCount > index) {
-                    firstItemState.value = photos[index]
-                }
-            }
-            onFirstVisibleItem(firstItemState)
+        LaunchedEffect(selectedPhotoIndex) {
+            if (selectedPhotoIndex != null && photos.itemCount > 0) {
+                val visibleItems = state.layoutInfo.visibleItemsInfo
+                if (visibleItems.isNotEmpty()) {
+                    val first = visibleItems.minOf { it.index }
+                    val last = visibleItems.maxOf { it.index }
 
-            LaunchedEffect(selectedPhotoIndex) {
-                if (selectedPhotoIndex != null && photos.itemCount > 0) {
-                    val visibleItems = state.layoutInfo.visibleItemsInfo
-                    if (visibleItems.isNotEmpty()) {
-                        val first = visibleItems.minOf { it.index }
-                        val last = visibleItems.maxOf { it.index }
-
-                        if (selectedPhotoIndex !in first..last) {
-                            log.d(
-                                    "Selected photo $selectedPhotoIndex is out of viewport ($first..$last). Scrolling."
-                            )
-                            state.scrollToItem(selectedPhotoIndex)
-                        }
+                    if (selectedPhotoIndex !in first..last) {
+                        log.d(
+                            "Selected photo $selectedPhotoIndex is out of viewport ($first..$last). Scrolling."
+                        )
+                        state.scrollToItem(selectedPhotoIndex)
                     }
                 }
             }
+        }
 
-            LazyVerticalStaggeredGrid(
-                    columns = StaggeredGridCells.Fixed(2),
-                    state = state,
-                    contentPadding =
-                            PaddingValues(
-                                    top = nestedScrollConnection.toolbarHeight,
-                                    bottom =
-                                            WindowInsets.navigationBars
-                                                    .asPaddingValues()
-                                                    .calculateBottomPadding() + bottomPadding
-                            ),
-            ) {
-                pagedItems(photos) { item ->
-                    val isPreloading = item.id == preloadingPhotoId
-                    Thumb(item, onPhotoClicked, isPreloading)
-                }
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Fixed(2),
+            state = state,
+            contentPadding =
+                PaddingValues(
+                    top = nestedScrollConnection.toolbarHeight,
+                    bottom =
+                        WindowInsets.navigationBars
+                            .asPaddingValues()
+                            .calculateBottomPadding() + bottomPadding
+                ),
+        ) {
+            pagedItems(photos) { item ->
+                val isPreloading = item.id == preloadingPhotoId
+                Thumb(item, onPhotoClicked, isPreloading)
             }
         }
+    }
 
 @Composable
 private fun LazyStaggeredGridState.isScrollingUp(): State<Boolean> {
@@ -318,14 +319,14 @@ private fun LazyStaggeredGridState.isScrollingUp(): State<Boolean> {
     return remember(this) {
         derivedStateOf {
             if (previousIndex != firstVisibleItemIndex) {
-                        previousIndex > firstVisibleItemIndex
-                    } else {
-                        previousScrollOffset >= firstVisibleItemScrollOffset
-                    }
-                    .also {
-                        previousIndex = firstVisibleItemIndex
-                        previousScrollOffset = firstVisibleItemScrollOffset
-                    }
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }
+                .also {
+                    previousIndex = firstVisibleItemIndex
+                    previousScrollOffset = firstVisibleItemScrollOffset
+                }
         }
     }
 }

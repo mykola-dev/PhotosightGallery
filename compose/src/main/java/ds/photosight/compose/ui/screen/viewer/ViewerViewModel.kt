@@ -18,11 +18,11 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ViewerViewModel(
-        private val shareUseCase: ShareUseCase,
-        private val downloadUseCase: DownloadUseCase,
-        private val openBrowserUseCase: OpenBrowserUseCase,
-        private val repo: PhotosightRepo,
-        log: Timber.Tree,
+    private val shareUseCase: ShareUseCase,
+    private val downloadUseCase: DownloadUseCase,
+    private val openBrowserUseCase: OpenBrowserUseCase,
+    private val repo: PhotosightRepo,
+    log: Timber.Tree,
 ) : BaseViewModel(log) {
 
     private val _state = MutableStateFlow(ViewerState())
@@ -36,14 +36,14 @@ class ViewerViewModel(
 
     private fun fetchDetails() = launch {
         val detailsState =
-                try {
-                    val details: PhotoDetails =
-                            detailsCache.getOrPut(photo.id) { repo.getPhotoDetails(photo.id) }
-                    DetailsState.Payload(details)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    DetailsState.Error
-                }
+            try {
+                val details: PhotoDetails =
+                    detailsCache.getOrPut(photo.id) { repo.getPhotoDetails(photo.id) }
+                DetailsState.Payload(details)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                DetailsState.Error
+            }
         _state.update { it.copy(details = detailsState) }
     }
 
@@ -54,9 +54,9 @@ class ViewerViewModel(
     fun onPageChanged(item: Photo) {
         _state.update {
             it.copy(
-                    currentPhoto = item,
-                    title = item.title,
-                    subtitle = item.authorName,
+                currentPhoto = item,
+                title = item.title,
+                subtitle = item.authorName,
             )
         }
     }

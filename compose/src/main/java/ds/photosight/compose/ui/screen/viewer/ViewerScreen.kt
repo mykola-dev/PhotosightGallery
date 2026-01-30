@@ -52,10 +52,10 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ViewerScreen(
-        mainViewModel: MainViewModel,
-        photoId: Int,
-        index: Int,
-        onBack: () -> Unit,
+    mainViewModel: MainViewModel,
+    photoId: Int,
+    index: Int,
+    onBack: () -> Unit,
 ) {
     logCompositions(msg = "viewer screen")
     val viewModel: ViewerViewModel = koinViewModel()
@@ -70,32 +70,32 @@ fun ViewerScreen(
     val currentPageIndex = index
 
     val downloadLauncher =
-            rememberLauncherForActivityResult(SaveImage()) { uri ->
-                if (uri != null) {
-                    viewModel.saveFile(uri)
-                }
+        rememberLauncherForActivityResult(SaveImage()) { uri ->
+            if (uri != null) {
+                viewModel.saveFile(uri)
             }
+        }
 
     if (photos.itemCount > 0) { // some bug with paging lib
         TranslucentTheme {
             ViewerContent(
-                    state = state,
-                    event = event,
-                    photos = photos,
-                    currentPageIndex = currentPageIndex,
-                    onPageChanged = {
-                        photos.getOrNull(it)?.let { photo ->
-                            mainViewModel.onPhotoSelected(photo.id)
-                            viewModel.onPageChanged(photo)
-                        }
-                    },
-                    onClicked = { viewModel.onClicked() },
-                    onShareUrl = viewModel::onUrlShare,
-                    onShareImage = viewModel::onImageShare,
-                    onDrawerToggle = viewModel::onDrawerStateChanged,
-                    onDownloadClick = { downloadLauncher.launch(viewModel.providePhotoTitle()) },
-                    onBrowserClick = viewModel::onOpenBrowser,
-                    onInfoClick = viewModel::onInfo
+                state = state,
+                event = event,
+                photos = photos,
+                currentPageIndex = currentPageIndex,
+                onPageChanged = {
+                    photos.getOrNull(it)?.let { photo ->
+                        mainViewModel.onPhotoSelected(photo.id)
+                        viewModel.onPageChanged(photo)
+                    }
+                },
+                onClicked = { viewModel.onClicked() },
+                onShareUrl = viewModel::onUrlShare,
+                onShareImage = viewModel::onImageShare,
+                onDrawerToggle = viewModel::onDrawerStateChanged,
+                onDownloadClick = { downloadLauncher.launch(viewModel.providePhotoTitle()) },
+                onBrowserClick = viewModel::onOpenBrowser,
+                onInfoClick = viewModel::onInfo
             )
         }
     }
@@ -108,18 +108,18 @@ fun ViewerScreen(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "LocalContextGetResourceValueCall")
 @Composable
 fun ViewerContent(
-        state: ViewerState,
-        event: UiEvent?,
-        photos: LazyPagingItems<Photo>,
-        currentPageIndex: Int,
-        onPageChanged: (Int) -> Unit,
-        onClicked: () -> Unit,
-        onShareUrl: () -> Unit,
-        onShareImage: () -> Unit,
-        onDrawerToggle: (value: Boolean) -> Unit,
-        onDownloadClick: () -> Unit,
-        onBrowserClick: () -> Unit,
-        onInfoClick: () -> Unit
+    state: ViewerState,
+    event: UiEvent?,
+    photos: LazyPagingItems<Photo>,
+    currentPageIndex: Int,
+    onPageChanged: (Int) -> Unit,
+    onClicked: () -> Unit,
+    onShareUrl: () -> Unit,
+    onShareImage: () -> Unit,
+    onDrawerToggle: (value: Boolean) -> Unit,
+    onDownloadClick: () -> Unit,
+    onBrowserClick: () -> Unit,
+    onInfoClick: () -> Unit
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -142,24 +142,26 @@ fun ViewerContent(
 
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalDrawerSheet(
-                        modifier = Modifier.width(300.dp),
-                        drawerContainerColor = Palette.drawerBackground,
-                        drawerShape = RoundedCornerShape(0),
-                        drawerTonalElevation = 0.dp
-                ) { Drawer(state.details) }
-            },
-            gesturesEnabled = true
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.width(300.dp),
+                drawerContainerColor = Palette.drawerBackground,
+                drawerShape = RoundedCornerShape(0),
+                drawerTonalElevation = 0.dp
+            ) { Drawer(state.details) }
+        },
+        gesturesEnabled = true
     ) {
         // Custom Box layout instead of Scaffold to avoid resize jumps
-        Box(Modifier.fillMaxSize().background(Palette.surface)) {
+        Box(Modifier
+            .fillMaxSize()
+            .background(Palette.surface)) {
             val pagerState =
-                    rememberPagerState(
-                            initialPage = currentPageIndex,
-                            pageCount = { Int.MAX_VALUE / 2 }
-                    )
+                rememberPagerState(
+                    initialPage = currentPageIndex,
+                    pageCount = { Int.MAX_VALUE / 2 }
+                )
 
             val updatedOnPageChanged by rememberUpdatedState(onPageChanged)
             LaunchedEffect(pagerState) {
@@ -169,17 +171,17 @@ fun ViewerContent(
             }
 
             HorizontalPager(
-                    state = pagerState,
-                    userScrollEnabled = true,
-                    modifier = Modifier.fillMaxSize()
+                state = pagerState,
+                userScrollEnabled = true,
+                modifier = Modifier.fillMaxSize()
             ) { page ->
                 photos.getOrNull(page)?.let { item ->
                     ZoomableImage(
-                            photo = item,
-                            onClicked = {
-                                if (isFabExpanded.value) isFabExpanded.value = false
-                                else onClicked()
-                            }
+                        photo = item,
+                        onClicked = {
+                            if (isFabExpanded.value) isFabExpanded.value = false
+                            else onClicked()
+                        }
                     )
                 }
             }
@@ -191,25 +193,27 @@ fun ViewerContent(
             // Bottom Bar & FAB
             Box(Modifier.align(Alignment.BottomCenter)) {
                 ViewerBottomBar(
-                        isVisible = state.showUi,
-                        isExpanded = isFabExpanded,
-                        onDrawerClick = { scope.launch { drawerState.open() } },
-                        onDownloadClick = onDownloadClick,
-                        onBrowserClick = onBrowserClick,
-                        onInfoClick = onInfoClick,
-                        fab = {
-                            Fab(
-                                    state.showUi,
-                                    isFabExpanded,
-                                    onShareUrl = onShareUrl,
-                                    onShareImage = onShareImage
-                            )
-                        }
+                    isVisible = state.showUi,
+                    isExpanded = isFabExpanded,
+                    onDrawerClick = { scope.launch { drawerState.open() } },
+                    onDownloadClick = onDownloadClick,
+                    onBrowserClick = onBrowserClick,
+                    onInfoClick = onInfoClick,
+                    fab = {
+                        Fab(
+                            state.showUi,
+                            isFabExpanded,
+                            onShareUrl = onShareUrl,
+                            onShareImage = onShareImage
+                        )
+                    }
                 )
             }
 
             // Snackbar
-            Box(Modifier.align(Alignment.BottomCenter).padding(bottom = 80.dp)) {
+            Box(Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 80.dp)) {
                 SnackbarHost(snackbarHostState)
             }
         }
@@ -217,10 +221,10 @@ fun ViewerContent(
 
     if (showSheet && state.currentPhoto != null) {
         ModalBottomSheet(
-                onDismissRequest = { showSheet = false },
-                sheetState = sheetState,
-                containerColor = MaterialTheme.colorScheme.primary,
-                scrimColor = Palette.translucent
+            onDismissRequest = { showSheet = false },
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.primary,
+            scrimColor = Palette.translucent
         ) { InfoSheet(state.currentPhoto, true) }
     }
 }
