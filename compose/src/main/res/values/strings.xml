@@ -45,11 +45,7 @@
     <string name="thin_font" translatable="false">sans-serif-light</string>
     <string name="light_font" translatable="false">sans-serif</string>
 
-	<string name="abouttext">"PhotoSight is a community of talented photographers mostly from Europe. You can find there daily updated archive of creative artistic photos or share your own.
-Photosight Gallery is an easy way to browse photos from https://sight.photo on your Android device.
-
-Please e-mail bugreports:
-deviantstudio.software@gmail.com
+	<string name="abouttext">"Immerse yourself in PhotoSight, a vibrant hub for talented photographers across Europe. Discover a constantly evolving gallery of artistic imagery, or contribute your own perspective to the archive. Photosight Gallery provides an intuitive experience, bringing the inspiring world of https://sight.photo to your Android screen.
 
 Change Log:
 
@@ -71,7 +67,7 @@ Change Log:
     <string name="likes">Likes</string>
     <string name="dislikes">Dislikes</string>
 	<string name="copyright" translatable="false">© 1997-2026 Deviant Studio</string>
-	<string name="about_title_" translatable="false">"PHOTOSIGHT GALLERY "</string>
+	<string name="about_title" translatable="false">"PHOTOSIGHT GALLERY"</string>
 	<string name="retry">Retry</string>
     <string name="views">Views</string>
 	<string name="about_">About…</string>

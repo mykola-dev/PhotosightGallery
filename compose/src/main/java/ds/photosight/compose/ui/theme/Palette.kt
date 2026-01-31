@@ -16,4 +16,5 @@ object Palette {
     val aotValue = Color(0xffdddddd)
     val red = Color(0xffdd3e35)
     val blue = Color(0xff15a9dc)
+    val translucentGrey = Color(0x20808080)
 }

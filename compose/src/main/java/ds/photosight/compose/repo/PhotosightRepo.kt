@@ -1,8 +1,13 @@
 package ds.photosight.compose.repo
 
+import android.annotation.SuppressLint
 import android.content.Context
 import ds.photosight.compose.ui.screen.gallery.RatingMenuItemState
-import ds.photosight.parser.*
+import ds.photosight.parser.CategoriesRequest
+import ds.photosight.parser.PhotoCategory
+import ds.photosight.parser.PhotoDetails
+import ds.photosight.parser.PhotoDetailsRequest
+import ds.photosight.parser.Request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -26,7 +31,7 @@ class PhotosightRepo(private val context: Context) {
     suspend fun getPhotoDetails(photoId: Int): PhotoDetails = apiRequest(PhotoDetailsRequest(photoId))
 
     fun getRatingsList(): List<RatingMenuItemState> = RatingMenuItemState.Type
-        .values()
+        .entries
         .map {
             RatingMenuItemState(
                 type = it,
@@ -36,6 +41,7 @@ class PhotosightRepo(private val context: Context) {
 
 }
 
+@SuppressLint("DiscouragedApi")
 private fun PhotoCategory.getLocalizedCategory(ctx: Context): String = ctx.resources.run {
     getIdentifier("category_$index", "string", ctx.packageName)
         .takeIf { it != 0 }

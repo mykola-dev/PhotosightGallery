@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
@@ -65,28 +66,18 @@ fun ViewerBottomBar(
     val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val expansionAnim by animateFloatAsState(if (isExpanded.value) 1f else 0f, label = "expansion")
 
-    // Animated notch properties
-    // Animated notch properties
     val notchWidth = 72.dp // Constant width for the FAB
     val notchCornerRadius = 50.dp // Constant circle shape
 
-    // Dynamic notch depth:
-    // - Collapsed: 36dp (half of 72dp) for perfect circle.
-    // - Expanded: 0dp (flat bar).
     val targetDepth = if (isExpanded.value) 0f else 36f
     val notchDepth by animateFloatAsState(targetValue = targetDepth, label = "notchDepth")
 
-    // FAB Vertical Position
-    // - Collapsed: -36.dp (half-melted)
-    // - Expanded: -80.dp (16dp gap above 64dp bar)
     val targetFabY = if (isExpanded.value) -80f else -36f
     val animatedFabY by animateFloatAsState(targetValue = targetFabY, label = "fabY")
 
     val barShape = remember(notchDepth) { NotchShape(notchWidth, notchDepth.dp, notchCornerRadius) }
 
-    // The entire bottom area
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomCenter) {
-        // Bottom Bar Background & Content
         AnimatedVisibility(
             visible = isVisible,
             enter = slideInVertically(initialOffsetY = { it }),
@@ -108,7 +99,6 @@ fun ViewerBottomBar(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Left Group
                     RippleIconButton(onClick = onDrawerClick) {
                         Icon(Icons.Default.Menu, null, tint = Color.White)
                     }
@@ -116,19 +106,11 @@ fun ViewerBottomBar(
                         Icon(Icons.Default.Save, null, tint = Color.White)
                     }
 
-                    // Spacer for FAB (Width includes side gaps)
-                    // Collapsed: 72dp (Space for FAB)
-                    // Expanded: 0dp (Icons move to center)
                     val spacerWidth = (72 * (1f - expansionAnim)).dp
                     Spacer(Modifier.width(spacerWidth))
 
-                    // Right Group
                     RippleIconButton(onClick = onBrowserClick) {
-                        Icon(
-                            Icons.Default.Language,
-                            null,
-                            tint = Color.White
-                        )
+                        Icon(Icons.Default.Language, null, tint = Color.White)
                     }
                     RippleIconButton(onClick = onInfoClick) {
                         Icon(Icons.Default.Info, null, tint = Color.White)
@@ -137,14 +119,13 @@ fun ViewerBottomBar(
             }
         }
 
-        // FAB (Custom Position) - Floating above the notch
         Box(
             modifier = Modifier
-                .offset(
-                    y = -bottomPadding + animatedFabY.dp
-                ) // Adjusted for half-melted 56dp FAB
+                .offset { IntOffset(0, (-bottomPadding + animatedFabY.dp).roundToPx()) }
                 .align(Alignment.BottomCenter)
-        ) { fab() }
+        ) {
+            fab()
+        }
     }
 }
 
@@ -152,11 +133,12 @@ fun ViewerBottomBar(
 private fun RippleIconButton(onClick: () -> Unit, content: @Composable () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    val backgroundColor by
-    animateColorAsState(
-        targetValue =
-            if (isPressed) Color.White.copy(alpha = 0.25f)
-            else Color.Transparent,
+    val backgroundColor by animateColorAsState(
+        targetValue = if (isPressed) {
+            Color.White.copy(alpha = 0.25f)
+        } else {
+            Color.Transparent
+        },
         label = "rippleHighlight"
     )
 
@@ -187,17 +169,13 @@ class NotchShape(private val width: Dp, private val depth: Dp, private val corne
             val cr = with(density) { cornerRadius.toPx() }
             val cx = size.width / 2
 
-            // Main bar rectangle
             addRect(Rect(0f, 0f, size.width, size.height))
 
-            // Notch to subtract
             val notchPath = Path().apply {
                 addRoundRect(
                     RoundRect(
                         left = cx - w / 2,
-                        top = -d, // By using -d and d, we
-                        // center the cut
-                        // vertically at 0
+                        top = -d,
                         right = cx + w / 2,
                         bottom = d,
                         cornerRadius = CornerRadius(cr, cr)
@@ -205,7 +183,6 @@ class NotchShape(private val width: Dp, private val depth: Dp, private val corne
                 )
             }
 
-            // Subtract notch from bar
             op(this, notchPath, PathOperation.Difference)
         }
         return Outline.Generic(path)

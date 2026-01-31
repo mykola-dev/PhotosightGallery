@@ -35,7 +35,6 @@ import ds.photosight.compose.R
 import ds.photosight.compose.ui.model.Photo
 import ds.photosight.compose.ui.modifiers.sharedBounds
 import ds.photosight.compose.ui.theme.Palette
-import ds.photosight.compose.util.logCompositions
 
 @Composable
 fun Thumb(
@@ -44,7 +43,6 @@ fun Thumb(
     isPreloading: Boolean = false,
 ) {
     val url = item.thumb
-    logCompositions(msg = "paged item ${item.id}")
 
     var isBadImage by remember(url) { mutableStateOf(false) }
     var retryHash by remember { mutableIntStateOf(0) }
@@ -60,30 +58,29 @@ fun Thumb(
 
     Box(modifier = Modifier.fillMaxWidth()) {
         SubcomposeAsyncImage(
-            model =
-                ImageRequest.Builder(LocalContext.current)
-                    .data(if (retryHash == 0) url else "$url?retry=$retryHash")
-                    .placeholderMemoryCacheKey(item.cacheKey)
-                    .crossfade(200)
-                    .diskCachePolicy(
-                        if (retryHash > 0) CachePolicy.DISABLED
-                        else CachePolicy.ENABLED
-                    )
-                    .listener(
-                        onSuccess = { _, result ->
-                            val width = result.drawable.intrinsicWidth
-                            val height = result.drawable.intrinsicHeight
-                            // Detect "little icons" (usually < 100px)
-                            isBadImage = width in 1..<100 &&
-                                height > 0 &&
-                                height < 100
-                        },
-                        onError = { _, _ ->
-                            // Fallback retry for network errors too
-                            isBadImage = true
-                        }
-                    )
-                    .build(),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(if (retryHash == 0) url else "$url?retry=$retryHash")
+                .placeholderMemoryCacheKey(item.cacheKey)
+                .crossfade(200)
+                .diskCachePolicy(
+                    if (retryHash > 0) CachePolicy.DISABLED
+                    else CachePolicy.ENABLED
+                )
+                .listener(
+                    onSuccess = { _, result ->
+                        val width = result.drawable.intrinsicWidth
+                        val height = result.drawable.intrinsicHeight
+                        // Detect "little icons" (usually < 100px)
+                        isBadImage = width in 1..<100 &&
+                            height > 0 &&
+                            height < 100
+                    },
+                    onError = { _, _ ->
+                        // Fallback retry for network errors too
+                        isBadImage = true
+                    }
+                )
+                .build(),
             contentDescription = item.title,
             contentScale = ContentScale.FillWidth,
             modifier =
@@ -114,10 +111,9 @@ fun Thumb(
         // Show loading overlay when preloading full-size image
         if (isPreloading) {
             Box(
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .padding(1.dp),
+                modifier = Modifier
+                    .matchParentSize()
+                    .padding(1.dp),
                 contentAlignment = Alignment.Center
             ) { CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary) }
         }

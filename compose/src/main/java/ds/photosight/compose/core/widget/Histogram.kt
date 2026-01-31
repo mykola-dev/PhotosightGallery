@@ -8,13 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.AndroidPath
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import ds.photosight.compose.util.logCompositions
 import kotlin.math.max
 
 @Composable
 fun Histogram(data: HistogramData?) {
-    logCompositions("histogram $data")
-
     Canvas(
         Modifier
             .aspectRatio(2f)

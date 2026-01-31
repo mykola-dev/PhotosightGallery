@@ -7,16 +7,15 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose") version "2.3.0"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.3.0"
-    id("com.github.breadmoirai.github-release") version "2.5.2"
 }
 
 val changelog = File(rootProject.projectDir, "changelog.txt").readText()
-val (appVersion, recentChanges) = Regex("""^v(\d\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v\d\..+|${'$'})""")
+val (appVersion, recentChanges) = Regex("""^v(\d\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v\d\..+|$)""")
     .find(changelog)!!
     .destructured
 val appVersionCode = changelog.lines().size + 20
 
- android {
+android {
     compileSdk = 36
 
     defaultConfig {
@@ -45,9 +44,7 @@ val appVersionCode = changelog.lines().size + 20
     }
 
     buildTypes {
-        debug {
-
-        }
+        debug { }
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
@@ -97,13 +94,12 @@ val appVersionCode = changelog.lines().size + 20
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    lint {
+        lintConfig = file("lint.xml")
+    }
+
     namespace = "ds.photosight.compose"
-}
-
-// Koin configuration - no special config needed, pure Kotlin DSL
-
-githubRelease {
-    token { gradleLocalProperties(rootDir, providers).getProperty("github.token") }
 }
 
 dependencies {
@@ -165,34 +161,4 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
-}
-
-tasks {
-    val copyRelease by registering(Copy::class) {
-        dependsOn(getByName("assembleRelease"))
-        from("${project.layout.buildDirectory.get()}/outputs/apk/release") {
-            include("*.apk")
-            rename { "photosight-v${appVersion}-release.apk" }
-        }
-        into(File(rootProject.rootDir, "bin"))
-    }
-
-    githubRelease.configure {
-        dependsOn(copyRelease)
-
-        owner.set("deviant-studio")
-        repo.set("PhotosightGallery")
-        tagName.set("v$appVersion")
-        releaseName.set("v$appVersion")
-        body.set(recentChanges)
-        draft.set(false)
-        prerelease.set(false)
-        overwrite.set(true)
-        dryRun.set(false)
-
-        val apkFile = File(rootProject.rootDir, "bin/photosight-v${appVersion}-release.apk")
-        if (apkFile.exists()) {
-            releaseAssets.setFrom(apkFile)
-        }
-    }
 }

@@ -16,20 +16,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import ds.photosight.compose.BuildConfig
 import ds.photosight.compose.R
 import ds.photosight.compose.core.widget.LinkifyText
 import ds.photosight.compose.ui.theme.PhotosightTheme
 
 @Composable
 fun AboutDialog(onDismiss: () -> Unit) {
-    val appVersion = BuildConfig.VERSION_NAME
-
     Dialog(onDismissRequest = onDismiss) {
         Surface(shape = MaterialTheme.shapes.medium, modifier = Modifier.fillMaxHeight(0.9f)) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    stringResource(R.string.about_title_) + appVersion,
+                    stringResource(R.string.about_title),
                     modifier = Modifier.padding(bottom = 16.dp),
                     style = MaterialTheme.typography.titleLarge
                 )

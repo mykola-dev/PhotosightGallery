@@ -1,5 +1,6 @@
 package ds.photosight.compose.data
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -15,6 +16,7 @@ fun PhotoCategory.asUiModel(): CategoryMenuItemState = CategoryMenuItemState(ind
 
 fun PhotoInfo.asUiModel(paginationKey: String?): Photo = Photo(id, thumb, large, pageUrl, title, authorName, authorUrl, paginationKey)
 
+@SuppressLint("DiscouragedApi")
 @DrawableRes
 fun PhotoDetails.Award.asDrawableResource(context: Context): Int = context.resources.getIdentifier(this.toString(), "drawable", context.packageName)
 

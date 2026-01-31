@@ -35,8 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,28 +65,13 @@ fun BottomMenu(
         val pagerState = rememberPagerState(pageCount = { MenuTabs.entries.size }, initialPage = 0)
         val tabIndex = pagerState.currentPage
 
-        val density = LocalDensity.current
-        val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-        val screenHeightPx = with(density) { screenHeight.toPx() }
+        val screenHeightPx = LocalWindowInfo.current.containerSize.height.toFloat()
 
         // Stabilized calculation using progress and state values
         val collapsedFraction by remember {
             derivedStateOf {
                 try {
                     val offset = shitState.requireOffset()
-                    // Assuming Expanded is at 0 (or close to top) and PartiallyExpanded is at
-                    // bottom.
-                    // We normalized offset to 0..1 range.
-                    // This is an approximation since we don't have easy access to precise anchors
-                    // map here.
-                    // Max offset roughly screenHeight - peekHeight, but let's just use screenHeight
-                    // as base denominator
-                    // for smoothness, clamped.
-                    // A more accurate way: if offset is small (< 100), we are expanded (0).
-                    // If offset is large, we are collapsed (1).
-                    // Let's rely on the relative progress.
-                    // targetValue is not available on SheetState easily without Experimental APIs.
-                    // Heuristic: offset / (screenHeight/2)
                     (offset / (screenHeightPx / 1.5f)).coerceIn(0f, 1f)
                 } catch (e: Exception) {
                     when (shitState.currentValue) {
@@ -207,7 +191,6 @@ fun MenuItemPreview() {
 @Preview
 @Composable
 fun BottomMenuPreview() {
-    val density = LocalDensity.current
     PhotosightTheme {
         // Preview disabled due to SheetState constructor restriction
         BottomMenu(

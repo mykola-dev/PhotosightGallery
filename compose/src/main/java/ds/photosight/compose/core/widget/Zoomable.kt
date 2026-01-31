@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -23,9 +24,9 @@ import kotlin.math.abs
 
 fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modifier = composed {
     var size by remember { mutableStateOf(IntSize.Zero) }
-    var scale by remember { mutableStateOf(1f) }
+    var scale by remember { mutableFloatStateOf(1f) }
     var pan by remember { mutableStateOf(Offset.Zero) }
-    var angle by remember { mutableStateOf(0f) }
+    var angle by remember { mutableFloatStateOf(0f) }
     val angleAnimated by animateFloatAsState(angle)
     val scaleAnimated by animateFloatAsState(scale)
     val panAnimated by animateOffsetAsState(pan)
@@ -88,7 +89,7 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
                         isTransformInProgress.value = true
                         // Consuming all changes if we are zoomed or zooming
                         event.changes.forEach { it.consume() }
-                        
+
                         scale = (scale * zoomChange).coerceIn(1f, 10f)
                         pan += panChange
                         angle += rotationChange
@@ -99,8 +100,6 @@ fun Modifier.zoomable(imageScale: Float, onClicked: (() -> Unit)? = null): Modif
                     } else {
                         isTransformInProgress.value = false
                     }
-                    // If scale is 1f and it's a single finger move, we don't consume, 
-                    // allowing HorizontalPager to catch it.
                 } while (event.changes.any { it.pressed })
                 isTransformInProgress.value = false
             }

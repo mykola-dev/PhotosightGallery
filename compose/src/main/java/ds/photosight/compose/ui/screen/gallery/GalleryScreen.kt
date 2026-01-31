@@ -55,7 +55,6 @@ import ds.photosight.compose.ui.rememberToolbarNestedScrollConnection
 import ds.photosight.compose.ui.screen.MainViewModel
 import ds.photosight.compose.util.ImagePreloader
 import ds.photosight.compose.util.log
-import ds.photosight.compose.util.logCompositions
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
@@ -66,7 +65,6 @@ fun GalleryScreen(
     gridState: LazyStaggeredGridState,
     onNavigateToViewer: (Int, Int) -> Unit,
 ) {
-    logCompositions(msg = "root")
     val viewModel: GalleryViewModel = koinViewModel()
     mainViewModel.setMenuStateFlow(viewModel.menuStateFlow)
 
@@ -136,7 +134,6 @@ fun GalleryScreen(
 @Composable
 fun LoadingSlot(isLoading: Boolean) {
     if (isLoading) {
-        logCompositions(msg = "loading")
         LinearProgressIndicator(
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.fillMaxWidth()
@@ -162,8 +159,6 @@ fun GalleryContent(
     toolbarState: State<ToolbarState>,
     onDismissAboutDialog: () -> Unit,
 ) {
-    logCompositions(msg = "gallery content")
-
     val nestedScrollConnection = rememberToolbarNestedScrollConnection()
     val scaffoldState = rememberBottomSheetScaffoldState()
     val hostState = scaffoldState.snackbarHostState
@@ -241,7 +236,7 @@ fun GalleryContent(
                         IntOffset(
                             x = 0,
                             y =
-                                nestedScrollConnection.toolbarOffsetHeightPx.value
+                                nestedScrollConnection.toolbarOffsetHeightPx.floatValue
                                     .roundToInt()
                         )
                     },
@@ -259,8 +254,6 @@ fun GalleryContent(
 @Composable
 private fun LazyGrid(gridState: GridState) =
     with(gridState) {
-        logCompositions(msg = "lazy grid")
-
         val scrollingUp by state.isScrollingUp()
         LaunchedEffect(scrollingUp) {
             log.v("scroll direction: $scrollingUp")

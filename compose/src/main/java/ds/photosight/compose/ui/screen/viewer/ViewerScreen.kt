@@ -1,6 +1,5 @@
 package ds.photosight.compose.ui.screen.viewer
 
-// Note: System UI controller now handled by Activity's enableEdgeToEdge() configuration
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -46,7 +45,6 @@ import ds.photosight.compose.ui.screen.MainViewModel
 import ds.photosight.compose.ui.theme.Palette
 import ds.photosight.compose.ui.theme.TranslucentTheme
 import ds.photosight.compose.util.log
-import ds.photosight.compose.util.logCompositions
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -57,17 +55,12 @@ fun ViewerScreen(
     index: Int,
     onBack: () -> Unit,
 ) {
-    logCompositions(msg = "viewer screen")
     val viewModel: ViewerViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
     val event by viewModel.events.collectAsState(null)
     val photos = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
 
-    // Set the selected photo when the screen opens
     LaunchedEffect(photoId) { mainViewModel.onPhotoSelected(photoId) }
-
-    // Use passed index directly for initial page index to ensure stability during transition
-    val currentPageIndex = index
 
     val downloadLauncher =
         rememberLauncherForActivityResult(SaveImage()) { uri ->
@@ -82,7 +75,7 @@ fun ViewerScreen(
                 state = state,
                 event = event,
                 photos = photos,
-                currentPageIndex = currentPageIndex,
+                currentPageIndex = index,
                 onPageChanged = {
                     photos.getOrNull(it)?.let { photo ->
                         mainViewModel.onPhotoSelected(photo.id)
@@ -100,7 +93,6 @@ fun ViewerScreen(
         }
     }
 
-    // Handle system back button
     BackHandler(enabled = true) { onBack() }
 }
 
@@ -149,14 +141,17 @@ fun ViewerContent(
                 drawerContainerColor = Palette.drawerBackground,
                 drawerShape = RoundedCornerShape(0),
                 drawerTonalElevation = 0.dp
-            ) { Drawer(state.details) }
+            ) {
+                Drawer(state.details)
+            }
         },
         gesturesEnabled = true
     ) {
-        // Custom Box layout instead of Scaffold to avoid resize jumps
-        Box(Modifier
-            .fillMaxSize()
-            .background(Palette.surface)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Palette.surface)
+        ) {
             val pagerState =
                 rememberPagerState(
                     initialPage = currentPageIndex,
@@ -190,7 +185,6 @@ fun ViewerContent(
                 ViewerToolbar(state.showUi, state.title, state.subtitle)
             }
 
-            // Bottom Bar & FAB
             Box(Modifier.align(Alignment.BottomCenter)) {
                 ViewerBottomBar(
                     isVisible = state.showUi,
@@ -210,10 +204,11 @@ fun ViewerContent(
                 )
             }
 
-            // Snackbar
-            Box(Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 80.dp)) {
+            Box(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 80.dp)
+            ) {
                 SnackbarHost(snackbarHostState)
             }
         }
