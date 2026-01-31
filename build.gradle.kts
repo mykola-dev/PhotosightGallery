@@ -1,12 +1,7 @@
-buildscript {
-    val kotlinVersion by extra("2.3.0")
-
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.13.2")
-        classpath(kotlin("gradle-plugin", version = kotlinVersion))
-    }
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.compose) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
 }

@@ -17,5 +17,7 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name = "Photosight"
+
 include(":parser")
-include(":compose")
+include(":app")

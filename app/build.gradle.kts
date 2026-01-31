@@ -3,14 +3,14 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.3.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.0"
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val changelog = File(rootProject.projectDir, "changelog.txt").readText()
-val (appVersion, recentChanges) = Regex("""^v(\d\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v\d\..+|$)""")
+val (appVersion, recentChanges) = Regex("""^v(\d+\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v\d+\..+|$)""")
     .find(changelog)!!
     .destructured
 val appVersionCode = changelog.lines().size + 20
@@ -103,62 +103,46 @@ android {
 }
 
 dependencies {
-    val koinVersion = "4.1.1"
-    val composeVersion = "1.10.2"
-    val materialIconsVersion = "1.7.8"
-    val coilVersion = "2.7.0"
-    val navigation3Version = "1.1.0-alpha03"
-
     implementation(project(":parser"))
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    coreLibraryDesugaring(libs.desugar)
 
-    // compose
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.4.0")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.compose.foundation:foundation:$composeVersion")
-    implementation("androidx.activity:activity-compose:1.12.3")
-    implementation("androidx.paging:paging-runtime-ktx:3.4.0")
-    implementation("androidx.paging:paging-compose:3.4.0")
-    implementation("androidx.navigation3:navigation3-runtime:$navigation3Version")
-    implementation("androidx.navigation3:navigation3-ui:$navigation3Version")
-    implementation("androidx.compose.material:material-icons-extended:$materialIconsVersion")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
+    // AndroidX Core
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
 
-    // androidx
-    implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.10.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
+    // AndroidX Lifecycle
+    implementation(libs.bundles.lifecycle)
 
-    // di - Koin (no KSP/KAPT needed)
-    implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
-    implementation("io.insert-koin:koin-compose:$koinVersion")
+    // Compose
+    implementation(libs.bundles.compose)
+    debugImplementation(libs.bundles.compose.debug)
 
-    // widgets - using built-in Compose LazyStaggeredGrid (Compose 1.4+)
+    // Navigation
+    implementation(libs.bundles.navigation3)
 
-    // kotlin
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
+    // Paging
+    implementation(libs.bundles.paging)
 
-    // network
-    implementation("io.coil-kt:coil-compose:$coilVersion")
+    // Dependency Injection - Koin
+    implementation(libs.bundles.koin)
 
-    // prefs
-    implementation("com.chibatching.kotpref:kotpref:2.13.2")
+    // Kotlinx
+    implementation(libs.bundles.coroutines)
+    implementation(libs.serialization.json)
 
-    // misc
-    implementation("com.jakewharton.timber:timber:5.0.1")
+    // Network
+    implementation(libs.coil.compose)
 
-    // tests
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.3.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+    // Storage/Preferences
+    implementation(libs.kotpref)
+
+    // Logging
+    implementation(libs.timber)
+
+    // Testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.bundles.compose.testing)
 }
