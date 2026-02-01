@@ -85,4 +85,18 @@ class PhotosightParserTest {
             }
         }
     }
+
+    @Test
+    fun `test photo details request`() {
+        runTest {
+            val details = PhotoDetailsRequest(7475960)()
+            println("PhotoDetails for ID 7475960:")
+            println("Stats: views=${details.stats.views}, likes=${details.stats.likes}, dislikes=${details.stats.dislikes}")
+            println("Awards: ${details.awards}")
+            println("Comments count: ${details.comments.size}")
+            details.comments.take(3).forEach { comment ->
+                println("Comment by ${comment.author}: ${comment.text.take(50)}...")
+            }
+        }
+    }
 }

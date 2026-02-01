@@ -70,7 +70,7 @@ class CategoriesRequest : JsoupRequest<List<PhotoCategory>>() {
 
 class PhotoDetailsRequest(private val photoId: Int) : JsoupRequest<PhotoDetails>() {
 
-    
+    override val url: String = "$baseUrl/photos/$photoId/"
 
     override suspend fun invoke(): PhotoDetails {
         val doc = getDocument()
@@ -112,8 +112,6 @@ class PhotoDetailsRequest(private val photoId: Int) : JsoupRequest<PhotoDetails>
     private fun Document.commentsSection() = parse("div.comments div.comment-content")
     private fun Document.awardsSection() = parse("div.medals > div.medal")
     private fun Document.infoSection() = parse("div.photo-info")
-
-    override val url: String = "$baseUrl/photos/$photoId"
 }
 
 abstract class PhotosRequest : JsoupRequest<PhotosPage>() {
@@ -135,7 +133,7 @@ abstract class PhotosRequest : JsoupRequest<PhotosPage>() {
                     val (thumb, title) =
                             el.getElementsByTag("img").run { attr("src") to attr("alt").trim() }
                     val large = thumb.thumbToLarge()
-                    val pageUrl = "$baseUrl/photos/$id"
+                    val pageUrl = "$baseUrl/photos/$id/"
                     val (author, authorUrl) =
                             el.getElementsByTag("p").first()!!
                                     .let { e -> e.getElementsByTag("a").first() ?: e }
