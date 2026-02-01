@@ -2,6 +2,7 @@ package ds.photosight.http_client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.HttpRedirect
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.defaultRequest
@@ -12,6 +13,7 @@ import io.ktor.http.isSuccess
 
 actual val httpClient: HttpClient = HttpClient(Android) {
     install(HttpCookies)
+    install(HttpRedirect)  // IMPORTANT: Enable redirect following!
 
     defaultRequest {
         header(

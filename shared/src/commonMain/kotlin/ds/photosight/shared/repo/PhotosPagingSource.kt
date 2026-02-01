@@ -90,6 +90,6 @@ class PhotosPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
-        return null
+        throw UnsupportedOperationException("not implemented")
     }
 }

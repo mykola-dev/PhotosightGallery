@@ -41,4 +41,48 @@ class PhotosightParserTest {
             }
         }
     }
+
+    @Test
+    fun `test top 50 photos request`() {
+        runTest {
+            val page = Top50PhotosRequest()()
+            println("Top50: Found ${page.photos.size} photos, hasNext=${page.hasNext}")
+            page.photos.take(3).forEach { photo ->
+                println("ID: ${photo.id}, Title: ${photo.title}")
+            }
+        }
+    }
+
+    @Test
+    fun `test top 200 photos request`() {
+        runTest {
+            val page = Top200PhotosRequest()()
+            println("Top200: Found ${page.photos.size} photos, hasNext=${page.hasNext}")
+            page.photos.take(3).forEach { photo ->
+                println("ID: ${photo.id}, Title: ${photo.title}")
+            }
+        }
+    }
+
+    @Test
+    fun `test top favorites photos request`() {
+        runTest {
+            val page = TopFavoritesPhotosRequest()()
+            println("TopFavorites: Found ${page.photos.size} photos, hasNext=${page.hasNext}")
+            page.photos.take(3).forEach { photo ->
+                println("ID: ${photo.id}, Title: ${photo.title}")
+            }
+        }
+    }
+
+    @Test
+    fun `test top applicants photos request`() {
+        runTest {
+            val page = TopApplicantsPhotosRequest()()
+            println("TopApplicants: Found ${page.photos.size} photos, hasNext=${page.hasNext}")
+            page.photos.take(3).forEach { photo ->
+                println("ID: ${photo.id}, Title: ${photo.title}")
+            }
+        }
+    }
 }

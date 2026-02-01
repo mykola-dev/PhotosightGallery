@@ -96,6 +96,8 @@ class GalleryViewModel(
     }
 
     fun updateLoadingState(state: CombinedLoadStates) {
+        // Show loading indicator during refresh (initial load) and append (next page)
+        // This matches the behavior of the original Android app
         val loading =
                 state.refresh is LoadState.Loading ||
                         state.append is LoadState.Loading ||

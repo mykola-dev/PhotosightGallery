@@ -206,31 +206,31 @@ class CategoriesPhotosRequest(
 }
 
 class Top50PhotosRequest : PhotosRequest() {
-    override val url: String = "$baseUrl/top/50"
+    override val url: String = "$baseUrl/top/50/"
 }
 
 class Top200PhotosRequest : PhotosRequest() {
-    override val url: String = "$baseUrl/top/200"
+    override val url: String = "$baseUrl/top/200/"
 }
 
 class TopArtPhotosRequest : PhotosRequest() {
-    override val url: String = "$baseUrl/top/art"
+    override val url: String = "$baseUrl/top/art/"
 }
 
 class TopTechPhotosRequest : PhotosRequest() {
-    override val url: String = "$baseUrl/top/tech"
+    override val url: String = "$baseUrl/top/tech/"
 }
 
 class TopOrigPhotosRequest : PhotosRequest() {
-    override val url: String = "$baseUrl/top/orig"
+    override val url: String = "$baseUrl/top/orig/"
 }
 
 class TopFavoritesPhotosRequest : PhotosRequest() {
-    override val url: String = "$baseUrl/top/favorites"
+    override val url: String = "$baseUrl/top/favorites/"
 }
 
 class TopApplicantsPhotosRequest : PhotosRequest() {
-    override val url: String = "$baseUrl/top/applicants"
+    override val url: String = "$baseUrl/top/applicants/"
 }
 
 class OutrunPhotosRequest : PhotosRequest() {

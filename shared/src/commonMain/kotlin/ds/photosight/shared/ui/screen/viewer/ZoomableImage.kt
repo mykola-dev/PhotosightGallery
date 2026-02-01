@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,10 +14,10 @@ import androidx.compose.ui.Modifier
 import coil3.compose.AsyncImagePainter
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
-import ds.photosight.shared.ui.model.Photo
-import ds.photosight.shared.ui.modifiers.sharedBounds
 import ds.photosight.shared.core.widget.zoomable
 import ds.photosight.shared.ui.image.buildPhotoImageRequest
+import ds.photosight.shared.ui.model.Photo
+import ds.photosight.shared.ui.modifiers.sharedBounds
 import ds.photosight.shared.util.log
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -58,7 +57,7 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
                 )
             }
             is AsyncImagePainter.State.Error -> {
-                log.e("error loading image: url=${photo.large}, error=${state.result.throwable?.message}")
+                log.e("error loading image: url=${photo.large}, error=${state.result.throwable.message}")
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                     Image(Icons.Default.Close, contentDescription = "Error loading image")
                 }

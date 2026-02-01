@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -74,10 +75,11 @@ fun Thumb(
                     .sharedBounds(key = item.transitionKey)
                     .clickable(enabled = !isPreloading) { onPhotoClicked(item) }
         ) {
-            val state = painter.state
-            if (state is AsyncImagePainter.State.Loading || isBadImage) {
+            // In Coil3, painter.state is a StateFlow, need to collect it
+            val painterState by painter.state.collectAsState()
+            if (painterState is AsyncImagePainter.State.Loading || isBadImage) {
                 ThumbLoadingAnimation()
-            } else if (state is AsyncImagePainter.State.Error) {
+            } else if (painterState is AsyncImagePainter.State.Error) {
                 // Simple placeholder for error state
                 Box(
                     modifier = Modifier
