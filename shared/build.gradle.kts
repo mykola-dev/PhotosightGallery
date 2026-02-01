@@ -19,6 +19,7 @@ kotlin {
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
                 implementation(compose.ui)
+                implementation(compose.animation)  // Required for shared element transitions
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
 

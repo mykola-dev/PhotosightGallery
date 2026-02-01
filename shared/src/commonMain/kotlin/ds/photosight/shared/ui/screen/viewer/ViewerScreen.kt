@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
@@ -66,7 +67,14 @@ fun ViewerScreen(
     val sharedTransitionScope = LocalSharedTransitionScope.current
     val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
 
-    LaunchedEffect(photoId) { mainViewModel.onPhotoSelected(photoId) }
+    // Debug logging
+    log.d("ViewerScreen: photoId=$photoId, index=$index, photos.itemCount=${photos.itemCount}")
+    log.d("ViewerScreen: photos.loadState=${photos.loadState}")
+    
+    LaunchedEffect(photoId) { 
+        log.d("ViewerScreen: onPhotoSelected called for photoId=$photoId")
+        mainViewModel.onPhotoSelected(photoId) 
+    }
 
     if (photos.itemCount > 0) {
         TranslucentTheme {
@@ -89,6 +97,16 @@ fun ViewerScreen(
                 onBrowserClick = viewModel::onOpenBrowser,
                 onInfoClick = viewModel::onInfo
             )
+        }
+    } else {
+        // Show loading indicator while photos are loading
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Palette.surface),
+            contentAlignment = Alignment.Center
+        ) {
+            androidx.compose.material3.CircularProgressIndicator()
         }
     }
 
@@ -152,16 +170,30 @@ fun ViewerContent(
                 .fillMaxSize()
                 .background(Palette.surface)
         ) {
+            // Use actual item count, with minimum of 1 to avoid empty pager
+            val actualPageCount = maxOf(photos.itemCount, 1)
+            log.d("ViewerContent: actualPageCount=$actualPageCount, currentPageIndex=$currentPageIndex")
+            
             val pagerState =
                 rememberPagerState(
-                    initialPage = currentPageIndex,
-                    pageCount = { Int.MAX_VALUE / 2 }
+                    initialPage = currentPageIndex.coerceIn(0, actualPageCount - 1),
+                    pageCount = { actualPageCount }
                 )
 
             val updatedOnPageChanged by rememberUpdatedState(onPageChanged)
             LaunchedEffect(pagerState) {
                 snapshotFlow { pagerState.currentPage }.collect { page ->
+                    log.d("HorizontalPager: currentPage=$page, itemCount=${photos.itemCount}")
                     updatedOnPageChanged(page)
+                    
+                    // Trigger loading more items when approaching the end
+                    if (page >= photos.itemCount - 3 && photos.loadState.append.endOfPaginationReached.not()) {
+                        log.d("Triggering load for next page...")
+                        photos.loadState.append.let { 
+                            // Try to trigger loading by accessing an item near the end
+                            photos.getOrNull(photos.itemCount - 1)
+                        }
+                    }
                 }
             }
 
@@ -170,7 +202,11 @@ fun ViewerContent(
                 userScrollEnabled = true,
                 modifier = Modifier.fillMaxSize()
             ) { page ->
-                photos.getOrNull(page)?.let { item ->
+                log.d("HorizontalPager content: page=$page, itemCount=${photos.itemCount}")
+                val item = photos.getOrNull(page)
+                log.d("HorizontalPager content: item at page $page = ${item?.id ?: "NULL"}")
+                if (item != null) {
+                    log.d("Rendering ZoomableImage for photo ${item.id}, url=${item.large}")
                     ZoomableImage(
                         photo = item,
                         onClicked = {
@@ -178,6 +214,15 @@ fun ViewerContent(
                             else onClicked()
                         }
                     )
+                } else {
+                    // Show loading placeholder when photo is not loaded yet
+                    log.d("Showing loading placeholder for page $page")
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
 

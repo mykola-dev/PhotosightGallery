@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import coil3.compose.AsyncImagePainter
@@ -21,6 +24,7 @@ import ds.photosight.shared.util.log
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
+    log.d("ZoomableImage: rendering photo ${photo.id}, large=${photo.large}, thumb=${photo.thumb}")
     SubcomposeAsyncImage(
         model = buildPhotoImageRequest(
             url = photo.large,
@@ -30,17 +34,23 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
         contentDescription = photo.title,
         modifier = Modifier
             .fillMaxSize()
-            // TODO: Re-enable shared element transitions once API is fixed
-            // .sharedBounds(key = photo.transitionKey)
+            .sharedBounds(key = photo.transitionKey)
     ) {
-        when (val state = painter.state) {
-            is AsyncImagePainter.State.Loading, is AsyncImagePainter.State.Success -> {
-                val scale = if (state is AsyncImagePainter.State.Success) {
-                    painter.intrinsicSize.run { width / height }
-                } else {
-                    1f
-                }
-
+        // In Coil3, painter.state is a StateFlow, need to collect it
+        val painterState by painter.state.collectAsState()
+        log.d("ZoomableImage: painter state = $painterState")
+        when (val state = painterState) {
+            is AsyncImagePainter.State.Loading -> {
+                log.d("ZoomableImage: Loading state - showing placeholder")
+                // Show the image content (with thumbnail placeholder) even while loading
+                // This is crucial for shared element transition to work smoothly
+                SubcomposeAsyncImageContent(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            is AsyncImagePainter.State.Success -> {
+                log.d("ZoomableImage: Success state")
+                val scale = painter.intrinsicSize.run { width / height }
                 SubcomposeAsyncImageContent(
                     modifier = Modifier
                         .fillMaxSize()
@@ -48,12 +58,15 @@ fun ZoomableImage(photo: Photo, onClicked: () -> Unit) {
                 )
             }
             is AsyncImagePainter.State.Error -> {
-                log.e("error loading image")
+                log.e("error loading image: url=${photo.large}, error=${state.result.throwable?.message}")
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    Image(Icons.Default.Close, null)
+                    Image(Icons.Default.Close, contentDescription = "Error loading image")
                 }
             }
-            else -> {}
+            is AsyncImagePainter.State.Empty -> {
+                log.d("ZoomableImage: Empty state")
+                Box(modifier = Modifier.fillMaxSize())
+            }
         }
     }
 }

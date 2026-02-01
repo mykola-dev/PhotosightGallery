@@ -71,8 +71,7 @@ fun Thumb(
                 Modifier
                     .fillMaxWidth()
                     .padding(1.dp)
-                    // TODO: Re-enable shared element transitions once API is fixed
-                    // .sharedBounds(key = item.transitionKey)
+                    .sharedBounds(key = item.transitionKey)
                     .clickable(enabled = !isPreloading) { onPhotoClicked(item) }
         ) {
             val state = painter.state
