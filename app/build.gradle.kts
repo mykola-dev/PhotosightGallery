@@ -4,15 +4,15 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
 
-val changelog = File(rootProject.projectDir, "changelog.txt").readText()
-val (appVersion, recentChanges) = Regex("""^v(\d+\..+)[\n\r]+([\s\S]+?)[\n\r]+(?:[\n\r]v\d+\..+|$)""")
-    .find(changelog)!!
-    .destructured
+val changelog = File(rootProject.projectDir, "changelog.txt").readText().replace("\r\n", "\n")
+val matchResult = Regex("""^v(\d+\.[^\n]+)\n([\s\S]+?)(?:\nv\d+\.|$)""").find(changelog)
+val appVersion = matchResult?.groupValues?.get(1) ?: "1.0.0"
+val recentChanges = matchResult?.groupValues?.get(2)?.trim() ?: ""
 val appVersionCode = changelog.lines().size + 20
 
 android {
@@ -30,63 +30,42 @@ android {
             useSupportLibrary = true
         }
 
-        resValue("string", "app_changelog", "\"$changelog\"")
+        // Inject changelog content into BuildConfig
+        buildConfigField("String", "APP_CHANGELOG", "\"${recentChanges.replace("\"", "\\\"")}\"")
     }
 
     signingConfigs {
-        val props = gradleLocalProperties(rootDir, providers)
         create("release") {
-            storeFile = file("../../${props.getProperty("storeFile")}")
-            keyAlias = props.getProperty("keyAlias")
-            keyPassword = props.getProperty("keyPassword")
-            storePassword = props.getProperty("storePassword")
+            val localProps = gradleLocalProperties(rootDir, providers)
+            keyAlias = localProps.getProperty("keyAlias") ?: System.getenv("KEY_ALIAS")
+            keyPassword = localProps.getProperty("keyPassword") ?: System.getenv("KEY_PASSWORD")
+            storeFile = file(localProps.getProperty("storeFile") ?: System.getenv("KEYSTORE_PATH") ?: "dummy.jks")
+            storePassword = localProps.getProperty("storePassword") ?: System.getenv("KEYSTORE_PASSWORD")
         }
     }
 
     buildTypes {
-        debug { }
         release {
-            signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = true
-    }
-
-    kotlin {
-        jvmToolchain(17)
-        compilerOptions {
-            freeCompilerArgs.addAll(
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-                "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
-                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-                "-opt-in=androidx.compose.ui.text.ExperimentalTextApi",
-                "-opt-in=coil.annotation.ExperimentalCoilApi"
-            )
-
-            // compose metrics
-            if (project.findProperty("myapp.enableComposeCompilerReports") == "true") {
-                val path = layout.buildDirectory.get().asFile.absolutePath + "/compose_metrics"
-                freeCompilerArgs.addAll(
-                    "-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$path"
-                )
-                freeCompilerArgs.addAll(
-                    "-P", "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=$path"
-                )
-            }
-        }
     }
 
     buildFeatures {
         compose = true
+        resValues = true
         buildConfig = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     packaging {
@@ -95,54 +74,83 @@ android {
         }
     }
 
-    lint {
-        lintConfig = file("lint.xml")
-    }
-
     namespace = "ds.photosight.compose"
+
+    sourceSets {
+        getByName("main") {
+            manifest.srcFile("src/main/AndroidManifest.xml")
+            res.srcDirs("src/main/res")
+            java.srcDirs("src/main/java")
+        }
+    }
+}
+
+kotlin {
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+    
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=coil.annotation.ExperimentalCoilApi"
+        )
+    }
+    
+    sourceSets {
+        androidMain.dependencies {
+            implementation(project(":shared"))
+            implementation(project(":parser"))
+
+            // AndroidX Core
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.activity.compose)
+
+            // AndroidX Lifecycle
+            implementation(libs.bundles.lifecycle)
+
+            // Compose
+            implementation(libs.bundles.compose)
+
+            // Navigation
+            implementation(libs.navigation.compose)
+
+            // Paging
+            implementation(libs.bundles.paging)
+
+            // Dependency Injection - Koin
+            implementation(libs.bundles.koin)
+
+            // Kotlinx
+            implementation(libs.bundles.coroutines)
+            implementation(libs.serialization.json)
+
+            // Network - Coil for Android
+            implementation(libs.coil.compose)
+
+            // Logging
+            implementation(libs.timber)
+            implementation(libs.napier)
+        }
+
+        androidInstrumentedTest.dependencies {
+            implementation(libs.bundles.compose.testing)
+        }
+
+        androidUnitTest.dependencies {
+            implementation(libs.junit)
+            implementation(libs.androidx.test.ext.junit)
+            implementation(libs.espresso.core)
+        }
+    }
 }
 
 dependencies {
-    implementation(project(":parser"))
-
     coreLibraryDesugaring(libs.desugar)
-
-    // AndroidX Core
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.activity.compose)
-
-    // AndroidX Lifecycle
-    implementation(libs.bundles.lifecycle)
-
-    // Compose
-    implementation(libs.bundles.compose)
     debugImplementation(libs.bundles.compose.debug)
-
-    // Navigation
-    implementation(libs.bundles.navigation3)
-
-    // Paging
-    implementation(libs.bundles.paging)
-
-    // Dependency Injection - Koin
-    implementation(libs.bundles.koin)
-
-    // Kotlinx
-    implementation(libs.bundles.coroutines)
-    implementation(libs.serialization.json)
-
-    // Network
-    implementation(libs.coil.compose)
-
-    // Storage/Preferences
-    implementation(libs.kotpref)
-
-    // Logging
-    implementation(libs.timber)
-
-    // Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.bundles.compose.testing)
 }

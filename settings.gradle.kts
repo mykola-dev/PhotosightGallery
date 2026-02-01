@@ -20,4 +20,5 @@ dependencyResolutionManagement {
 rootProject.name = "Photosight"
 
 include(":parser")
+include(":shared")
 include(":app")

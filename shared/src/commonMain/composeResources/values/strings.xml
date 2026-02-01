@@ -1,0 +1,128 @@
+<resources>
+    <string name="app_name">Photosight Gallery</string>
+    <string name="about_">About…</string>
+    <string name="about_title">PHOTOSIGHT GALLERY</string>
+    <string name="abouttext">Immerse yourself in PhotoSight, a vibrant hub for talented photographers across Europe. Discover a constantly evolving gallery of artistic imagery, or contribute your own perspective to the archive. Photosight Gallery provides an intuitive experience, bringing the inspiring world of https://sight.photo to your Android screen.
+
+Change Log:
+
+%1$s
+
+%2$s</string>
+    <string name="app_changelog">v2.0.3
+- Performance improvements
+v3.0
+- Multiplatform release: Android, iOS, Desktop, Web
+
+v2.0.2
+- UI Fixes
+
+v2.0.1
+- fixed parser
+
+v2.0
+- rewritten with jetpack compose
+
+v1.0.5
+- fixed data parsing
+
+v1.0.4
+- fixed empty comments section
+- fixed colors on dark theme
+
+v1.0.3
+- fixed empty page issue
+
+v1.0.2
+- daily photos loading fix
+
+v1.0.1
+- minor fixes
+
+v1.0
+- the app has been rewritten from scratch
+</string>
+    <string name="copyright">© 1997-2026 Deviant Studio</string>
+    <string name="all_authors">All Authors</string>
+    <string name="author">Author</string>
+    <string name="by_artistry">Artistry</string>
+    <string name="by_comments">Comments</string>
+    <string name="by_date">Date</string>
+    <string name="by_originality">Originality</string>
+    <string name="by_rating">Rating</string>
+    <string name="by_technique">Technique</string>
+    <string name="categories">Categories</string>
+    <string name="dislikes">Dislikes</string>
+    <string name="filter_by">Filter By</string>
+    <string name="info">Info</string>
+    <string name="likes">Likes</string>
+    <string name="loading_failed">Loading Failed</string>
+    <string name="new_photos">New Photos</string>
+    <string name="open_in_web_browser">Open in Browser</string>
+    <string name="page_">Page %s</string>
+    <string name="photo_details">Photo Details</string>
+    <string name="rating_applicants">Applicants</string>
+    <string name="rating_artistic">Artistry</string>
+    <string name="rating_authors">Rating Authors</string>
+    <string name="rating_day">Top of the Day</string>
+    <string name="rating_favorites">Favorites</string>
+    <string name="rating_month">Top of the Month</string>
+    <string name="rating_original">Originality</string>
+    <string name="rating_technic">Technique</string>
+    <string name="rating_week">Top of the Week</string>
+    <string name="ratings">Ratings</string>
+    <string name="retry">Retry</string>
+    <string name="save_to_sd">Download</string>
+    <string name="saved_successfully">Saved Successfully</string>
+    <string name="share_img">Share Image</string>
+    <string name="share_link">Share URL</string>
+    <string name="share_subj">Check this out!</string>
+    <string name="share_text">Sent with Photosight Gallery</string>
+    <string name="sort_by">Sort By</string>
+    <string name="source">Source</string>
+    <string name="title">Title</string>
+    <string name="views">Views</string>
+    <string name="ok">OK</string>
+    <string name="all_photos">All Photos</string>
+    <string name="artistic">Artistic</string>
+    <string name="nude">Nude</string>
+    <string name="default_sort">Default</string>
+    <string name="time_sort">Time</string>
+    <string name="popularity_sort">Popularity</string>
+    <string name="rates_photos">Rated Photos</string>
+    <string name="count_sort">By Count</string>
+    <string name="art_sort">By Artistry</string>
+    <string name="original_sort">By Originality</string>
+    <string name="tech_sort">By Technique</string>
+    <string name="comments_sort">By Comments</string>
+    <string name="category_2">Portrait</string>
+    <string name="category_3">Nature</string>
+    <string name="category_4">Still Life</string>
+    <string name="category_5">Macro</string>
+    <string name="category_6">Travels</string>
+    <string name="category_7">Urban</string>
+    <string name="category_8">Animals</string>
+    <string name="category_9">Reportage</string>
+    <string name="category_10">Sport</string>
+    <string name="category_11">Humor</string>
+    <string name="category_12">Genre</string>
+    <string name="category_13">Museum</string>
+    <string name="category_14">Digital Art</string>
+    <string name="category_15">Nu</string>
+    <string name="category_16">Other</string>
+    <string name="category_17">Photosight</string>
+    <string name="category_18">Glamour</string>
+    <string name="category_19">Advertising</string>
+    <string name="category_27">Paparazzi</string>
+    <string name="category_36">Landscape</string>
+    <string name="category_64">Photo Hunt</string>
+    <string name="category_65">Undersea World</string>
+    <string name="category_70">Genre Portrait</string>
+    <string name="category_80">Kids World</string>
+    <string name="category_82">Architecture and Interior</string>
+    <string name="category_87">Photo Models</string>
+    <string name="category_91">Wedding</string>
+    <string name="category_92">Techno</string>
+    <string name="category_94">Mobile</string>
+    <string name="category_96">Restoration</string>
+</resources>
