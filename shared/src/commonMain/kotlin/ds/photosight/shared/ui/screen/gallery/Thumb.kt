@@ -6,8 +6,6 @@ import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter
@@ -77,19 +73,21 @@ fun Thumb(
         ) {
             // In Coil3, painter.state is a StateFlow, need to collect it
             val painterState by painter.state.collectAsState()
-            if (painterState is AsyncImagePainter.State.Loading || isBadImage) {
-                ThumbLoadingAnimation()
-            } else if (painterState is AsyncImagePainter.State.Error) {
-                // Simple placeholder for error state
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .background(Palette.greyDark),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Error", color = Palette.primary)
+
+            // Trigger retry when error state is detected (multiplatform solution)
+            if (painterState is AsyncImagePainter.State.Error && !isBadImage) {
+                LaunchedEffect(painterState) {
+                    isBadImage = true
                 }
+            }
+
+            if (painterState is AsyncImagePainter.State.Loading ||
+                painterState is AsyncImagePainter.State.Error ||
+                isBadImage
+            ) {
+                // Show loading animation during load, error, or retry states
+                // This triggers the auto-retry mechanism when isBadImage is set
+                ThumbLoadingAnimation()
             } else {
                 SubcomposeAsyncImageContent()
             }
