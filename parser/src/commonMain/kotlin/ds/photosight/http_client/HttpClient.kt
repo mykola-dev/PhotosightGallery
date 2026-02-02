@@ -7,3 +7,6 @@ expect val httpClient: HttpClient
 
 // Platform-independent function to make HTTP requests
 expect suspend fun runHttpRequest(url: String, cookies: Map<String, String>): String
+
+// Download bytes from URL - expect declaration
+expect suspend fun downloadBytes(url: String): ByteArray

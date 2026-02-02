@@ -1,9 +1,9 @@
 package ds.photosight.shared.util
 
 import coil3.ImageLoader
+import coil3.SingletonImageLoader
 import coil3.PlatformContext
 import coil3.annotation.DelicateCoilApi
-import coil3.imageLoader
 import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,7 @@ object ImagePreloader {
     @OptIn(DelicateCoilApi::class)
     suspend fun preload(context: PlatformContext, imageUrl: String): Boolean = withContext(Dispatchers.IO) {
         try {
-            val imageLoader = context.imageLoader
+            val imageLoader = SingletonImageLoader.get(context)
             val request = ImageRequest.Builder(context)
                 .data(imageUrl)
                 .build()

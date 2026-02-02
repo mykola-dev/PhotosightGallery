@@ -3,10 +3,7 @@
 package ds.photosight.shared.ui.navigation
 
 import androidx.compose.animation.AnimatedContent
-import kotlinx.serialization.Serializable
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,17 +11,17 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
-import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateListOf
 import androidx.navigation3.runtime.NavKey
+import ds.photosight.shared.ui.modifiers.LocalAnimatedVisibilityScope
+import ds.photosight.shared.ui.modifiers.LocalSharedTransitionScope
 import ds.photosight.shared.ui.screen.MainViewModel
 import ds.photosight.shared.ui.screen.gallery.GalleryScreen
 import ds.photosight.shared.ui.screen.viewer.ViewerScreen
 import ds.photosight.shared.ui.theme.PhotosightTheme
+import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
-
-import ds.photosight.shared.ui.modifiers.LocalAnimatedVisibilityScope
-import ds.photosight.shared.ui.modifiers.LocalSharedTransitionScope
 
 /** Navigation 3 with SharedTransitionLayout for shared element transitions */
 @Composable
@@ -32,7 +29,7 @@ fun SharedApp() {
     val mainViewModel: MainViewModel = koinViewModel()
 
     // Developer-owned back stack, defaulting to GalleryRoute
-    val backStack = rememberNavBackStack(GalleryRoute)
+    val backStack = remember { mutableStateListOf<NavKey>(GalleryRoute) }
 
     val gridState = rememberLazyStaggeredGridState()
 
@@ -40,9 +37,10 @@ fun SharedApp() {
         SharedTransitionLayout {
             CompositionLocalProvider(LocalSharedTransitionScope provides this) {
                 val selectedKey = backStack.lastOrNull()
-                AnimatedContent(
+                AnimatedContent<Any?>(
                     targetState = selectedKey,
                     transitionSpec = { fadeIn(tween(300)) togetherWith fadeOut(tween(200)) },
+                    label = "AppNavigation"
                 ) { key ->
                     if (key != null) {
                         CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {

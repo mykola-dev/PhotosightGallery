@@ -20,7 +20,7 @@ actual class DownloadUseCase {
         // Download image using Ktor
         val client = HttpClient()
         try {
-            val response: ByteArray = client.get(photo.large).body()
+            val response: ByteArray = client.get(photo.large).bodyAsBytes()
             Files.write(targetPath, response)
         } finally {
             client.close()

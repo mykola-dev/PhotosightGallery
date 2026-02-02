@@ -9,6 +9,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.statement.bodyAsText
+import io.ktor.client.statement.readBytes
 import io.ktor.http.isSuccess
 
 actual val httpClient: HttpClient = HttpClient(Android) {
@@ -45,4 +46,9 @@ actual suspend fun runHttpRequest(url: String, cookies: Map<String, String>): St
     }
 
     return response.bodyAsText()
+}
+
+actual suspend fun downloadBytes(url: String): ByteArray {
+    val response = httpClient.get(url)
+    return response.readBytes()
 }

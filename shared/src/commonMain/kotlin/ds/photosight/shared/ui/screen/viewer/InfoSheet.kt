@@ -1,6 +1,5 @@
 package ds.photosight.shared.ui.screen.viewer
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,6 +11,7 @@ import ds.photosight.shared.ui.theme.Palette
 import ds.photosight.shared.core.widget.Histogram
 import ds.photosight.shared.core.widget.HistogramData
 import ds.photosight.shared.core.widget.LinkifyText
+import ds.photosight.shared.util.loadHistogramData
 import org.jetbrains.compose.resources.stringResource
 import photosight.shared.generated.resources.Res
 import photosight.shared.generated.resources.photo_details
@@ -22,8 +22,9 @@ import photosight.shared.generated.resources.source
 @Composable
 fun InfoSheet(photo: Photo, visible: Boolean) {
     Column(
-            Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
-                    .navigationBarsPadding()
+        Modifier
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
+            .navigationBarsPadding()
     ) {
         Text(stringResource(Res.string.photo_details), style = MaterialTheme.typography.titleLarge)
         Spacer(Modifier.height(8.dp))
@@ -32,17 +33,14 @@ fun InfoSheet(photo: Photo, visible: Boolean) {
         InfoRow(stringResource(Res.string.source), photo.pageUrl)
         Spacer(Modifier.height(16.dp))
 
-        // Bitmap processing for histogram is Android-specific and commented out for now
         var data by remember(photo) { mutableStateOf<HistogramData?>(null) }
-        
-        // TODO: Implement multiplatform bitmap processing for histogram
-        // LaunchedEffect(photo, visible) {
-        //     if (visible) {
-        //         val bitmap = loadBitmap(photo.thumb)
-        //         data = processHistogram(bitmap)
-        //     }
-        // }
-        
+
+        LaunchedEffect(photo, visible) {
+            if (visible) {
+                data = loadHistogramData(photo.thumb)
+            }
+        }
+
         Histogram(data)
     }
 }
@@ -55,12 +53,3 @@ fun InfoRow(header: String, value: String) {
         LinkifyText(value, style = style, modifier = Modifier.weight(2f))
     }
 }
-
-// TODO: Implement multiplatform histogram processing
-// private fun processHistogram(bitmap: ImageBitmap): HistogramData {
-//     val r = IntArray(256)
-//     val g = IntArray(256)
-//     val b = IntArray(256)
-//     // Process pixels...
-//     return HistogramData(r, g, b)
-// }
