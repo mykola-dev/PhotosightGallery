@@ -47,6 +47,9 @@ import ds.photosight.shared.ui.theme.TranslucentTheme
 import ds.photosight.shared.util.log
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.resources.stringResource
+import photosight.shared.generated.resources.Res
+import photosight.shared.generated.resources.saved_successfully
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -136,10 +139,11 @@ fun ViewerContent(
     )
     var showSheet by remember { mutableStateOf(false) }
 
+    val savedSuccessMessage = stringResource(Res.string.saved_successfully)
     LaunchedEffect(event) {
         log.v("event=$event")
         when (event) {
-            is UiEvent.Snack -> snackbarHostState.showSnackbar(event.stringId)
+            is UiEvent.Snack -> snackbarHostState.showSnackbar(savedSuccessMessage)
             is UiEvent.OpenInfo -> showSheet = true
             null -> Unit
         }
