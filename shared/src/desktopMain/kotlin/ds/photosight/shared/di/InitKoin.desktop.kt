@@ -7,11 +7,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import org.koin.core.logger.PrintLogger
 
-/**
- * Desktop (JVM)-specific Koin initialization.
- * Sets up logger and Napier logging.
- */
-actual fun initKoin(): KoinApplication {
+fun initKoin(): KoinApplication {
     // Initialize Napier for multiplatform logging
     Napier.base(DebugAntilog())
     

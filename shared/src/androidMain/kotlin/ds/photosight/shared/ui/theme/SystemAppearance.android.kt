@@ -10,7 +10,7 @@ import androidx.core.view.WindowCompat
 actual fun SystemAppearance(isDark: Boolean) {
     val view = LocalView.current
     SideEffect {
-        val window = (view.context.findActivity() as? Activity)?.window ?: return@SideEffect
+        val window = view.context.findActivity()?.window ?: return@SideEffect
         WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !isDark
     }
 }

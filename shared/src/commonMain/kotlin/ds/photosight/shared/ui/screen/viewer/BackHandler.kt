@@ -4,7 +4,8 @@ import androidx.compose.runtime.Composable
 
 /**
  * Multiplatform BackHandler using expect/actual pattern.
- * Handles back button press on Android, no-op on other platforms.
+ * Android: Handles hardware back button via androidx.activity.compose.BackHandler
+ * Other platforms: No-op (no hardware back button)
  */
 @Composable
 expect fun BackHandler(enabled: Boolean = true, onBack: () -> Unit)

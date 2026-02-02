@@ -3,9 +3,10 @@ package ds.photosight.shared.ui.screen.viewer
 import androidx.compose.runtime.Composable
 
 /**
- * Desktop implementation of BackHandler - no-op since desktop doesn't have a hardware back button.
+ * Desktop/non-Android implementation of BackHandler - no-op.
+ * Desktop apps handle navigation via window controls or software buttons.
  */
 @Composable
 actual fun BackHandler(enabled: Boolean, onBack: () -> Unit) {
-    // No-op on desktop - use window close button or Esc key handling instead
+    // No-op: No hardware back button on desktop
 }
