@@ -10,10 +10,16 @@ import ds.photosight.shared.repo.PAGE_SIZE
 import ds.photosight.shared.repo.PhotosPagingSourceFactory
 import ds.photosight.shared.ui.model.Photo
 import ds.photosight.shared.ui.screen.gallery.MenuState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val photosPagingSourceFactory: PhotosPagingSourceFactory,
@@ -26,11 +32,15 @@ class MainViewModel(
     var selectedId: Int = 0
         private set
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun setMenuStateFlow(menuState: Flow<MenuState>) {
         if (!::menu.isInitialized) {
             menu = menuState
             viewModelScope.launch {
                 menuState
+                    .distinctUntilChanged { old, new ->
+                        old.selectedItem == new.selectedItem && old.categoriesFilter == new.categoriesFilter
+                    }
                     .flatMapLatest { providePhotosStream(it) }
                     .collect { _photosPagedFlow.value = it }
             }
@@ -38,9 +48,7 @@ class MainViewModel(
     }
 
     private fun providePhotosStream(menuState: MenuState): Flow<PagingData<Photo>> = flow {
-        emit(PagingData.empty())    // cleanup list first
         if (menuState.selectedItem == null) return@flow
-        delay(100) // this is required for triggering the empty data on ui (???)
         emitAll(
             Pager(
                 config = PagingConfig(pageSize = PAGE_SIZE, prefetchDistance = PAGE_SIZE / 2, enablePlaceholders = false),
@@ -50,7 +58,6 @@ class MainViewModel(
                 }
             )
                 .flow
-                .map { it }
                 .cachedIn(viewModelScope)
         )
     }

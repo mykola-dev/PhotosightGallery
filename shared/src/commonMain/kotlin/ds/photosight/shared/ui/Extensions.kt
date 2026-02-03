@@ -35,12 +35,10 @@ fun <T : Any> LazyPagingItems<T>.getOrNull(index: Int): T? = if (index < itemCou
 
 fun <T : Any> LazyPagingItems<T>.getIndexById(id: Int?): Int? {
     if (id == null) return null
-    for (i in 0 until itemCount) {
-        val item = get(i)
-        // This is a bit tricky with PagingData as it might not have all items loaded.
-        // But for our needs it should work if the item is in the current page.
-        // Assuming T has an 'id' property or we need a more generic way.
-        // For now, let's cast to Photo if possible.
+    // Use itemSnapshotList to avoid triggering 'get(index)' which leads to infinite paging loads
+    val snapshots = itemSnapshotList
+    for (i in 0 until snapshots.size) {
+        val item = snapshots[i]
         if (item is ds.photosight.shared.ui.model.Photo && item.id == id) {
             return i
         }
