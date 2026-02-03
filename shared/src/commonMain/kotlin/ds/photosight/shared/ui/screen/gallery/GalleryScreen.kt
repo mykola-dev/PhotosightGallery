@@ -53,6 +53,7 @@ import ds.photosight.shared.ui.model.Photo
 import ds.photosight.shared.ui.pagedItems
 import ds.photosight.shared.ui.rememberToolbarNestedScrollConnection
 import ds.photosight.shared.ui.screen.MainViewModel
+import ds.photosight.shared.ui.screen.viewer.BackHandler
 import ds.photosight.shared.util.ImagePreloader
 import ds.photosight.shared.util.log
 import kotlinx.coroutines.launch
@@ -201,6 +202,10 @@ fun GalleryContent(
             }
             isMenuVisible = true
         }
+    }
+
+    BackHandler(enabled = sheetState.currentValue == SheetValue.Expanded) {
+        scope.launch { sheetState.partialExpand() }
     }
 
     // Stabilized bottom padding for the content inside the scaffold.
