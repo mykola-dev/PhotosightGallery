@@ -11,16 +11,14 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateListOf
-import androidx.navigation3.runtime.NavKey
+import androidx.compose.runtime.remember
 import ds.photosight.shared.ui.modifiers.LocalAnimatedVisibilityScope
 import ds.photosight.shared.ui.modifiers.LocalSharedTransitionScope
 import ds.photosight.shared.ui.screen.MainViewModel
 import ds.photosight.shared.ui.screen.gallery.GalleryScreen
 import ds.photosight.shared.ui.screen.viewer.ViewerScreen
 import ds.photosight.shared.ui.theme.PhotosightTheme
-import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 
 /** Navigation 3 with SharedTransitionLayout for shared element transitions */
@@ -28,8 +26,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun SharedApp() {
     val mainViewModel: MainViewModel = koinViewModel()
 
-    // Developer-owned back stack, defaulting to GalleryRoute
-    val backStack = remember { mutableStateListOf<NavKey>(GalleryRoute) }
+    // Developer-owned back stack, defaulting to Gallery
+    val backStack = remember { mutableStateListOf<AppRoute>(AppRoute.Gallery) }
 
     val gridState = rememberLazyStaggeredGridState()
 
@@ -45,18 +43,18 @@ fun SharedApp() {
                     if (key != null) {
                         CompositionLocalProvider(LocalAnimatedVisibilityScope provides this) {
                             when (key) {
-                                is GalleryRoute -> {
+                                is AppRoute.Gallery -> {
                                     GalleryScreen(
                                         mainViewModel = mainViewModel,
                                         gridState = gridState,
                                         onNavigateToViewer = { photoId, index ->
                                             // Navigate by adding to the back stack
-                                            backStack.add(ViewerRoute(photoId, index))
+                                            backStack.add(AppRoute.Viewer(photoId, index))
                                         }
                                     )
                                 }
 
-                                is ViewerRoute -> {
+                                is AppRoute.Viewer -> {
                                     ViewerScreen(
                                         mainViewModel = mainViewModel,
                                         photoId = key.photoId,
@@ -76,9 +74,3 @@ fun SharedApp() {
     }
 }
 
-// Routes for Navigation 3
-@Serializable
-data object GalleryRoute : NavKey
-
-@Serializable
-data class ViewerRoute(val photoId: Int, val index: Int) : NavKey

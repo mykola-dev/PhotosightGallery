@@ -85,6 +85,13 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3", 
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "material-icons" }
 compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "compose" }
 
+# Compose Multiplatform (JetBrains) - for Desktop
+compose-multiplatform-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "compose-multiplatform" }
+compose-multiplatform-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "compose-multiplatform" }
+compose-multiplatform-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "compose-multiplatform" }
+compose-multiplatform-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "compose-multiplatform" }
+compose-multiplatform-animation = { group = "org.jetbrains.compose.animation", name = "animation", version.ref = "compose-multiplatform" }
+
 # Navigation - Multiplatform (JetBrains)
 navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }

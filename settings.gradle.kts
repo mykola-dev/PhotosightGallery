@@ -14,6 +14,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://jitpack.io")
+        maven("https://packages.jetbrains.team/maven/p/skiko/maven")
     }
 }
 
@@ -22,3 +23,4 @@ rootProject.name = "Photosight"
 include(":parser")
 include(":shared")
 include(":app")
+include(":desktop")

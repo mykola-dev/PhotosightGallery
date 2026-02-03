@@ -9,10 +9,12 @@ Change Log:
 %1$s
 
 %2$s</string>
-    <string name="app_changelog">v2.0.3
-- Performance improvements
+    <string name="app_changelog">
 v3.0
 - Multiplatform release: Android, iOS, Desktop, Web
+
+v2.0.3
+- Performance improvements
 
 v2.0.2
 - UI Fixes

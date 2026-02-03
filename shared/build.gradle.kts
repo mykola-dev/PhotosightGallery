@@ -36,9 +36,6 @@ kotlin {
                 implementation(libs.ksoup)
                 implementation(libs.paging.common)
                 implementation(libs.paging.compose.common)
-                implementation(libs.navigation.compose)
-                implementation(libs.navigation3.runtime)
-                implementation(libs.navigation3.ui)
                 implementation(libs.multiplatform.settings)
                 implementation(libs.datetime)
 
@@ -76,6 +73,10 @@ kotlin {
             }
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
 }
 
 android {
