@@ -1,10 +1,11 @@
 @file:Suppress("MoveLambdaOutsideParentheses")
+@file:OptIn(androidx.compose.ui.UiComposable::class, androidx.compose.material3.ExperimentalMaterial3Api::class)
 
 package ds.photosight.shared.ui.screen.gallery
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -262,13 +263,19 @@ fun GalleryContent(
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         snackbarHost = { SnackbarHost(hostState) }
     ) { innerPadding ->
-        // Only apply top padding to the Box, allowing it to extend behind the bottom sheet
-        Box(
+        BoxWithConstraints(
             Modifier
                 .fillMaxSize()
                 .padding(top = innerPadding.calculateTopPadding())
                 .nestedScroll(nestedScrollConnection)
         ) {
+            val columns = when {
+                maxWidth < 600.dp -> 2
+                maxWidth < 840.dp -> 3
+                maxWidth < 1200.dp -> 4
+                else -> 5
+            }
+
             LazyGrid(
                 GridState(
                     state = gridState,
@@ -285,7 +292,8 @@ fun GalleryContent(
                             isMenuVisible = isScrollingUp
                         }
                     }
-                )
+                ),
+                columns = columns
             )
             MainToolbar(
                 state = toolbarState,
@@ -309,8 +317,9 @@ fun GalleryContent(
     }
 }
 
+@androidx.compose.ui.UiComposable
 @Composable
-private fun LazyGrid(gridState: GridState) =
+private fun LazyGrid(gridState: GridState, columns: Int) =
     with(gridState) {
         state.WatchScrollDirection { isScrollingUp ->
             log.v("scroll direction: $isScrollingUp")
@@ -344,7 +353,7 @@ private fun LazyGrid(gridState: GridState) =
         }
 
         LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
+            columns = StaggeredGridCells.Fixed(columns),
             state = state,
             modifier = Modifier.fillMaxSize(),
             contentPadding =
