@@ -2,48 +2,13 @@
     <string name="app_name">Photosight Gallery</string>
     <string name="about_">About…</string>
     <string name="about_title">PHOTOSIGHT GALLERY</string>
-    <string name="abouttext">Immerse yourself in PhotoSight, a vibrant hub for talented photographers across Europe. Discover a constantly evolving gallery of artistic imagery, or contribute your own perspective to the archive. Photosight Gallery provides an intuitive experience, bringing the inspiring world of https://sight.photo to your Android screen.
+    <string name="abouttext">Immerse yourself in PhotoSight, a vibrant hub for talented photographers across Europe. Discover a constantly evolving gallery of artistic imagery, or contribute your own perspective to the archive. Photosight Gallery provides an intuitive experience, bringing the inspiring world of https://sight.photo to your screen.
 
 Change Log:
 
 %1$s
 
 %2$s</string>
-    <string name="app_changelog">
-v3.0
-- Multiplatform release: Android, iOS, Desktop, Web
-
-v2.0.3
-- Performance improvements
-
-v2.0.2
-- UI Fixes
-
-v2.0.1
-- fixed parser
-
-v2.0
-- rewritten with jetpack compose
-
-v1.0.5
-- fixed data parsing
-
-v1.0.4
-- fixed empty comments section
-- fixed colors on dark theme
-
-v1.0.3
-- fixed empty page issue
-
-v1.0.2
-- daily photos loading fix
-
-v1.0.1
-- minor fixes
-
-v1.0
-- the app has been rewritten from scratch
-</string>
     <string name="copyright">© 1997-2026 Deviant Studio</string>
     <string name="all_authors">All Authors</string>
     <string name="author">Author</string>

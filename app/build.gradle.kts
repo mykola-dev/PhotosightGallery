@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-val changelog = File(rootProject.projectDir, "changelog.txt").readText().replace("\r\n", "\n")
+val changelog = File(rootProject.projectDir, "shared/src/commonMain/composeResources/files/changelog.txt").readText().replace("\r\n", "\n")
 val matchResult = Regex("""^v(\d+\.[^\n]+)\n([\s\S]+?)(?:\nv\d+\.|$)""").find(changelog)
 val appVersion = matchResult?.groupValues?.get(1) ?: "1.0.0"
 val recentChanges = matchResult?.groupValues?.get(2)?.trim() ?: ""
@@ -62,10 +62,6 @@ android {
         compose = true
         resValues = true
         buildConfig = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     packaging {

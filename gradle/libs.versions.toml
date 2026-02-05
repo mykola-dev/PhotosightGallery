@@ -1,12 +1,11 @@
 [versions]
 # Plugins
-agp = "8.9.1"
+agp = "8.9.3"
 kotlin = "2.3.0"
-kotlinx-datetime = "0.6.1"
+kotlinx-datetime = "0.7.1"
 
 # Compose Multiplatform
 compose-multiplatform = "1.11.0-alpha02"
-compose-compiler = "1.5.14"
 
 # AndroidX Core
 androidx-core = "1.17.0"
@@ -19,7 +18,6 @@ compose-material3 = "1.4.0"
 
 # Navigation - Multiplatform (JetBrains)
 navigation-compose = "2.9.1"
-navigation3 = "1.0.0"
 
 # Paging - Cash App Multiplatform
 paging = "3.4.0"
@@ -33,22 +31,18 @@ coroutines = "1.10.2"
 serialization = "1.10.0"
 
 # Network
-okhttp = "5.3.2"
-ktor = "3.0.1"
+ktor = "3.4.0"
 coil = "2.7.0"
-coil3 = "3.0.0-alpha10"
+coil3 = "3.3.0"
 
 # UI Components
 material-icons = "1.7.8"
-constraintlayout-compose = "1.1.1"
 
 # Storage/Preferences
-kotpref = "2.13.2"
-multiplatform-settings = "1.1.1"
+multiplatform-settings = "1.3.0"
 
 # Parsing
-jsoup = "1.22.1"
-ksoup = "0.2.0"
+ksoup = "0.2.5"
 
 # Logging
 timber = "5.0.1"
@@ -56,16 +50,13 @@ napier = "2.7.1"
 
 # Testing
 junit = "4.13.2"
-androidx-test-junit = "1.2.1"
-espresso-core = "3.6.1"
+androidx-test-junit = "1.3.0"
+espresso-core = "3.7.0"
 
 # Other
-desugar = "2.1.4"
+desugar = "2.1.5"
 
 [libraries]
-# Plugins
-agp = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
-kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 # AndroidX Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
@@ -94,8 +85,6 @@ compose-multiplatform-animation = { group = "org.jetbrains.compose.animation", n
 
 # Navigation - Multiplatform (JetBrains)
 navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
 
 # Paging - AndroidX
 paging-runtime = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
@@ -104,7 +93,6 @@ paging-compose = { group = "androidx.paging", name = "paging-compose", version.r
 # Paging - Multiplatform (Cash App)
 paging-common = { group = "app.cash.paging", name = "paging-common", version.ref = "paging-multiplatform" }
 paging-compose-common = { group = "app.cash.paging", name = "paging-compose-common", version.ref = "paging-multiplatform" }
-paging-testing = { group = "app.cash.paging", name = "paging-testing", version.ref = "paging-multiplatform" }
 
 # Dependency Injection - Koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -122,15 +110,9 @@ serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serializ
 # Network - Ktor (Multiplatform)
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
-ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
 ktor-client-java = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
-
-# Network - Legacy (Android only)
-okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 
 # Images - Coil 3 (Multiplatform)
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
@@ -208,16 +190,10 @@ coroutines = [
     "coroutines-android"
 ]
 
-navigation = [
-    "navigation-compose",
-    "navigation3-ui"
-]
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
