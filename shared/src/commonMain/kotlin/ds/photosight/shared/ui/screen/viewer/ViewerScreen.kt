@@ -43,8 +43,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import ds.photosight.shared.ui.events.UiEvent
 import ds.photosight.shared.ui.getOrNull
 import ds.photosight.shared.ui.model.Photo
-import ds.photosight.shared.ui.modifiers.LocalAnimatedVisibilityScope
-import ds.photosight.shared.ui.modifiers.LocalSharedTransitionScope
 import ds.photosight.shared.ui.screen.MainViewModel
 import ds.photosight.shared.ui.theme.Palette
 import ds.photosight.shared.ui.theme.TranslucentTheme
@@ -69,10 +67,6 @@ fun ViewerScreen(
     val state by viewModel.state.collectAsState()
     val event by viewModel.events.collectAsState(null)
     val photos = mainViewModel.photosPagedFlow.collectAsLazyPagingItems()
-
-    // Access shared transition scopes if needed for animations
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
 
     // Debug logging
     log.d("ViewerScreen: photoId=$photoId, index=$index, photos.itemCount=${photos.itemCount}")
@@ -102,7 +96,8 @@ fun ViewerScreen(
                 onDrawerToggle = viewModel::onDrawerStateChanged,
                 onDownloadClick = { viewModel.saveFile() },
                 onBrowserClick = viewModel::onOpenBrowser,
-                onInfoClick = viewModel::onInfo
+                onInfoClick = viewModel::onInfo,
+                onBack = onBack
             )
         }
     } else {
@@ -134,7 +129,8 @@ fun ViewerContent(
     onDrawerToggle: (value: Boolean) -> Unit,
     onDownloadClick: () -> Unit,
     onBrowserClick: () -> Unit,
-    onInfoClick: () -> Unit
+    onInfoClick: () -> Unit,
+    onBack: () -> Unit
 ) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -242,7 +238,12 @@ fun ViewerContent(
             }
 
             Box(Modifier.align(Alignment.TopCenter)) {
-                ViewerToolbar(state.showUi, state.title, state.subtitle)
+                ViewerToolbar(
+                    isVisible = state.showUi,
+                    title = state.title,
+                    subtitle = state.subtitle,
+                    onBack = { onClicked(); onBack() }
+                )
             }
 
             Box(Modifier.align(Alignment.BottomCenter)) {
